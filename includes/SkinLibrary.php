@@ -56,9 +56,19 @@ class SkinLibrary extends SkinTemplate {
 	public function initPage( OutputPage $out ) {
 		parent::initPage( $out );
 
+		// Load metadata
+		$out->addMeta( 'description', 'theLijia Library');
+		$out->addMeta( 'author', 'Lijia-YongxinL');
+		$out->addMeta( 'HandheldFriendly', 'true' );
+		$out->addMeta( 'apple-mobile-web-app-capable', 'YES' );
+
 		if ( $this->getConfig()->get( 'LibraryResponsive' ) ) {
 			$this->enableResponsiveMode();
 		}
+
+		// Load custom/user styles
+		$out->addModuleStyles( 'skins.library.styles.bootstrap' );
+
 	}
 
 	/**

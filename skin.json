@@ -39,6 +39,12 @@
 	},
 	"@note": "When modifying skins.library.styles definition, make sure the installer still works",
 	"ResourceModules": {
+		"skins.library.styles.bootstrap": {
+			"class": "ResourceLoaderSkinModule",
+			"styles": [
+				"resources/skins.library.styles/bootstrap/bootstrap.min.css"
+			]
+		},
 		"skins.library.styles.legacy": {
 			"class": "ResourceLoaderSkinModule",
 			"features": [ "elements", "content", "interface", "logo", "legacy" ],
