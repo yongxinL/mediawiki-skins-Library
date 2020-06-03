@@ -1,0 +1,22 @@
+{{!
+	See @typedef MenuDefinition
+}}
+<div id="{{id}}" {{#class}}class="{{.}}"{{/class}} aria-labelledby="{{label-id}}" {{{html-tooltip}}}
+	 {{{html-userlangattributes}}}>
+	{{#is-dropdown}}
+	<input type="checkbox" class="libraryMenuCheckbox library-menu-checkbox" aria-labelledby="{{label-id}}" />
+	{{/is-dropdown}}
+	<h3 id="{{label-id}}">
+		<span>{{label}}</span>
+	</h3>
+	{{! `body` class for backwards compatibility but let editors know not to use
+	 it via HTML comment below: }}
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body library-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="{{list-classes}}">{{{html-items}}}</ul>
+		{{{html-after-portal}}}
+	</div>
+</div>
+{{! Note: html-hook-library-after-toolbox is deprecated. }}
+{{{html-hook-library-after-toolbox}}}

@@ -1,0 +1,28 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"skinname-library": "Library",
+	"library-skin-desc": "Modern version of MonoBook with fresh look and Bootstrap framework supported",
+	"prefs-library-enable-library-1-label": "Use Legacy Library",
+	"prefs-library-enable-library-1-help": "",
+	"library-opt-out": "Switch to old look",
+	"library-opt-out-tooltip": "Change your settings to go back to the old look of the skin (legacy Library)",
+	"library.css": "/* All CSS here will be loaded for users of the Library skin */",
+	"library.js": "/* All JavaScript here will be loaded for users of the Library skin */",
+	"library-action-toggle-sidebar": "Toggle sidebar",
+	"library-action-addsection": "Add topic",
+	"library-action-delete": "Delete",
+	"library-action-move": "Move",
+	"library-action-protect": "Protect",
+	"library-action-undelete": "Undelete",
+	"library-action-unprotect": "Change protection",
+	"library-view-create": "Create",
+	"library-view-edit": "Edit",
+	"library-view-history": "View history",
+	"library-view-view": "Read",
+	"library-view-viewsource": "View source",
+	"library-jumptonavigation": "Jump to navigation",
+	"library-jumptosearch": "Jump to search",
+	"library-more-actions": "More"
+}

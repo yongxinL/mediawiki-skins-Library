@@ -1,0 +1,68 @@
+# git-deploy status file:
+/.deploy
+
+# Editors
+*.kate-swp
+*~
+\#*#
+.#*
+.*.swp
+.project
+cscope.files
+cscope.out
+## NetBeans
+nbproject*
+project.index
+## Sublime
+sublime-*
+sftp-config.json
+
+# Building & testing
+/composer.lock
+/docs
+/node_modules
+/vendor
+
+# Operating systems
+## Mac OS X
+.DS_Store
+## Windows
+Thumbs.db
+
+# Misc
+.buildpath
+.classpath
+.idea
+.metadata*
+.settings
+/static*
+/tags
+/.htaccess
+/.htpasswd
+.eslintcache
+
+# ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# clone to Library
+.phan
+.storybook
+dev-scripts
+stories
+tests
+.eslintignore
+.eslintrc.json
+.gitreview
+.phpcs
+.stylelintignore
+.stylelintrc.json
+.svgo.yml
+Doxyfile
+jsdoc.json
+tsconfig.json
+
+# ignore everything related to Visual Studio Code
+.vscode/*
+*.code-workspace
