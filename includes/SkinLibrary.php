@@ -66,8 +66,11 @@ class SkinLibrary extends SkinTemplate {
 			$this->enableResponsiveMode();
 		}
 
-		// Load custom/user styles
-		$out->addModuleStyles( 'skins.library.styles.bootstrap' );
+		// Load custom/vendor styles
+		$out->addModuleStyles( 'skins.library.vendor.styles' );
+
+		// Load custom/vendor modules
+		$out->addModules( 'skins.library.vendor.js' );
 
 	}
 

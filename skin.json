@@ -39,10 +39,11 @@
 	},
 	"@note": "When modifying skins.library.styles definition, make sure the installer still works",
 	"ResourceModules": {
-		"skins.library.styles.bootstrap": {
+		"skins.library.vendor.styles": {
 			"class": "ResourceLoaderSkinModule",
 			"styles": [
-				"resources/skins.library.styles/bootstrap/bootstrap.min.css"
+				"resources/vendor/bootstrap/css/bootstrap.min.css",
+				"resources/vendor/fontawesome/css/all.min.css"
 			]
 		},
 		"skins.library.styles.legacy": {
@@ -61,7 +62,10 @@
 				"desktop",
 				"mobile"
 			],
-			"styles": [ "resources/skins.library.styles/skin.less" ]
+			"styles": [
+				"resources/skins.library.styles/library.less",
+				"resources/skins.library.styles/skin.less"
+			]
 		},
 		"skins.library.icons": {
 			"class": "ResourceLoaderImageModule",
@@ -79,8 +83,14 @@
 			],
 			"styles": [ "resources/skins.library.styles.responsive.less" ]
 		},
+		"skins.library.vendor.js": {
+			"packageFiles": [
+				"resources/vendor/bootstrap/js/bootstrap.bundle.min.js"
+			]
+		},
 		"skins.library.js": {
 			"packageFiles": [
+				"resources/skins.library.js/library.js",
 				"resources/skins.library.js/skin.js",
 				"resources/skins.library.legacy.js/collapsibleTabs.js",
 				"resources/skins.library.legacy.js/library.js"
