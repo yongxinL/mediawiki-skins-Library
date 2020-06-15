@@ -36,59 +36,78 @@
 }}
 
 {{{html-headelement}}}
+{{#data-sidebar}}{{>Sidebar}}{{/data-sidebar}}
 
-<div id="mw-page-base" class="mw-header-placeholder noprint"></div>
+{{! <div id="mw-page-base" class="mw-header-placeholder noprint"></div> }}
 
-<div id="content" class="mw-body" role="main">
-	<a id="top"></a>
+<div class="mw-body mw-content" role="main">
+	<div class="mw-header">
+		<div class="container-fluid">
+			<div class="mw-header-left">
+				<a href="" id="mw-sidebarShow" class="mw-header-menu-icon"><span></span></a>
+			</div>
+			<div class="mw-header-center">
+				{{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
+			</div>
+			<div class="mw-header-right">
+				{{{html-personal-notification}}}
+				{{#data-personal-menu}}{{>Menu}}{{/data-personal-menu}}
+			</div>
+		</div>
+
+	</div>
+
+	<div class="container d-block">
+		<div class="mw-content-header">
+			<div class="mw-content-header-left">
+				{{!html-indicators}}
+				<div id="contentSub"{{{html-userlangattributes}}}>{{{html-subtitle}}}</div>
+				<h2 id="firstHeading" class="mw-content-title" lang="{{page-langcode}}">{{{html-title}}}</h2>
+				{{#page-isarticle}}<div id="siteSub" class="noprint">{{msg-tagline}}</div>{{/page-isarticle}}
+				
+			</div>
+			<div class="mw-content-header-right">
+				<div class="media">
+					<div class="media-body">
+						<label>Last Edit</label>
+						<h6>{{{msg-lastedit}}}</h6>
+					</div>
+				</div>
+				<div class="media">
+					<div class="media-body">
+						<label>Category</label>
+						<h6>{{{msg-maincategory}}}</h6>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mw-content-nav">
+			{{#data-namespace-tabs}}{{>Menu}}{{/data-namespace-tabs}}
+			{{#data-page-actions}}{{>Menu}}{{/data-page-actions}}
+			{{! TODO: add action dropdown menu}}
+		</div>
+	</div>
+
 	{{#html-sitenotice}}
 		<div id="siteNotice" class="mw-body-content">{{{html-sitenotice}}}</div>
 	{{/html-sitenotice}}
-	{{{html-indicators}}}
-	<h1 id="firstHeading" class="firstHeading" lang="{{page-langcode}}">{{{html-title}}}</h1>
-	{{{html-prebodyhtml}}}
-	<div id="bodyContent" class="mw-body-content">
-		{{#page-isarticle}}<div id="siteSub" class="noprint">{{msg-tagline}}</div>{{/page-isarticle}}
-		<div id="contentSub"{{{html-userlangattributes}}}>{{{html-subtitle}}}</div>
-		{{#html-undelete}}<div id="contentSub2">{{{html-undelete}}}</div>{{/html-undelete}}
-		{{#html-newtalk}}<div class="usermessage">{{{html-newtalk}}}</div>{{/html-newtalk}}
-		{{!
-			Keep this empty `div` for compatibility with gadgets and user scripts
-			using this place to insert extra elements before.
-		}}
-		<div id="jump-to-nav"></div>
-		<a class="mw-jump-link" href="#mw-head">{{msg-library-jumptonavigation}}</a>
-		<a class="mw-jump-link" href="#p-search">{{msg-library-jumptosearch}}</a>
-		{{{html-bodycontent}}}
-		{{#html-printfooter}}
+
+	<div id="content" class="mw-content-body">
+		<div class="container d-block">
+			{{{html-prebodyhtml}}}
+			{{{html-bodycontent}}}
+			{{#html-printfooter}}
 			<div class="printfooter">{{{html-printfooter}}}</div>
-		{{/html-printfooter}}
-		{{{html-catlinks}}}
-		<div class="visualClear"></div>
-		{{{html-debuglog}}}
-	</div>
-</div>
-{{{html-dataAfterContent}}}
-
-<header class="mw-header">
-{{>Logo}}
-</header>
-
-<div id="mw-navigation">
-	<h2>{{{html-navigation-heading}}}</h2>
-	<div id="mw-head">
-		{{#data-personal-menu}}{{>Menu}}{{/data-personal-menu}}
-		<div id="left-navigation">
-			{{#data-namespace-tabs}}{{>Menu}}{{/data-namespace-tabs}}
-			{{#data-variants}}{{>Menu}}{{/data-variants}}
+			{{/html-printfooter}}
+			<div class="visualClear"></div>
+			{{{html-debuglog}}}
 		</div>
-		<div id="right-navigation">
-			{{#data-page-actions}}{{>Menu}}{{/data-page-actions}}
-			{{#data-page-actions-more}}{{>Menu}}{{/data-page-actions-more}}
-			{{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
-		</div>
+		{{{html-dataAfterContent}}}
 	</div>
-	{{#data-sidebar}}{{>Sidebar}}{{/data-sidebar}}
+	{{#data-footer}}{{>Footer}}{{/data-footer}}
+	{{{html-printtail}}}
 </div>
-{{#data-footer}}{{>Footer}}{{/data-footer}}
-{{{html-printtail}}}
+
+
+
+

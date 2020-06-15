@@ -85,7 +85,7 @@ class LibraryTemplate extends BaseTemplate {
 	 * @return Message
 	 */
 	public function msg( $key ) {
-		return $this->getMsg( $key );
+		return $this->getMsg( 'library-' . $key );
 	}
 
 	/**
@@ -93,6 +93,70 @@ class LibraryTemplate extends BaseTemplate {
 	 */
 	private function getConfig() {
 		return $this->config;
+	}
+
+	/**
+	 * @return Main menu
+	 */
+	private function getMainMenu() : array {
+		return [
+			'MAINMENU' => [
+				'0' => [
+					'text' => 'Home',
+					'href' => '/',
+					'anonymous' => true,
+				],
+				'1' => [
+					'text' => 'Login',
+					'href' => '/wp-login.php',
+					'anonymous' => true,
+				],
+				'2' => [
+					'text' => 'Home',
+					'href' => '/',
+					'anonymous' => false,
+				],
+				'3' => [
+					'text' => 'Daily',
+					'href' => '/category/family/daily/',
+				],
+				'4' => [
+					'text' => 'Memories',
+					'href' => '/category/family/memories/',
+				],
+				'5' => [
+					'text' => 'Blogging',
+					'href' => '/category/family/blog/',
+				],
+				'6' => [
+					'text' => 'Photography',
+					'href' => '/category/family/photography/',
+	
+				],
+				'7' => [
+					'text' => 'Day Out',
+					'href' => '/category/family/dayout/',
+				],
+				'8' => [
+					'text' => 'Holiday',
+					'href' => '/category/family/holiday/',
+				],
+				'9' => [
+					'text' => 'Library',
+					'href' => '/wiki/Main_Page',
+				],
+				'10' => [
+					'text' => 'Members',
+					'href' => '/category/members/',
+				],
+				'11' => [
+					'text' => 'Log out',
+					'href' => '/logout/',
+					'anonymous' => false,
+				],
+
+			],
+		];
 	}
 
 	/**
@@ -150,7 +214,7 @@ class LibraryTemplate extends BaseTemplate {
 
 			// Remember that the string '0' is a valid title.
 			// From OutputPage::getPageTitle, via ::setPageTitle().
-			'html-title' => $out->getPageTitle(),
+			'html-title' => strpos( $out->getPageTitle(), 'history' ) ? $out->getPageTitle() : basename( $out->getPageTitle() ), 
 
 			'html-prebodyhtml' => $this->get( 'prebodyhtml', '' ),
 			'msg-tagline' => $this->msg( 'tagline' )->text(),
@@ -173,6 +237,8 @@ class LibraryTemplate extends BaseTemplate {
 			'html-bodycontent' => $this->get( 'bodycontent' ),
 
 			'html-printfooter' => $skin->printSource(),
+			'msg-lastedit' => preg_replace('/(.*)on(.*)\,(.*)/', '$2', $this->get( 'lastmod' ) ),
+			'msg-maincategory' => preg_replace('/(.*?)<li>(.*?)<\/li>(.*)/', '$2', $skin->getCategoryLinks() ),
 			'html-catlinks' => $skin->getCategories(),
 			'html-dataAfterContent' => $this->get( 'dataAfterContent', '' ),
 			// From MWDebug::getHTMLDebugLog (when $wgShowDebug is enabled)
@@ -193,7 +259,7 @@ class LibraryTemplate extends BaseTemplate {
 			'msg-sitesubtitle' => $this->msg( 'sitesubtitle' )->text(),
 			'main-page-href' => $mainPageHref,
 
-			'data-sidebar' => $this->buildSidebar(),
+			'data-sidebar' => $this->buildSidebarProps(),
 		] + $this->getMenuProps();
 
 		// The following logic is unqiue to Library (not used by legacy Library) and
@@ -246,28 +312,6 @@ class LibraryTemplate extends BaseTemplate {
 			];
 		}
 
-		// If footer icons are enabled append to the end of the rows
-		$footerIcons = $this->getFooterIcons( 'icononly' );
-		if ( count( $footerIcons ) > 0 ) {
-			$items = [];
-			foreach ( $footerIcons as $blockName => $blockIcons ) {
-				$html = '';
-				foreach ( $blockIcons as $icon ) {
-					$html .= $skin->makeFooterIcon( $icon );
-				}
-				$items[] = [
-					'id' => 'footer-' . htmlspecialchars( $blockName ) . 'ico',
-					'html' => $html,
-				];
-			}
-
-			$footerRows[] = [
-				'id' => 'footer-icons',
-				'className' => 'noprint',
-				'array-items' => $items,
-			];
-		}
-
 		return $footerRows;
 	}
 
@@ -276,17 +320,36 @@ class LibraryTemplate extends BaseTemplate {
 	 *
 	 * @return array
 	 */
-	private function buildSidebar() : array {
+	private function buildSidebarProps() : array {
 		$skin = $this->getSkin();
-		$portals = $this->get( 'sidebar', [] );
+		$portals = $this->getMainMenu();
 		$props = [];
-		// Force the rendering of the following portals
-		if ( !isset( $portals['TOOLBOX'] ) ) {
-			$portals['TOOLBOX'] = true;
+
+		// for logged out users Library shows a limited menu
+		if ( !$skin->getUser()->isLoggedIn() ) {
+			// remove un-authorized items
+			foreach ( $portals['MAINMENU'] as $name => $content ) {
+				if ( !$content['anonymous'] ) {
+					unset( $portals['MAINMENU'][$name] );
+				}
+			}
+		} else {
+			// remove logged items
+			foreach ( $portals['MAINMENU'] as $name => $content ) {
+				if ( $content['anonymous'] ) {
+					unset( $portals['MAINMENU'][$name] );
+				}
+			}
+			// Force the rendering of the following portals
+			if ( !isset( $portals['TOOLBOX'] ) ) {
+				$portals['TOOLBOX'] = true;
+			}
+			if ( !isset( $portals['LANGUAGES'] ) ) {
+				$portals['LANGUAGES'] = true;
+			}
+			$portals = array_merge( $this->get( 'sidebar', [] ), $portals );
 		}
-		if ( !isset( $portals['LANGUAGES'] ) ) {
-			$portals['LANGUAGES'] = true;
-		}
+
 		// Render portals
 		foreach ( $portals as $name => $content ) {
 			if ( $content === false ) {
@@ -301,27 +364,22 @@ class LibraryTemplate extends BaseTemplate {
 					break;
 				case 'TOOLBOX':
 					$portal = $this->getMenuData(
-						'tb',  $this->getToolbox(), self::MENU_TYPE_PORTAL
+						'specialtools',
+						$this->getToolbox(),
+						self::MENU_TYPE_PORTAL, [
+							'tag' => 'li',
+						]
 					);
-					// Run deprecated hooks.
-					$libraryTemplate = $this;
-					ob_start();
-					// Use SidebarBeforeOutput instead.
-					Hooks::run( 'SkinTemplateToolboxEnd', [ &$libraryTemplate, true ] );
-					$htmlhookitems = ob_get_clean();
-					$portal['html-items'] .= $htmlhookitems;
-					ob_start();
-					Hooks::run( 'LibraryAfterToolbox', [], '1.35' );
-					$props[] = $portal + [
-						'html-hook-library-after-toolbox' => ob_get_clean(),
-					];
+					$props[] = $portal;
 					break;
 				case 'LANGUAGES':
 					$languages = $skin->getLanguages();
 					$portal = $this->getMenuData(
 						'lang',
 						$languages,
-						self::MENU_TYPE_PORTAL
+						self::MENU_TYPE_PORTAL, [
+							'tag' => 'li',
+						]
 					);
 					// The language portal will be added provided either
 					// languages exist or there is a value in html-after-portal
@@ -345,7 +403,11 @@ class LibraryTemplate extends BaseTemplate {
 						$html = false;
 					}
 					$portal = $this->getMenuData(
-						$name, $content, self::MENU_TYPE_PORTAL
+						$name,
+						$content,
+						self::MENU_TYPE_PORTAL, [
+							'tag' => 'li',
+						]
 					);
 					if ( $html ) {
 						$portal['html-items'] .= $html;
@@ -353,26 +415,35 @@ class LibraryTemplate extends BaseTemplate {
 					$props[] = $portal;
 					break;
 			}
+
 		}
 
-		$firstPortal = $props[0] ?? null;
-		if ( $firstPortal ) {
-			$firstPortal[ 'class' ] .= ' portal-first';
-		}
+		$html = '';
+		foreach ( $props as $name => $content ) {
+			if ( trim($content['html-items']) === '' ) {
+				unset( $props[$name] );
+				continue;
+			}
+			if ( trim($html) === '' ) {
+				$html = Html::rawElement(
+					'a', [
+						'class' => 'nav-link active',
+						'href' => '#' . $content['id'],
+					], $this->Msg( $content['id'] )
+				);
+			} else {
+				$html .= Html::rawElement(
+					'a', [
+						'class' => 'nav-link',
+						'href' => '#' . $content['id'],
+					], $this->Msg( $content['id'] )
+				);
+			}
+		};
 
 		return [
-			'has-logo' => $this->isLegacy,
-			'html-logo-attributes' => Xml::expandAttributes(
-				Linker::tooltipAndAccesskeyAttribs( 'p-logo' ) + [
-					'class' => 'mw-wiki-logo',
-					'href' => Skin::makeMainPageUrl(),
-				]
-			),
-			'array-portals-rest' => array_slice( $props, 1 ),
-			'data-portals-first' => $firstPortal,
-			'msg-library-action-toggle-sidebar' => $this->msg( 'library-action-toggle-sidebar' )->text(),
-			// [todo] fetch user preference when logged in (T246427).
-			'sidebar-visible' => true
+			'html-sidebar-aside' => $html,
+			'array-sidebar-body' => array_values( $props ),
 		];
 	}
 
@@ -396,45 +467,59 @@ class LibraryTemplate extends BaseTemplate {
 		bool $setLabelToSelected = false
 	) : array {
 		$extraClasses = [
-			self::MENU_TYPE_DROPDOWN => 'library-menu library-menu-dropdown libraryMenu',
-			self::MENU_TYPE_TABS => 'library-menu library-menu-tabs libraryTabs',
-			self::MENU_TYPE_PORTAL => 'library-menu library-menu-portal portal',
-			self::MENU_TYPE_DEFAULT => 'library-menu',
+			self::MENU_TYPE_DROPDOWN => 'dropdown mw-profile-menu',
+			self::MENU_TYPE_TABS => 'nav',
+			self::MENU_TYPE_PORTAL => 'mw-sidebar-pane',
+			self::MENU_TYPE_DEFAULT => '',
 		];
 		// A list of classes to apply the list element and override the default behavior.
 		$listClasses = [
 			// `.menu` is on the portal for historic reasons.
 			// It should not be applied elsewhere per T253329.
-			self::MENU_TYPE_DROPDOWN => 'menu library-menu-content-list',
+			self::MENU_TYPE_DROPDOWN => '',
 		];
 		$isPortal = self::MENU_TYPE_PORTAL === $type;
 
 		// For some menu items, there is no language key corresponding with its menu key.
 		// These inconsitencies are captured in MENU_LABEL_KEYS
-		$msgObj = $this->msg( self::MENU_LABEL_KEYS[ $label ] ?? $label );
+		// $msgObj = $this->msg( self::MENU_LABEL_KEYS[ $label ] ?? $label );
+		$msgObj = strtolower( preg_replace( '/[^a-zA-Z0-9]/s', '', $label ) );
 		$props = [
-			'id' => "p-$label",
-			'label-id' => "p-{$label}-label",
-			// If no message exists fallback to plain text (T252727)
-			'label' => $msgObj->exists() ? $msgObj->text() : $label,
+			'id' => $msgObj,
+			'label-id' => "{$msgObj}-label",
+			'label' => $this->Msg( $msgObj . '-label' ),
+			'label-msg' => $this->Msg(  $msgObj . '-msg' ),
 			'html-userlangattributes' => $this->get( 'userlangattributes', '' ),
-			'list-classes' => $listClasses[$type] ?? 'library-menu-content-list',
+			'list-classes' => $listClasses[$type],
 			'html-items' => '',
 			'is-dropdown' => self::MENU_TYPE_DROPDOWN === $type,
-			'html-tooltip' => Linker::tooltip( 'p-' . $label ),
+			'is-portal' => self::MENU_TYPE_PORTAL === $type,
+			'is-tabs' => self::MENU_TYPE_TABS === $type,
+			'html-tooltip' => Linker::tooltip( $label ),
+			'html-menu-prebody' => $options['prebody'],
 		];
 
 		foreach ( $urls as $key => $item ) {
 			// Add CSS class 'collapsible' to all links EXCEPT watchstar.
 			if (
-				$key !== 'watch' && $key !== 'unwatch' &&
-				isset( $options['library-collapsible'] ) && $options['library-collapsible'] ) {
+				$key !== 'watch' && $key !== 'unwatch' ) {
 				if ( !isset( $item['class'] ) ) {
 					$item['class'] = '';
 				}
-				$item['class'] = rtrim( 'collapsible ' . $item['class'], ' ' );
+				$item['class'] = rtrim( 'nav-item ' . $item['class'], ' ' );
+			} else {
+				$item['class'] = rtrim( 'nav-item ' . $item['class'], ' ' );
 			}
-			$props['html-items'] .= $this->getSkin()->makeListItem( $key, $item, $options );
+
+			if ( !isset( $options['link-class'] ) ) {
+				$options['link-class'] = 'nav-link';
+			} else {
+				$options['link-class'] = rtrim( 'nav-link ' . $options['link-class'], ' ' );
+			}
+
+			// send $label to $options for getMsg() identify
+			$options['menu-id'] = strtolower( preg_replace( '/[^a-zA-Z0-9]/s', '', $label ) );
+			$props['html-items'] .= $this->makeListItems( $key, $item, $options );
 
 			// Check the class of the item for a `selected` class and if so, propagate the items
 			// label to the main label.
@@ -458,44 +543,92 @@ class LibraryTemplate extends BaseTemplate {
 	 * @return array
 	 */
 	private function getMenuProps() : array {
-		$contentNavigation = $this->get( 'content_navigation', [] );
-		$personalTools = $this->getPersonalTools();
 		$skin = $this->getSkin();
-
-		// For logged out users Library shows a "Not logged in message"
-		// This should be upstreamed to core, with instructions for how to hide it for skins
-		// that do not want it.
-		// For now we create a dedicated list item to avoid having to sync the API internals
-		// of makeListItem.
-		if ( !$skin->getUser()->isLoggedIn() && User::groupHasPermission( '*', 'edit' ) ) {
-			$loggedIn =
-				Html::element( 'li',
-					[ 'id' => 'pt-anonuserpage' ],
-					$this->msg( 'notloggedin' )->text()
-				);
-		} else {
-			$loggedIn = '';
-		}
+		$portals = $this->getPersonalTools();
+		$notification = [ 'notifications-alert', 'notifications-notice' ];
+		$props = [];
+		// $options = [ 'link-class' => 'dropdown-item' ];
+		$contentNavigation = $this->get( 'content_navigation', [] );
 
 		// This code doesn't belong here, it belongs in the UniversalLanguageSelector
 		// It is here to workaround the fact that it wants to be the first item in the personal menus.
-		if ( array_key_exists( 'uls', $personalTools ) ) {
+		if ( array_key_exists( 'uls', $portals ) ) {
 			$uls = $skin->makeListItem( 'uls', $personalTools[ 'uls' ] );
 			unset( $personalTools[ 'uls' ] );
 		} else {
 			$uls = '';
 		}
 
-		$ptools = $this->getMenuData( 'personal', $personalTools );
-		// Append additional link items if present.
-		$ptools['html-items'] = $uls . $loggedIn . $ptools['html-items'];
+		if ( !$skin->getUser()->isLoggedIn() ) {
+			$props = $this->getMenuData(
+				'usermenu',
+				$portals,
+				self::MENU_TYPE_TABS, [
+					'link-class' => 'btn btn-primary btn-with-icon btn-rounded',
+				]
+			);
+
+			if ( array_key_exists( 'views', $contentNavigation ) ) {
+				unset( $contentNavigation['views'] );
+			};
+		} else {
+			if ( array_key_exists( 'userpage', $portals ) ) {
+				$html = '<img src="https://ui-avatars.com/api/?length=2&size=80&rounded=true&name=' . str_replace( '.', '+', $portals['userpage']['links'][0]['text'] ) . '">';
+				$html = Html::rawElement(
+					'div', [
+						'class' => 'mw-img-user',
+					], $html 
+				);
+				$html .= Html::rawElement(
+					'h6', [], Html::rawElement(
+						'a', [
+							'href' => $portals['userpage']['links'][0]['href'],
+							'class' => [ 'nav-link' ],
+							'title' => Linker::titleAttrib( $portals['userpage']['links'][0]['single-id'] ),
+						], $portals['userpage']['links'][0]['text']
+					)
+				);
+				$html = Html::rawElement(
+					'div', [
+						'class' => 'mw-header-profile',
+					], $html 
+				);
+				$options['prebody'] = $html;
+				unset( $portals['userpage'] );
+			}
+
+			/* TODO: 
+			 *  1. add notification links - output {{{html-personal-notification}}}
+			 *  2. Watch / unWatch icon
+			 *  3. and update Logout link
+			if ( isset( $portals['logout'] ) ) {
+				$portals['logout']['links'][0]['href'] = '/logout/';
+			}
+			*/
+
+			$props = $this->getMenuData(
+				'usermenu',
+				$portals,
+				self::MENU_TYPE_DROPDOWN, [
+					'link-class' => 'dropdown-item'
+				]
+			);
+
+			$contentNavigation['views']['more'] = [
+				'text' => 'More',
+				'href' => '#',
+				'id' => 'ca-more',
+			];
+		}
 
 		return [
-			'data-personal-menu' => $ptools,
+			'data-personal-menu' => $props,
 			'data-namespace-tabs' => $this->getMenuData(
 				'namespaces',
 				$contentNavigation[ 'namespaces' ] ?? [],
-				self::MENU_TYPE_TABS
+				self::MENU_TYPE_TABS, [
+					'tag' => 'li',
+				]
 			),
 			'data-variants' => $this->getMenuData(
 				'variants',
@@ -507,7 +640,7 @@ class LibraryTemplate extends BaseTemplate {
 				'views',
 				$contentNavigation[ 'views' ] ?? [],
 				self::MENU_TYPE_TABS, [
-					'library-collapsible' => true,
+					'tag' => 'li',
 				]
 			),
 			'data-page-actions-more' => $this->getMenuData(
@@ -528,16 +661,170 @@ class LibraryTemplate extends BaseTemplate {
 			'form-id' => $config->get( 'LibraryUseSimpleSearch' ) ? 'simpleSearch' : '',
 			'html-button-search-fallback' => $this->makeSearchButton(
 				'fulltext',
-				[ 'id' => 'mw-searchButton', 'class' => 'searchButton mw-fallbackSearchButton' ]
+				[ 'id' => 'mw-searchButton', 'class' => 'searchButton mw-fallbackSearchButton d-none' ]
 			),
 			'html-button-search' => $this->makeSearchButton(
 				'go',
-				[ 'id' => 'searchButton', 'class' => 'searchButton' ]
+				[ 'id' => 'btn', 'class' => 'searchButton' ]
 			),
-			'html-input' => $this->makeSearchInput( [ 'id' => 'searchInput' ] ),
+			'html-input' => $this->makeSearchInput( [
+				'id' => 'searchInput',
+				'class' => 'form-control',
+				'placeholder' => 'Search for anything ...'
+				] ),
 			'msg-search' => $this->msg( 'search' ),
 			'page-title' => SpecialPage::getTitleFor( 'Search' )->getPrefixedDBkey(),
 		];
 		return $props;
+	}
+
+	/**
+	 * Generates a list link for a navigation, portal, sidebar ...
+	 * @param string $key - Usually a key from the list that generating this link from.
+	 * @param array $item - Contains some of a specific set of keys
+	 * @param array $options (optional) -Can be use to affect the output of a link.
+	 * 
+	 * @return string
+	 */
+	private function makeLinks( $key, $item, $options = [] ) {
+		$msgObj = $options['menu-id'] . '-' . strtolower( preg_replace( '/[^a-zA-Z0-9]/s', '', $item['msg'] ?? $item['text'] ?? $item['single-id'] ) );
+		$html =  $this->msg( $msgObj )->text() ?? $item['text'];
+
+		if ( isset( $options['text-wrapper'] ) ) {
+			$wrapper = $options['text-wrapper'];
+			if ( isset( $wrapper['tag'] ) ) {
+				$wrapper = [ $wrapper ];
+			}
+			while ( count( $wrapper ) > 0 ) {
+				$element = array_pop( $wrapper );
+				$html = Html::rawElement( $element['tag'], $element['attributes'] ?? null, $html );
+			}
+		}
+ 
+		if ( isset( $item['href'] ) || isset( $options['link-fallback'] ) ) {
+			$attrs = $item;
+			foreach ( [ 'single-id', 'text', 'msg', 'tooltiponly', 'context', 'primary',
+				'tooltip-params', 'exists' ] as $k ) {
+				unset( $attrs[$k] );
+			}
+ 
+			if ( isset( $attrs['data'] ) ) {
+				foreach ( $attrs['data'] as $key => $value ) {
+					$attrs[ 'data-' . $key ] = $value;
+				}
+				unset( $attrs[ 'data' ] );
+			}
+ 
+			if ( isset( $item['id'] ) && !isset( $item['single-id'] ) ) {
+				$item['single-id'] = $item['id'];
+			}
+ 
+			$tooltipParams = [];
+			if ( isset( $item['tooltip-params'] ) ) {
+				$tooltipParams = $item['tooltip-params'];
+			}
+ 
+			if ( isset( $item['single-id'] ) ) {
+				$tooltipOption = isset( $item['exists'] ) && $item['exists'] === false ? 'nonexisting' : null;
+ 
+				if ( isset( $item['tooltiponly'] ) && $item['tooltiponly'] ) {
+					$title = Linker::titleAttrib( $item['single-id'], $tooltipOption, $tooltipParams );
+					if ( $title !== false ) {
+						$attrs['title'] = $title;
+					}
+				} else {
+					$tip = Linker::tooltipAndAccesskeyAttribs(
+						$item['single-id'],
+						$tooltipParams,
+						$tooltipOption
+					);
+					if ( isset( $tip['title'] ) && $tip['title'] !== false ) {
+						$attrs['title'] = $tip['title'];
+					}
+					if ( isset( $tip['accesskey'] ) && $tip['accesskey'] !== false ) {
+						$attrs['accesskey'] = $tip['accesskey'];
+					}
+				}
+			}
+			if ( isset( $options['link-class'] ) ) {
+				if ( isset( $attrs['class'] ) ) {
+					$attrs['class'] .= " {$options['link-class']} {$key} {$item['text']}";
+				} else {
+					$attrs['class'] = $options['link-class'];
+				}
+			}
+			$html = Html::rawElement( isset( $attrs['href'] )
+				? 'a'
+				: $options['link-fallback'], $attrs, $html );
+		}
+ 
+		return $html;
+	}
+
+	/**
+	 * Generate a list item for a navigation, portal, sidebar ...
+	 * @param string $key - usually a key from the list that generating this link from 
+	 * @param array $item - list item data containing some of a specific set of keys. 
+	 *  The 'id', 'class' and 'itemtitle' keys will be used as attributes for the list item,
+	 *   if 'active' contains a value of true a "active" class will also be appened to class.
+	 * @param array $options (optional) - will be pass to makeLinks function
+	 * 
+	 * @return string
+	 */
+	private function makeListItems( $key, $item, $options = [] ) {
+		// In case this is still set from SkinTemplate, we don't want it to appear in
+        // the HTML output (normally removed in SkinTemplate::buildContentActionUrls())
+         unset( $item['redundant'] );
+  
+         if ( isset( $item['links'] ) ) {
+             $links = [];
+             foreach ( $item['links'] as $linkKey => $link ) {
+                 $links[] = $this->makeLinks( $linkKey, $link, $options );
+             }
+             $html = implode( ' ', $links );
+         } else {
+             $link = $item;
+             // These keys are used by makeListItem and shouldn't be passed on to the link
+             foreach ( [ 'id', 'class', 'active', 'tag', 'itemtitle' ] as $k ) {
+                 unset( $link[$k] );
+             }
+             if ( isset( $item['id'] ) && !isset( $item['single-id'] ) ) {
+                 // The id goes on the <li> not on the <a> for single links
+                 // but makeSidebarLink still needs to know what id to use when
+                 // generating tooltips and accesskeys.
+                 $link['single-id'] = $item['id'];
+             }
+             if ( isset( $link['link-class'] ) ) {
+                 // link-class should be set on the <a> itself,
+                 // so pass it in as 'class'
+                 $link['class'] = $link['link-class'];
+                 unset( $link['link-class'] );
+			 }
+
+             $html = $this->makeLinks( $key, $link, $options );
+         }
+  
+         $attrs = [];
+         foreach ( [ 'id', 'class' ] as $attr ) {
+             if ( isset( $item[$attr] ) ) {
+                 $attrs[$attr] = $item[$attr];
+             }
+         }
+         if ( isset( $item['active'] ) && $item['active'] ) {
+             if ( !isset( $attrs['class'] ) ) {
+                 $attrs['class'] = '';
+             }
+             $attrs['class'] .= ' active';
+             $attrs['class'] = trim( $attrs['class'] );
+         }
+         if ( isset( $item['itemtitle'] ) ) {
+             $attrs['title'] = $item['itemtitle'];
+		 }
+
+		 if ( !isset( $options['tag'] ) ) {
+			 return $html;
+		 } else {
+			 return Html::rawElement( $options['tag'] ?? 'li', $attrs, $html );
+		 }
 	}
 }

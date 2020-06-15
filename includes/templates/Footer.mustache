@@ -13,14 +13,10 @@
 	string|null html-userlangattributes a string of attribute HTML
 	footerRow[] array-footer-rows iterable list of footer rows
 }}
-{{{html-hook-library-before-footer}}}
 <div id="footer" class="mw-footer" role="contentinfo" {{{html-userlangattributes}}}>
-	{{#array-footer-rows}}
-	<ul id="{{id}}" {{#className}}class="{{.}}"{{/className}}>
-		{{#array-items}}
-		<li id="{{id}}">{{{html}}}</li>
-		{{/array-items}}
-	</ul>
-	{{/array-footer-rows}}
+	<div class="container">
+			{{{html-catlinks}}}
+			<span>2020 theLijia</span>
+	</div>
 	<div style="clear: both;"></div>
 </div>

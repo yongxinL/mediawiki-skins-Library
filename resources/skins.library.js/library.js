@@ -49,8 +49,4 @@ $(function(){
 		$(this).parent().toggleClass('show');
 		$(this).parent().siblings().removeClass('show');
 	});
-
-
-
-
 });

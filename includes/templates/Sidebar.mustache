@@ -1,44 +1,32 @@
 {{!
-	@typedef object emphasized-sidebar-action
 	@prop string href
 	@prop string text
 
-	string html-logo-attributes for site logo. Must be used inside tag e.g. `class="logo" lang="en-gb"`
-	MenuDefinition data-portals-first
-	MenuDefinition[] array-portals-rest
-	emphasized-sidebar-action data-emphasized-sidebar-action For displaying an emphasized action in the sidebar.
-	string msg-library-action-toggle-sidebar The label used by the sidebar button.
-	boolean sidebar-visible For users that want to see the sidebar on initial render, this should be
-	  true.
+	string msg-sitetitle
+	string html-sidebar-aside
+
+	MenuDefinition[] array-sidebar-body
 }}
 
-<input
-		type="checkbox"
-		id="mw-sidebar-checkbox"
-		class="mw-checkbox-hack-checkbox"
-		role="button"
-		{{#sidebar-visible}}checked{{/sidebar-visible}}
-		aria-labelledby="mw-sidebar-button"
-		aria-controls="mw-panel">
-<label
-	id="mw-sidebar-button"
-	class="
-		mw-checkbox-hack-button
-		mw-ui-icon
-		mw-ui-icon-element
-		{{#sidebar-visible}}mw-ui-icon-wikimedia-collapseHorizontal-base20{{/sidebar-visible}}
-		{{^sidebar-visible}}mw-ui-icon-wikimedia-menu-base20{{/sidebar-visible}}
-	"
-	for="mw-sidebar-checkbox"
-	data-event-name="ui.sidebar">
-	{{msg-library-action-toggle-sidebar}}
-</label>
-<div id="mw-panel" class="mw-sidebar mw-checkbox-hack-target">
-	{{#data-portals-first}}{{>Menu}}{{/data-portals-first}}
-	{{#data-emphasized-sidebar-action}}
-	<div class="mw-sidebar-action">
-		<a class="mw-sidebar-action-link" title="{{title}}" href="{{href}}">{{text}}</a>
+<div class="mw-sidebar">
+	<a href="{{{main-page-href}}}" class="mw-sidebar-logo"><i class="fas fa-university"></i></a>
+	<nav class="nav">
+		{{{html-sidebar-aside}}}
+	</nav>
+	<div class="mw-sidebar-bottom">
+		<a href="/wiki/Help:Contents" class="mw-sidebar-help"><i class="far fa-lightbulb"></i></a>
 	</div>
-	{{/data-emphasized-sidebar-action}}
-	{{#array-portals-rest}}{{>Menu}}{{/array-portals-rest}}
+</div>
+
+<div class="mw-sidebar-aside">
+	<div class="mw-sidebar-header">
+		<a href="{{{main-page-href}}}" class="mw-logo">{{{msg-sitetitle}}}</a>
+        <a href="" class="mw-sidebar-toggle-menu">
+          <i class="fas fa-arrow-left"></i>
+          <i class="fas fa-times"></i>
+        </a>
+	</div>
+	<div class="mw-sidebar-body">
+		{{#array-sidebar-body}}{{>Menu}}{{/array-sidebar-body}}
+	</div>
 </div>

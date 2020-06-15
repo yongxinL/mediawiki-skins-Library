@@ -62,10 +62,6 @@ class SkinLibrary extends SkinTemplate {
 		$out->addMeta( 'HandheldFriendly', 'true' );
 		$out->addMeta( 'apple-mobile-web-app-capable', 'YES' );
 
-		if ( $this->getConfig()->get( 'LibraryResponsive' ) ) {
-			$this->enableResponsiveMode();
-		}
-
 		// Load custom/vendor styles
 		$out->addModuleStyles( 'skins.library.vendor.styles' );
 
@@ -81,9 +77,9 @@ class SkinLibrary extends SkinTemplate {
 	 * @param array &$bodyAttrs
 	 */
 	public function addToBodyAttributes( $out, &$bodyAttrs ) {
-		if ( $this->isLegacy() ) {
-			$bodyAttrs['class'] .= ' skin-library-legacy';
-		}
+
+		// Load custom styles into body tag
+		$bodyAttrs['class'] .= ' mw-body mw-light';
 	}
 
 	/**
@@ -93,16 +89,11 @@ class SkinLibrary extends SkinTemplate {
 	public function getDefaultModules() {
 		$modules = parent::getDefaultModules();
 
-		if ( $this->isLegacy() ) {
-			$modules['styles']['skin'][] = 'skins.library.styles.legacy';
-			$modules[Constants::SKIN_NAME] = 'skins.library.legacy.js';
-		} else {
-			$modules['styles'] = array_merge(
-				$modules['styles'],
-				[ 'skins.library.styles', 'mediawiki.ui.icon', 'skins.library.icons' ]
-			);
-			$modules[Constants::SKIN_NAME][] = 'skins.library.js';
-		}
+		$modules['styles'] = array_merge(
+			$modules['styles'],
+			[ 'skins.library.styles', 'mediawiki.ui.icon' ]
+		);
+		$modules[Constants::SKIN_NAME][] = 'skins.library.js';
 
 		return $modules;
 	}

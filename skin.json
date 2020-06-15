@@ -46,42 +46,16 @@
 				"resources/vendor/fontawesome/css/all.min.css"
 			]
 		},
-		"skins.library.styles.legacy": {
-			"class": "ResourceLoaderSkinModule",
-			"features": [ "elements", "content", "interface", "logo", "legacy" ],
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"styles": [ "resources/skins.library.styles/skin-legacy.less" ]
-		},
 		"skins.library.styles": {
 			"class": "ResourceLoaderSkinModule",
-			"features": [ "elements", "content", "interface", "legacy" ],
+			"features": [ "elements", "content", "interface" ],
 			"targets": [
 				"desktop",
 				"mobile"
 			],
 			"styles": [
-				"resources/skins.library.styles/library.less",
-				"resources/skins.library.styles/skin.less"
+				"resources/skins.library.styles/library.css"
 			]
-		},
-		"skins.library.icons": {
-			"class": "ResourceLoaderImageModule",
-			"selector": ".mw-ui-icon-wikimedia-{name}-base20:before",
-			"defaultColor": "#54595d",
-			"images": {
-				"menu": "resources/skins.library.icons/menu.svg",
-				"collapseHorizontal": "resources/skins.library.icons/collapseHorizontal.svg"
-			}
-		},
-		"skins.library.styles.responsive": {
-			"targets": [
-				"desktop",
-				"mobile"
-			],
-			"styles": [ "resources/skins.library.styles.responsive.less" ]
 		},
 		"skins.library.vendor.js": {
 			"packageFiles": [
@@ -90,24 +64,11 @@
 		},
 		"skins.library.js": {
 			"packageFiles": [
-				"resources/skins.library.js/library.js",
-				"resources/skins.library.js/skin.js",
-				"resources/skins.library.legacy.js/collapsibleTabs.js",
-				"resources/skins.library.legacy.js/library.js"
+				"resources/skins.library.js/library.js"
 			],
 			"dependencies": [
 				"mediawiki.util",
 				"mediawiki.page.ready"
-			]
-		},
-		"skins.library.legacy.js": {
-			"packageFiles": [
-				"resources/skins.library.legacy.js/skin-legacy.js",
-				"resources/skins.library.legacy.js/collapsibleTabs.js",
-				"resources/skins.library.legacy.js/library.js"
-			],
-			"dependencies": [
-				"mediawiki.util"
 			]
 		}
 	},
@@ -156,15 +117,15 @@
 			"description": "@var boolean Show skin-specific user preferences on the Special:Preferences appearance tab when true and hide them otherwise."
 		},
 		"LibraryDefaultSkinVersion": {
-			"value": "1",
+			"value": "2",
 			"description": "@var string:['2'|'1'] The version ('2' for latest, '1' for legacy) of the Library skin to use for anonymous users and as a fallback. The value is _not_ persisted."
 		},
 		"LibraryDefaultSkinVersionForExistingAccounts": {
-			"value": "1",
+			"value": "2",
 			"description": "@var string:['2'|'1'] The version ('2' for latest, '1' for legacy) of the Library skin to use when an existing user has not specified a preference. This configuration is not used for new accounts (see LibraryDefaultSkinVersionForNewAccounts) and is impermanent. In the future, this field may contains versions such as \"beta\" which when specified and the BetaFeatures extension is installed, and the user is enrolled, the latest version is used otherwise legacy. The value is _not_ persisted."
 		},
 		"LibraryDefaultSkinVersionForNewAccounts": {
-			"value": "1",
+			"value": "2",
 			"description": "@var string:['2'|'1'] The version ('2' for latest, '1' for legacy) of the Library skin to **set** for newly created user accounts. **The value is persisted as a user preference.** This configuration is not used for preexisting accounts (see LibraryDefaultSkinVersionForExistingAccounts) and only ever executed once at new account creation time."
 		}
 	},

@@ -1,0 +1,26 @@
+{{!
+	@prop string href
+	@prop string text
+
+	string html-topbar-alert
+	string html-topbar-notice
+	string html-topbar-login
+
+	MenuDefinition[] array-topbar-usermenu
+}}
+
+<div class="mw-header">
+	<div class="container-fluid">
+		<div class="mw-header-left">
+			<a href="" id="mw-sidebarShow" class="mw-header-menu-icon"><span></span></a>
+		</div>
+		<div class="mw-header-center">
+			{{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
+		</div>
+		<div class="mw-header-right">
+			{{{html-topbar-notification}}}
+			{{#array-topbar-usermenu}}{{>Menu}}{{/array-topbar-usermenu}}
+		</div>
+	</div>
+	
+</div>

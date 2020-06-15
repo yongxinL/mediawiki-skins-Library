@@ -3,20 +3,23 @@
 }}
 <div id="{{id}}" {{#class}}class="{{.}}"{{/class}} aria-labelledby="{{label-id}}" {{{html-tooltip}}}
 	 {{{html-userlangattributes}}}>
-	{{#is-dropdown}}
-	<input type="checkbox" class="libraryMenuCheckbox library-menu-checkbox" aria-labelledby="{{label-id}}" />
-	{{/is-dropdown}}
-	<h3 id="{{label-id}}">
-		<span>{{label}}</span>
-	</h3>
-	{{! `body` class for backwards compatibility but let editors know not to use
-	 it via HTML comment below: }}
-	<!-- Please do not use the .body class, it is deprecated. -->
-	<div class="body library-menu-content">
-		<!-- Please do not use the .menu class, it is deprecated. -->
+	{{#is-portal}}
+		<h6 id="{{label-id}}" class="mw-sidebar-title">{{label}}</h6>
+		<small class="mw-sidebar-text">{{{label-msg}}}</small>
 		<ul class="{{list-classes}}">{{{html-items}}}</ul>
-		{{{html-after-portal}}}
+	{{/is-portal}}
+	{{#is-tabs}}
+	{{{html-items}}}
+	{{/is-tabs}}
+
+	{{#is-dropdown}}
+	<a href="" class="mw-img-user"><i class="far fa-user"></i></a>
+	<div class="dropdown-menu">
+		<div class="mw-dropdown-header d-sm-none">
+			<a href="" class="mw-header-arrow"><i class="fas fa-arrow-left"></i></a>
+		</div>
+		{{{html-menu-prebody}}}
+		{{{html-items}}}
 	</div>
+	{{/is-dropdown}}
 </div>
-{{! Note: html-hook-library-after-toolbox is deprecated. }}
-{{{html-hook-library-after-toolbox}}}
