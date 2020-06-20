@@ -38,50 +38,57 @@
 {{{html-headelement}}}
 {{#data-sidebar}}{{>Sidebar}}{{/data-sidebar}}
 
-{{! <div id="mw-page-base" class="mw-header-placeholder noprint"></div> }}
+{{! <div id="mw-page-base" class="mw-topbar-placeholder noprint"></div> }}
 
 <div class="mw-body mw-content" role="main">
-	<div class="mw-header">
+	<div class="mw-topbar">
 		<div class="container-fluid">
-			<div class="mw-header-left">
-				<a href="" id="mw-sidebarShow" class="mw-header-menu-icon"><span></span></a>
+			<div class="mw-topbar-left">
+				<a href="" id="mw-sidebarShow" class="mw-topbar-menu-icon"><span></span></a>
 			</div>
-			<div class="mw-header-center">
+			<div class="mw-topbar-center">
 				{{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
 			</div>
-			<div class="mw-header-right">
+			<div class="mw-topbar-right">
 				{{{html-personal-notification}}}
 				{{#data-personal-menu}}{{>Menu}}{{/data-personal-menu}}
 			</div>
 		</div>
-
 	</div>
 
-	<div class="container d-block">
-		<div class="mw-content-header">
+	<div class="mw-content-header">
+		<div class="container">
 			<div class="mw-content-header-left">
 				{{!html-indicators}}
 				<div id="contentSub"{{{html-userlangattributes}}}>{{{html-subtitle}}}</div>
-				<h2 id="firstHeading" class="mw-content-title" lang="{{page-langcode}}">{{{html-title}}}</h2>
+				<h3 id="firstHeading" class="mw-content-title" lang="{{page-langcode}}">{{{html-title}}}</h3>
 				{{#page-isarticle}}<div id="siteSub" class="noprint">{{msg-tagline}}</div>{{/page-isarticle}}
-				
 			</div>
+			{{#page-isarticle}}
 			<div class="mw-content-header-right">
+				{{#msg-lastedit}}
 				<div class="media">
 					<div class="media-body">
 						<label>Last Edit</label>
 						<h6>{{{msg-lastedit}}}</h6>
 					</div>
 				</div>
+				{{/msg-lastedit}}
+				{{#msg-maincategory}}
 				<div class="media">
 					<div class="media-body">
 						<label>Category</label>
 						<h6>{{{msg-maincategory}}}</h6>
 					</div>
 				</div>
+				{{/msg-maincategory}}
 			</div>
+			{{/page-isarticle}}
 		</div>
-		<div class="mw-content-nav">
+	</div>
+
+	<div class="mw-content-nav">
+		<div class="container">
 			{{#data-namespace-tabs}}{{>Menu}}{{/data-namespace-tabs}}
 			{{#data-page-actions}}{{>Menu}}{{/data-page-actions}}
 			{{! TODO: add action dropdown menu}}
@@ -94,7 +101,9 @@
 
 	<div id="content" class="mw-content-body">
 		<div class="container d-block">
+			<!-- prebody content -->
 			{{{html-prebodyhtml}}}
+			<!-- body content -->
 			{{{html-bodycontent}}}
 			{{#html-printfooter}}
 			<div class="printfooter">{{{html-printfooter}}}</div>
@@ -106,8 +115,5 @@
 	</div>
 	{{#data-footer}}{{>Footer}}{{/data-footer}}
 	{{{html-printtail}}}
+	<div class="to-top"></div>
 </div>
-
-
-
-
