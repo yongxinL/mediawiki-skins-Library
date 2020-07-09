@@ -64,6 +64,7 @@
 	"library-views-editsource": "<i class=\"fas fa-code\"></i> Edit source",
 	"library-views-watch": "<i class=\"far fa-star\"></i>",
 	"library-views-unwatch": "<i class=\"fas fa-star\"></i>",
+	"library-views-more": "<i class=\"fas fa-th-list\"></i>",
 	"prefs-library-enable-library-1-label": "Use Legacy Library",
 	"prefs-library-enable-library-1-help": "",
 	"library-opt-out": "Switch to old look",
