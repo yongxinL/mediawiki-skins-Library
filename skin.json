@@ -43,7 +43,8 @@
 			"class": "ResourceLoaderSkinModule",
 			"styles": [
 				"resources/vendor/bootstrap/css/bootstrap.min.css",
-				"resources/vendor/fontawesome/css/all.min.css"
+				"resources/vendor/fontawesome/css/all.min.css",
+				"resources/vendor/webfonts/css/webfonts.css"
 			]
 		},
 		"skins.library.styles": {
