@@ -585,7 +585,7 @@ class LibraryTemplate extends BaseTemplate {
 				$html = '<img src="https://ui-avatars.com/api/?length=2&size=80&rounded=true&name=' . str_replace( '.', '+', $portals['userpage']['links'][0]['text'] ) . '">';
 				$html = Html::rawElement(
 					'div', [
-						'class' => 'mw-img-user',
+						'class' => '',
 					], $html 
 				);
 				$html .= Html::rawElement(

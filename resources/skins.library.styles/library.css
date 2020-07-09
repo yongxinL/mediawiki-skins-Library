@@ -13,29 +13,16 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
 @import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800");
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,500,600,700,800");
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 
 /* ######### PAGE LAYOUT STYLES ######### */
 /* ### 6.1 Global ### */
 
-html {
-	font-size: 13px;
-}
-
-@media (min-width: 768px) {
-	html {
-		font-size: 14px;
-	}
-}
-
-@media (min-width: 1200px) {
-	html {
-		font-size: 16px;
-	}
-}
-
 body.mediawiki {
-	font-family: "Roboto", sans-serif;
-	color: #5d5d66;
+	font-family: Muli, sans-serif;
+	font-size: 16px;
+	line-height: 32px;
+	font-weight: 600;
 }
 
 .mw-body {
@@ -86,45 +73,67 @@ body.mediawiki {
 /* -- typography -- */
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-	color: #272727;
-	font-weight: 400;
+	color: #333333;
+	letter-spacing: 0;
+	-webkit-font-smoothing: antialiased;
+	font-weight: 600;
 }
 
-h1, .h1 {
-	font-size: 1.75rem;
+body h1 {
+    font-family: Nunito;
+    text-transform: capitalize;
+    letter-spacing: 0px;
+    font-size: 60px;
+    line-height: 70px;
+    font-weight: 700;
 }
 
-h2, .h2 {
-	font-size: 1.5rem;
+body h2 {
+    font-family: Nunito;
+    text-transform: none;
+    letter-spacing: 0px;
+    font-size: 48px;
+    line-height: 58px;
+    font-weight: 700;
 }
 
-h3, .h3 {
-	font-size: 1.3125rem;
-	line-height: 1.25;
+body h3 {
+    font-family: Nunito;
+    text-transform: none;
+    letter-spacing: 0px;
+    font-size: 26px;
+    line-height: 36px;
+    font-weight: 400;
 }
 
-h4, .h4 {
-	font-size: 1.25rem;
-	line-height: 1.4;
+body h4 {
+    font-family: Nunito;
+    text-transform: none;
+    letter-spacing: 0px;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 700;
 }
 
-h5, .h5 {
-	font-size: 1.1875rem;
-	line-height: 1.35;
+body h5 {
+	font-family: Roboto;
+    text-transform: none;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
 }
 
-h6, .h6 {
-	font-size: 1.125rem;
-	line-height: 1.54;
-}
-
-h1, h2, h3, h4, h5, h6, p, button, dl, blockquote, figure, label {
-	padding: 0;
-	margin: 0;
+body h6 {
+	font-family: Nunito;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 400;
 }
 
 * + p {
-	margin-top: 1.25rem;
+	margin-top: 1rem;
 }
 
 * + h1,
@@ -139,7 +148,7 @@ h2 + h3,
 h2 + p,
 h3 + p,
 h4 + p {
-	margin-top: 1.25rem;
+	margin-top: 1rem;
 }
 
 h6 + h1 {
@@ -167,111 +176,87 @@ dl + dl {
 	margin-top: .5rem;
 }
 
-@media (min-width: 768px) {
-	h1, .h1 {
-		font-size: 2rem;
+@media only screen and (max-width: 768px) {
+	body h1 {
+		font-size: 39px;
+		line-height: 48px;
 	}
-	h2, .h2 {
-		font-size: 1.625rem;
+	body h2 {
+		font-size: 36px;
+		line-height: 42px;
 	}
-	h3, .h3 {
-		font-size: 1.5rem;
+	body h3 {
+		font-size: 21px;
+		line-height: 28px;
 	}
-	h4, .h4 {
-		font-size: 1.3125rem;
+	body h4 {
+		font-size: 18px;
+		line-height: 24px;
 	}
-	h6 + h1 {
-		margin-top: 3.75rem;
+	body h5 {
+		font-size: 16px;
+		line-height: 22px;
 	}
-	h1 + img {
-		margin-top: 2.8125rem;
+	body h6 {
+		font-size: 16px;
+		line-height: 21px;
+	}
+	#toc {
+		display: none;
 	}
 }
 
-@media (min-width: 992px) {
-	h1, .h1 {
-		font-size: 2.875rem;
+@media only screen and (max-width: 992px) {
+	body h1 {
+		font-size: 42px;
+		line-height: 52px;
 	}
-	h2, .h2 {
-		font-size: 2.25rem;
+	body h2 {
+		font-size: 39px;
+		line-height: 46px;
 	}
-	h3, .h3 {
-		font-size: 1.875rem;
+	body h3 {
+		font-size: 21px;
+		line-height: 28px;
 	}
-	h4, .h4 {
-		font-size: 1.625rem;
+	body h4 {
+		font-size: 20px;
+		line-height: 26px;
 	}
-	h5, .h5 {
-		font-size: 1.5rem;
-		line-height: 1.54;
+	body h5 {
+		font-size: 16px;
+		line-height: 22px;
 	}
-	h6, .h6 {
-		font-size: 1.3125rem;
+	body h6 {
+		font-size: 18px;
+		line-height: 26px;
 	}
-	h1 + p {
-		margin-top: 2rem;
-	}
-	h2 + p {
-		margin-top: 2.25rem;
-	}
-	h4 + p {
-		margin-top: 2.5rem;
-	}
-	h5 + p {
-		margin-top: 1.875rem;
-	}
-	h6 + p {
-		margin-top: 1.875rem;
-	}
-	h1 + h5 {
-		margin-top: 2.1875rem;
-	}
-	h2 + h4 {
-		margin-top: 2.125rem;
-	}
-	h6 + h2 {
-		margin-top: 1.5625rem;
-	}
-	h1 + img {
-		margin-top: 3.75rem;
-	}
-	p + h1 {
-		margin-top: 2.5rem;
-	}
-
 }
 
-@media (min-width: 1600px) {
-	h1, .h1 {
-		font-size: 4.125rem;
+@media only screen and (max-width: 1200px) {
+	body h1 {
+		font-size: 45px;
+		line-height: 56px;
 	}
-	h2, .h2 {
-		font-size: 2.875rem;
+	body h2 {
+		font-size: 41px;
+		line-height: 50px;
 	}
-	h3, .h3 {
-		font-size: 2.25rem;
+	body h3 {
+		font-size: 22px;
+		line-height: 30px;
 	}
-	h4, .h4 {
-		font-size: 1.875rem;
+	body h4 {
+		font-size: 20px;
+		line-height: 26px;
 	}
-	* + h1,
-	* + h2 {
-		margin-top: 1.875rem;
+	body h5 {
+		font-size: 16px;
+		line-height: 22px;
 	}
-	* + h3 {
-		margin-top: 1.5625rem;
-	}
-	h3 + p {
-		margin-top: 2.5rem;
-	}
-	h6 + h1 {
-		margin-top: 5.3125rem;
-	}
-	h1 + img {
-		margin-top: 4.6875rem;
-	}
-	p + h1 {
-		margin-top: 3.75rem;
+	body h6 {
+		font-size: 18px;
+		line-height: 26px;
 	}
 }
 
@@ -289,6 +274,7 @@ body.ns-special .mw-content-header-right {
 }
 
 .mw-content-header-left #contentSub {
+	font-family: Nunito;
 	font-size: 0.875rem;
 	margin: 0 10px;
 }
@@ -346,6 +332,14 @@ body.ns-special .mw-content-header-right {
     font-weight: 400;
 }
 
+#mw-content-text {
+	font-weight: 500;
+}
+
+#mw-content-text p {
+	margin-bottom: 0;
+}
+
 #mw-content-text span.mw-editsection {
 	font-size: 1rem;
 	margin-left: 10px;
@@ -385,6 +379,7 @@ body.ns-special .mw-content-header-right {
 #mw-content-text ol {
 	padding: 0;
 	list-style: none;
+	margin-bottom: 1rem;
 }
 
 #mw-content-text ul li:before {
@@ -408,6 +403,11 @@ body.ns-special .mw-content-header-right {
     margin-right: .8em;
 }
 
+#mw-content-text ul ul,
+#mw-content-text ol ol {
+	margin-left: 2rem;
+}
+
 #toc ul {
 	margin: 0.3em 0;
 }
@@ -429,11 +429,10 @@ body.ns-special .mw-content-header-right {
 	height: 50px;
 	border-radius: 0.375rem;
 	box-shadow: 10px 15px 18px rgba(23, 23, 36, 0.15);
-	background: #31c77f;
+	background: #7987a1;
 	color: #fff;
 	will-change: transform;
 	transition: .2s;
-	
 }
 
 .to-top:before {
@@ -447,6 +446,12 @@ body.ns-special .mw-content-header-right {
 	opacity: 1;
 	transition: all 0.2s, transform 0.2s cubic-bezier(0.5, 0, 1, 2);
 	z-index: 1000;
+}
+
+.to-top.active, .to-top:hover {
+	background: #5b47fb;
+    color: #fff;
+    cursor: pointer;
 }
 
 .mwe-popups {

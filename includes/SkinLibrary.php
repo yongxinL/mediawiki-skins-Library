@@ -43,8 +43,6 @@ class SkinLibrary extends SkinTemplate {
 	public function enableResponsiveMode() {
 		if ( !$this->responsiveMode ) {
 			$out = $this->getOutput();
-			$out->addMeta( 'viewport', 'width=device-width, initial-scale=1' );
-			$out->addModuleStyles( 'skins.library.styles.responsive' );
 			$this->responsiveMode = true;
 		}
 	}
@@ -57,10 +55,9 @@ class SkinLibrary extends SkinTemplate {
 		parent::initPage( $out );
 
 		// Load metadata
+		$out->addMeta( 'viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no' );
 		$out->addMeta( 'description', 'theLijia Library');
 		$out->addMeta( 'author', 'Lijia-YongxinL');
-		$out->addMeta( 'HandheldFriendly', 'true' );
-		$out->addMeta( 'apple-mobile-web-app-capable', 'YES' );
 
 		// Load custom/vendor styles
 		$out->addModuleStyles( 'skins.library.vendor.styles' );
