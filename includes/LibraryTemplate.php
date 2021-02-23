@@ -117,29 +117,29 @@ class LibraryTemplate extends BaseTemplate {
 					'anonymous' => false,
 				],
 				'3' => [
-					'text' => 'Daily',
-					'href' => '/category/family/daily/',
+					'text' => 'Family',
+					'href' => '/category/family/',
 				],
 				'4' => [
-					'text' => 'Memories',
-					'href' => '/category/family/memories/',
+					'text' => 'Life',
+					'href' => '/category/life/',
 				],
 				'5' => [
 					'text' => 'Blogging',
-					'href' => '/category/family/blog/',
+					'href' => '/category/life/blog/',
 				],
 				'6' => [
 					'text' => 'Photography',
-					'href' => '/category/family/photography/',
+					'href' => '/category/life/photo/',
 	
 				],
 				'7' => [
-					'text' => 'Day Out',
-					'href' => '/category/family/dayout/',
+					'text' => 'Travel',
+					'href' => '/category/travel/',
 				],
 				'8' => [
 					'text' => 'Holiday',
-					'href' => '/category/family/holiday/',
+					'href' => '/category/travel/holiday/',
 				],
 				'9' => [
 					'text' => 'Library',
@@ -147,7 +147,7 @@ class LibraryTemplate extends BaseTemplate {
 				],
 				'10' => [
 					'text' => 'Members',
-					'href' => '/category/members/',
+					'href' => '/members/',
 				],
 				'11' => [
 					'text' => 'Log out',
@@ -230,15 +230,15 @@ class LibraryTemplate extends BaseTemplate {
 			// From Skin::getNewtalks(). Always returns string, cast to null if empty.
 			'html-newtalk' => $skin->getNewtalks() ?: null,
 
-			'msg-library-jumptonavigation' => $this->msg( 'library-jumptonavigation' )->text(),
-			'msg-library-jumptosearch' => $this->msg( 'library-jumptosearch' )->text(),
+			// 'msg-library-jumptonavigation' => $this->msg( 'library-jumptonavigation' )->text(),
+			// 'msg-library-jumptosearch' => $this->msg( 'library-jumptosearch' )->text(),
 
 			// Result of OutputPage::addHTML calls
 			'html-bodycontent' => $this->get( 'bodycontent' ),
 
 			'html-printfooter' => $skin->printSource(),
-			'msg-lastedit' => preg_replace('/(.*)on(.*)\,(.*)/', '$2', $this->get( 'lastmod' ) ),
-			'msg-maincategory' => preg_replace('/(.*?)<li>(.*?)<\/li>(.*)/', '$2', $skin->getCategoryLinks() ),
+			'msg-lastedit' => preg_replace('/(.*)on(.*)\,(.*)/', '$2', $this->get( 'lastmod' ) ) ?: null,
+			'msg-maincategory' => preg_replace('/(.*?)<li>(.*?)<\/li>(.*)/', '$2', $skin->getCategoryLinks() ) ?: null,
 			'html-catlinks' => $skin->getCategories(),
 			'html-dataAfterContent' => $this->get( 'dataAfterContent', '' ),
 			// From MWDebug::getHTMLDebugLog (when $wgShowDebug is enabled)
@@ -250,11 +250,11 @@ class LibraryTemplate extends BaseTemplate {
 				'html-hook-library-before-footer' => $htmlHookLibraryBeforeFooter,
 				'array-footer-rows' => $this->getTemplateFooterRows(),
 			],
-			'html-navigation-heading' => $this->msg( 'navigation-heading' ),
+			// 'html-navigation-heading' => $this->msg( 'navigation-heading' ),
 			'data-search-box' => $this->buildSearchProps(),
 
 			// Header
-			'data-logos' => ResourceLoaderSkinModule::getAvailableLogos( $this->getConfig() ),
+			// 'data-logos' => ResourceLoaderSkinModule::getAvailableLogos( $this->getConfig() ),
 			'msg-sitetitle' => $this->msg( 'sitetitle' )->text(),
 			'msg-sitesubtitle' => $this->msg( 'sitesubtitle' )->text(),
 			'main-page-href' => $mainPageHref,
@@ -264,6 +264,7 @@ class LibraryTemplate extends BaseTemplate {
 
 		// The following logic is unqiue to Library (not used by legacy Library) and
 		// is planned to be moved in a follow-up patch.
+		/*
 		if ( !$this->isLegacy && $skin->getUser()->isLoggedIn() ) {
 			$commonSkinData['data-sidebar']['data-emphasized-sidebar-action'] = [
 				'href' => SpecialPage::getTitleFor(
@@ -275,7 +276,7 @@ class LibraryTemplate extends BaseTemplate {
 				'title' => $this->msg( 'library-opt-out-tooltip' )->text(),
 			];
 		}
-
+		*/
 		return $commonSkinData;
 	}
 
@@ -496,7 +497,7 @@ class LibraryTemplate extends BaseTemplate {
 			'is-portal' => self::MENU_TYPE_PORTAL === $type,
 			'is-tabs' => self::MENU_TYPE_TABS === $type,
 			'html-tooltip' => Linker::tooltip( $label ),
-			'html-menu-prebody' => $options['prebody'],
+			'html-menu-prebody' => $options['html-prebody'] ?: null,
 		];
 
 		foreach ( $urls as $key => $item ) {
@@ -564,6 +565,7 @@ class LibraryTemplate extends BaseTemplate {
 				'usermenu',
 				$portals,
 				self::MENU_TYPE_TABS, [
+					'tag' => 'li',
 					'link-class' => 'btn btn-primary btn-with-icon btn-rounded',
 				]
 			);
@@ -571,12 +573,19 @@ class LibraryTemplate extends BaseTemplate {
 			if ( array_key_exists( 'views', $contentNavigation ) ) {
 				unset( $contentNavigation['views'] );
 			};
+
+			foreach ( $notification as $k ) {
+				if ( array_key_exists( $k, $portals ) ) {
+					unset( $portals[$k] );
+				}
+			}
+
 		} else {
 			if ( array_key_exists( 'userpage', $portals ) ) {
 				$html = '<img src="https://ui-avatars.com/api/?length=2&size=80&rounded=true&name=' . str_replace( '.', '+', $portals['userpage']['links'][0]['text'] ) . '">';
 				$html = Html::rawElement(
 					'div', [
-						'class' => 'mw-img-user',
+						'class' => '',
 					], $html 
 				);
 				$html .= Html::rawElement(
@@ -590,10 +599,9 @@ class LibraryTemplate extends BaseTemplate {
 				);
 				$html = Html::rawElement(
 					'div', [
-						'class' => 'mw-header-profile',
+						'class' => 'mw-topbar-profile',
 					], $html 
 				);
-				$options['prebody'] = $html;
 				unset( $portals['userpage'] );
 			}
 
@@ -610,7 +618,8 @@ class LibraryTemplate extends BaseTemplate {
 				'usermenu',
 				$portals,
 				self::MENU_TYPE_DROPDOWN, [
-					'link-class' => 'dropdown-item'
+					'link-class' => 'dropdown-item',
+					'html-prebody' => $html,
 				]
 			);
 

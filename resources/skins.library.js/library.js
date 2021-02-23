@@ -1,52 +1,53 @@
 $(function(){
-  'use strict'
-
-	if($('.mw-sidebar .nav-link.active').length) {
-		var targ = $('.mw-sidebar .nav-link.active').attr('href');
+	'use strict';
+	// Mobile First support so active menu in navbar
+	// has submenu displayed by default but not in desktop
+	// so the code below will hide the active menu if it's desktop
+	if($('.sidebar-icon .nav-link.active').length) {
+		var targ = $('.sidebar-icon .nav-link.active').attr('href');
+		console.log(targ);
+	
 		$(targ).addClass('show');
-
-		if(window.matchMedia('(min-width: 1200px)').matches) {
-			$('.mw-sidebar-aside').addClass('show');
+		if (window.matchMedia('(min-width: 1200px)').matches ) {
+			$('.sidebar-aside').addClass('show');
 		}
-
-		if(window.matchMedia('(min-width: 992px)').matches && window.matchMedia('(max-width: 1199px)').matches) {
-			$('.mw-sidebar .nav-link.active').removeClass('active');
-		}
+		if (window.matchMedia('(min-width: 992px)').matches && window.matchMedia('(max-width: 1199px)').matches ) {
+			$('.sidebar-icon').removeClass('active');
+		} 
 	}
 
-	$('.mw-sidebar .nav-link').on('click', function(e){
+	// showing submenu in aside while hiding previous open submenu
+	$('.sidebar-icon .nav-link').on('click', function(e){
 		e.preventDefault();
 
 		$(this).addClass('active');
 		$(this).siblings().removeClass('active');
 
-		$('.mw-sidebar-aside').addClass('show');
+		$('.sidebar-aside').addClass('show');
 
 		var targ = $(this).attr('href');
+		console.log(targ);
+
 		$(targ).addClass('show');
 		$(targ).siblings().removeClass('show');
 	});
 
-	$('.mw-sidebar-toggle-menu').on('click', function(e){
+	// showing submenu when clicking on toggle-menu
+	$('.sidebar-toggle-menu').on('click', function(e){
 		e.preventDefault();
 
 		if(window.matchMedia('(min-width: 992px)').matches) {
-			$('.mw-sidebar .nav-link.active').removeClass('active');
-			$('.mw-sidebar-aside').removeClass('show');
+		  $('.sidebar-icon .nav-link.active').removeClass('active');
+		  $('.sidebar-aside').removeClass('show');
 		} else {
-			$('body').removeClass('mw-sidebar-show');
+		  $('body').removeClass('sidebar-show');
 		}
-	})
+	  })
 
-	$('#mw-sidebarShow').on('click', function(e){
+	// this will show sidebar in left for mobile only
+	$('#sidebarshow').on('click', function(e){
 		e.preventDefault();
-		$('body').toggleClass('mw-sidebar-show');
+		$('body').toggleClass('sidebar-show');
 	});
 
-	// Shows header dropdown while hiding others
-	$('.mw-header .dropdown > a').on('click', function(e) {
-		e.preventDefault();
-		$(this).parent().toggleClass('show');
-		$(this).parent().siblings().removeClass('show');
-	});
 });

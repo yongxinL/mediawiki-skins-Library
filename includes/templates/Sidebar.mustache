@@ -8,25 +8,61 @@
 	MenuDefinition[] array-sidebar-body
 }}
 
-<div class="mw-sidebar">
-	<a href="{{{main-page-href}}}" class="mw-sidebar-logo"><i class="fas fa-university"></i></a>
+<div class="sidebar-icon">
+	<a href="{{{link-mainpage}}}" class="sidebar-icon-logo"><i class="fab fa-wpexplorer"></i></a>
 	<nav class="nav">
 		{{{html-sidebar-aside}}}
+		<a href="#asideDashboard" class="nav-link"><i class="fab fa-audible"></i></a>
+		<a href="#asideAppsPages" class="nav-link"><i class="fas fa-anchor"></i></a>
+		<a href="#asideUIElements" class="nav-link"><i class="fas fa-balance-scale"></i></a>
 	</nav>
-	<div class="mw-sidebar-bottom">
-		<a href="/wiki/Help:Contents" class="mw-sidebar-help"><i class="far fa-lightbulb"></i></a>
-	</div>
-</div>
+    <div class="sidebar-bottom">
+        <a href="/wiki/Help:Contents" class="nav-link"><i class="fas fa-user-cog"></i></a>
+        <a href="/wiki/Help:Contents" class="nav-link"><i class="far fa-question-circle"></i></a>
+    </div>
+</div>	{{!-- sidebar-icon --}}
 
-<div class="mw-sidebar-aside">
-	<div class="mw-sidebar-header">
-		<a href="{{{main-page-href}}}" class="mw-logo">{{{msg-sitetitle}}}</a>
-        <a href="" class="mw-sidebar-toggle-menu">
+<div class="sidebar-aside">
+	<div class="sidebar-aside-header">
+		<a href="{{{link-mainpage}}}" class="sidebar-aside-logo">{{{msg-sitetitle}}}</a>
+        <a href="" class="sidebar-toggle-menu">
           <i class="fas fa-arrow-left"></i>
           <i class="fas fa-times"></i>
         </a>
 	</div>
-	<div class="mw-sidebar-body">
+	<div class="sidebar-aside-body">
 		{{#array-sidebar-body}}{{>Menu}}{{/array-sidebar-body}}
+		<div id="asideDashboard" class="sidebar-aside-pane">
+			<h6 class="sidebar-aside-title">Dashboard</h6>
+			<small class="sidebar-aside-text">Choose between layouts to experience different look and feel for your projects.</small>
+
+			<ul class="nav">
+				<li class="nav-item"><a href="dashboard-one.html" class="nav-link">Web Analytics</a></li>
+				<li class="nav-item"><a href="dashboard-two.html" class="nav-link">Sales Monitoring</a></li>
+				<li class="nav-item"><a href="dashboard-three.html" class="nav-link">Ad Campaign</a></li>
+			</ul>
+		</div>
+		<div id="asideAppsPages" class="sidebar-aside-pane">
+			<h6 class="sidebar-aside-title">Apps &amp; Pages</h6>
+			<small class="sidebar-aside-text">Some pre-built web apps and pages for you to use in your project.</small>
+			<ul class="nav">
+				<li class="nav-item"><a href="page-profile.html" class="nav-link">Profile</a></li>
+				<li class="nav-item"><a href="page-invoice.html" class="nav-link">Invoice</a></li>
+				<li class="nav-item"><a href="page-signin.html" class="nav-link">Sign In</a></li>
+				<li class="nav-item"><a href="page-signup.html" class="nav-link">Sign Up</a></li>
+				<li class="nav-item"><a href="page-404.html" class="nav-link">Page 404</a></li>
+			</ul>
+		</div>
+		<div id="asideUIElements" class="sidebar-aside-pane">
+			<h6 class="sidebar-aside-title">UI Elements</h6>
+			<small class="sidebar-aside-text">Some pre-built web apps and pages for you to use in your project.</small>
+			<ul class="nav">
+				<li class="nav-item"><a href="page-profile.html" class="nav-link">Profile</a></li>
+				<li class="nav-item"><a href="page-invoice.html" class="nav-link">Invoice</a></li>
+				<li class="nav-item"><a href="page-signin.html" class="nav-link">Sign In</a></li>
+				<li class="nav-item"><a href="page-signup.html" class="nav-link">Sign Up</a></li>
+				<li class="nav-item"><a href="page-404.html" class="nav-link">Page 404</a></li>
+			</ul>
+		</div>
 	</div>
-</div>
+</div>	{{!-- sidebar-aside --}}

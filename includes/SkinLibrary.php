@@ -1,6 +1,6 @@
 <?php
 /**
- * Library - Modern version of MonoBook with fresh look and Bootstrap framework supported
+ * Library - A fresh modren look of MediaWiki with Bootstrap framework supported.
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * @file
  * @ingroup Skins
  */
 
-use MediaWiki\MediaWikiServices;
-use Library\Constants;
+ use Library\Constants;
+ use Wikimedia\WrappedStringList;
 
 /**
  * Skin subclass for Library
@@ -31,106 +30,122 @@ use Library\Constants;
  * @unstable
  */
 class SkinLibrary extends SkinTemplate {
-	public $skinname = Constants::SKIN_NAME;
-	public $stylename = 'Library';
-	public $template = 'LibraryTemplate';
-
-	private $responsiveMode = false;
 
 	/**
-	 * Enables the responsive mode
+	 * @var templateParser|null
 	 */
-	public function enableResponsiveMode() {
-		if ( !$this->responsiveMode ) {
-			$out = $this->getOutput();
-			$out->addMeta( 'viewport', 'width=device-width, initial-scale=1' );
-			$out->addModuleStyles( 'skins.library.styles.responsive' );
-			$this->responsiveMode = true;
+	private $templateParser = null;
+
+	/**
+	 * Get the template parser, it will be lazily created if not already set.
+	 *
+	 * @return templateParser
+	 */
+	protected function getTemplateParser() {
+
+		if ( $this->templateParser === null ) {
+			$this->templateParser = new TemplateParser( __DIR__ . '/templates' );
 		}
+		return $this->templateParser;
 	}
-
+	
 	/**
-	 * Initializes output page and sets up skin-specific parameters
-	 * @param OutputPage $out Object to initialize
+	 * Extend the method SkinMustache::getTemplateData to add additional template data.
+	 * 
+	 * The data keys should be valid English words. Compounds words should be hyphenated
+	 * except if they are normally written as one word. Each key should be prefixed with
+	 * a type hint, this may be enforced by the class PHPUnit test.
+	 * 
+	 * Naming conventions for Mustache parameters.
+	 * 
+	 * Value type (first segment):
+	 * - Prefix "is" or "has" for boolean values.
+	 * - Prefix "msg-" for interface message, followed by their message key.
+	 * - Prefix "html-" for plain strings or raw HTML.
+	 * - Prefix "array-" for plain array or lists of any values.
+	 * - Prefix "data-" for an array of template parameters that should be passed directly
+	 *   to template partial.
+	 * 
+	 * Source of value (first or second segment):
+	 * - Segment "page-" for data relating to the current page (e.g. Title, WikiPage, or OutputPage).
+	 * - Segment "hook-" for any thing generated from a hook. It should be followed by the name
+	 *   of hook in hyphenated lowercase.
+	 * 
+	 * Conditionally used values must use null to indicate absence (not false or '').
+	 * 
+	 * @return array data for Mustache template.
 	 */
-	public function initPage( OutputPage $out ) {
-		parent::initPage( $out );
+	public function getTemplateData() {
+		$out = $this->getOutput();
+		$printSource = Html::rawElement( 'div', [ 'class' => 'printfooter' ], $this->printSource() );
+		$bodyContent = $out->getHTML() . "\n" . $printSource;
 
-		// Load metadata
-		$out->addMeta( 'description', 'theLijia Library');
-		$out->addMeta( 'author', 'Lijia-YongxinL');
-		$out->addMeta( 'HandheldFriendly', 'true' );
-		$out->addMeta( 'apple-mobile-web-app-capable', 'YES' );
+		$commonSkinData = [
+			'page-isarticle' => (bool)$out->isArticle(),
+			// array objects
+			'array-indicators' => $this->getIndicatorsData( $out->getIndicators() ),
 
-		// Load custom/vendor styles
-		$out->addModuleStyles( 'skins.library.vendor.styles' );
+			// data objects
+			'data-search-box' => '',
 
-		// Load custom/vendor modules
-		$out->addModules( 'skins.library.vendor.js' );
+			// HTML strings
+			'html-site-notice' => $this->getSiteNotice() ?: null,
+			'html-title' => strpos( $out->getPageTitle(), 'history' ) ? $out->getPageTitle() : basename( $out->getPageTitle() ), 
+			'html-subtitle' => $this->prepareSubtitle(),
+			'html-body-content' => $this->wrapHTML( $out->getTitle(), $bodyContent ),
+			'html-categories' => $this->getCategories(),
+			'html-after-content' => $this->afterContentHook(),
+			'html-undelete-link' => $this->prepareUndeleteLink(),
+			'html-user-language-attributes' => $this->prepareUserLanguageAttributes(),
 
+			// links
+			'link-mainpage' => Title::newMainPage()->getLocalUrl(),
+		];
+
+		foreach ( $this->options['messages'] ?? [] as $message ) {
+			$data["msg-{$message}"] = $this->msg( $message )->text();
+		}
+
+		// print_r( $this->getPortletsTemplateData() );
+		return $commonSkinData;
 	}
 
 	/**
-	 * Called by OutputPage::headElement when it is creating the
-	 * `<body>` tag. Overrides method in Skin class.
+	 * Render the associated template. The master template is assumed
+	 * to be 'skin' unless 'template has been passed in the skin options
+	 *
+	 * @return void
+	 */
+	public function generateHTML() {
+		$this->setupTemplateContext();
+		$out = $this->getOutput();
+		$tp = $this->getTemplateParser();
+		$template = $this->options['template'] ?? 'skin';
+		$data = $this->getTemplateData();
+
+		// T259955: OutputPage::headElement must be called last (after getTemplateData)
+		$html = $out->headElement( $this );
+		$html .= $tp->processTemplate( $template, $data );
+		$html .= $this->tailElement( $out );
+		return $html;
+	}
+
+	/**
+	 * The final bits that go to the bottom of a page.
+	 * HTML document including the closing tags.
+	 *
 	 * @param OutputPage $out
-	 * @param array &$bodyAttrs
+	 * @return string
 	 */
-	public function addToBodyAttributes( $out, &$bodyAttrs ) {
-
-		// Load custom styles into body tag
-		$bodyAttrs['class'] .= ' mw-body mw-light';
-	}
-
-	/**
-	 * @inheritDoc
-	 * @return array
-	 */
-	public function getDefaultModules() {
-		$modules = parent::getDefaultModules();
-
-		$modules['styles'] = array_merge(
-			$modules['styles'],
-			[ 'skins.library.styles', 'mediawiki.ui.icon' ]
-		);
-		$modules[Constants::SKIN_NAME][] = 'skins.library.js';
-
-		return $modules;
-	}
-
-	/**
-	 * Set up the LibraryTemplate. Overrides the default behaviour of SkinTemplate allowing
-	 * the safe calling of constructor with additional arguments. If dropping this method
-	 * please ensure that LibraryTemplate constructor arguments match those in SkinTemplate.
-	 *
-	 * @internal
-	 * @param string $classname
-	 * @return LibraryTemplate
-	 */
-	protected function setupTemplate( $classname ) {
-		$tp = new TemplateParser( __DIR__ . '/templates' );
-		return new LibraryTemplate( $this->getConfig(), $tp, $this->isLegacy() );
-	}
-
-	/**
-	 * Whether the logo should be preloaded with an HTTP link header or not
-	 * @since 1.29
-	 * @return bool
-	 */
-	public function shouldPreloadLogo() {
-		return true;
-	}
-
-	/**
-	 * Whether or not the legacy version of the skin is being used.
-	 *
-	 * @return bool
-	 */
-	private function isLegacy() : bool {
-		$isLatestSkinFeatureEnabled = MediaWikiServices::getInstance()
-			->getService( Constants::SERVICE_FEATURE_MANAGER )
-			->isFeatureEnabled( Constants::FEATURE_LATEST_SKIN );
-
-		return !$isLatestSkinFeatureEnabled;
+	private function tailElement( $out ) {
+		$tail = [
+			MWDebug::getDebugHTML( $this ),
+			$this->bottomScripts(),
+			wfReportTime( $out->getCSP()->getNonce() ),
+			MWDebug::getHTMLDebugLog()
+			. Html::closeElement( 'body' )
+			. Html::closeElement( 'html' )
+		];
+		return WrappedStringList::join( "\n", $tail );
 	}
 }
