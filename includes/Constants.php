@@ -37,29 +37,29 @@ final class Constants {
 	 */
 	public const SKIN_NAME = 'library';
 
-	public const SKIN_CUSTOM_SIDENAV = array(
-		'sidenav' => [
-			'0' => [ 'text' => 'Home', 'href' => '/' ],
-			'1' => [ 'text' => 'Login', 'href' => '/wp-login.php', 'logged' => false ],
-			'2' => [ 'text' => 'Family', 'href' => '/category/family/', 'logged' => true ],
-			'3' => [ 'text' => 'Life', 'href' => '/category/life/' ],
-			'4' => [ 'text' => 'Travel', 'href' => '/category/travel/' ],
-			'5' => [ 'text' => 'Library', 'href' => '/wiki/Main_page' ],
-			'6' => [ 'text' => 'Log out', 'href' => '/wp-login.php?logout', 'logged' => true ]
+	public const SKIN_CUSTOM_NAV = array(
+		'nav' => [
+			'Home' => [ 'text' => 'Home', 'href' => '/' ],
+			'Login' => [ 'text' => 'Login', 'href' => '/wp-login.php', 'logged' => false ],
+			'Family' => [ 'text' => 'Family', 'href' => '/category/family/', 'logged' => true ],
+			'Life' => [ 'text' => 'Life', 'href' => '/category/life/', 'logged' => true ],
+			'Travel' => [ 'text' => 'Travel', 'href' => '/category/travel/', 'logged' => true ],
+			'Library' => [ 'text' => 'Library', 'href' => '/wiki/Main_page', 'logged' => true ],
+			'Logout' => [ 'text' => 'Log out', 'href' => '/wp-login.php?logout', 'logged' => true ]
 		]
 		);
 
-	public const MENU_TYPE_DEFAULT = 0;
-	public const MENU_TYPE_BASENAV = 1;
-	public const MENU_TYPE_TABS = 2;
-	public const MENU_TYPE_DROPDOWN = 3;
-	public const MENU_TYPE_PORTAL = 4;
-
-	public function getCustSideNav( bool $logged = true ) {
-		$data = SELF::SKIN_CUSTOM_SIDENAV;
-		foreach ( $data['sidenav'] as $name => $content ) {
-			if ( $content['logged'] != $logged ) {
-				unset( $data['sidenav'][$name] );
+	/**
+	 * return custom navigation menu based on loggged
+	 * 
+	 * @param bool logged
+	 * @return array
+	 */
+	public function getCustomNav( bool $logged = false ) {
+		$data = SELF::SKIN_CUSTOM_NAV;
+		foreach ( $data['nav'] as $name => $content ) {
+			if( ( isset( $content['logged'] )) && ( $content['logged'] != $logged ) ) {
+				unset( $data['nav'][$name] );
 			}
 		}
 		return $data;

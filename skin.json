@@ -15,21 +15,21 @@
 			"class": "SkinLibrary",
 			"@args": "See SkinLibrary::__construct for more detail.",
 			"args": [
-					{
+				{
 					"name": "library",
 					"styles": [
 						"skins.library.vendor.styles",
 						"skins.library.styles"
 					],
 					"messages": [
-						"sitetitle",
-						"tagline"
+						"msg-1",
+						"msg-2"
 					],
 					"scripts": [
 						"skins.library.vendor.js",
 						"skins.library.js"
 					]
-				} 
+				}
 			]
 		}
 	},
@@ -51,7 +51,7 @@
 	"@note": "When modifying skins.library.styles definition, make sure the installer still works",
 	"ResourceModules": {
 		"skins.library.vendor.styles": {
-			"styles":[
+			"styles": [
 				"resources/bootstrap/bootstrap.min.css",
 				"resources/fontawesome/css/fontawesome.min.css"
 			]
@@ -99,7 +99,6 @@
 	},
 	"ResourceModuleSkinStyles": {
 		"library": {
-			"jquery.tipsy": "resources/jquery.tipsy.less",
 			"jquery.ui": [
 				"resources/jquery.ui/jquery.ui.core.css",
 				"resources/jquery.ui/jquery.ui.theme.css",
@@ -115,12 +114,7 @@
 				"resources/jquery.ui/jquery.ui.slider.css",
 				"resources/jquery.ui/jquery.ui.tabs.css",
 				"resources/jquery.ui/jquery.ui.tooltip.css"
-			],
-			"+mediawiki.action.view.redirectPage": "resources/mediawiki.action.view.redirectPage.less",
-			"+mediawiki.notification": "resources/mediawiki.notification.less",
-			"+oojs-ui-core.styles": "resources/ooui.less",
-			"mediawiki.special": "resources/mediawiki.special.less",
-			"+ext.relatedArticles.readMore": "resources/ext.relatedArticles.readMore.less"
+			]
 		}
 	},
 	"config": {

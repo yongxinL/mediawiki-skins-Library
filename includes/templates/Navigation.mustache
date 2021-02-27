@@ -1,0 +1,50 @@
+{{!
+    TODO:  update document
+}}
+
+<div class="workspace-header">
+    <div class="container-fluid">
+        <div class="workspace-header-left">
+            <a href="" id="sidebarshow" class="workspace-header-menu-icon"><span></span></a>
+        </div>
+        <div class="workspace-header-center">
+            {{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
+        </div>
+        <div class="workspace-header-right">
+            {{#data-notifications-alert}}
+            <div id="pt-notifications-alert" class="workspace-header-message">
+                <a href="/wiki/Special:Notifications" data-counter-num="0" data-counter-text="0" title="Your alerts">
+                    <button class="btn"><i class="far fa-envelope"></i></button>
+                </a>
+            </div>
+            {{/data-notifications-alert}}
+            {{#data-notifications-notice}}
+            <div id="pt-notifications-notice" class="dropdown workspace-header-notification">
+                <a href="/wiki/Special:Notifications" data-counter-num="1" data-counter-text="1" title="Your notices">
+                    <button class="btn"><i class="fas fa-envelope-open-text"></i></button>
+                </a>
+            </div>
+            {{/data-notifications-notice}}
+            <div id="usermenu" class="dropdown workspace-profile-menu">
+                <a href="#" class="dropdown-toggle workspace-img-user" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{#data-userpage}}{{{avatar}}}{{/data-userpage}}
+                </a>
+                <div class="dropdown-menu">
+                    <div class="workspace-dropdown-header d-sm-none">
+                        <a href="" class="dropdown-header-arrow"><i class="fas fa-arrow-left"></i></a>
+                    </div>
+                    {{#data-userpage}}
+                    <div class="workspace-header-profile">
+                        <div class="workspace-img-user">
+                            {{{avatar}}}
+                        </div>
+                        <h6>{{name}}</h6>
+                        <span>{{member}}</span>
+                    </div>	{{!-- workspace-header-profile --}}
+                    {{/data-userpage}}
+                    {{#data-personal}}{{>Menu}}{{/data-personal}}
+                </div>	{{!-- dropdown-menu --}}
+            </div>	{{!-- workspace-profile-menu --}}
+        </div> 
+    </div>
+</div>	{{!-- workspace-header --}}

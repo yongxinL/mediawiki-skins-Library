@@ -1,161 +1,80 @@
 {{!
-	string html-headelement a string of attribute HTML that begins with `<html>` and ends with
-		`</head>` and contains `meta` tags and ResourceLoader internals.
-	string|null html-sitenotice the contents of a banner defined in MediaWiki:Sitenotice.
-		Also used by CentralNotice to inject banners into Library.
-	string html-indicators raw HTML containing wiki-defined badges such as "good article",
-		"featured article". An empty string if none are defined.
-	string page-langcode the content language of the article. Assumed to be escaped HTML.
-	string html-title
-	string html-prebodyhtml
-	bool page-isarticle
-	string msg-tagline
-	string html-subtitle
-	string html-undelete
-	string html-newtalk
-	string msg-library-jumptonavigation
-	string msg-library-jumptosearch
-	string html-bodycontent
-	string html-printfooter
-	string html-catlinks
-	string html-debuglog
-	string html-dataAfterContent
-	string html-navigation-heading heading for entire navigation that is usually hidden to screen
-		readers
-	LogoOptions data-logos
-	MenuDefinition data-personal-menu
-	MenuDefinition data-namespace-tabs
-	MenuDefinition data-variants
-	MenuDefinition data-page-actions
-	MenuDefinition data-page-actions-more
-	object data-search-box. See SearchBox.mustache for documentation.
-	object data-sidebar. See Sidebar.mustache for documentation.
-	object data-footer for footer template partial. see Footer.mustache for documentation.
-	string html-printtail HTML to render at the end of the page contained necessary script tags for
-		ResourceLoader terminated with `</body></html>`.
+    TODO:  update document
 }}
 
 <div class="wrapper">
 	{{>Sidebar}}
-
 	<div class="workspace-container">
-		<div class="workspace-header">
-			<div class="container-fluid">
-				<div class="workspace-header-left">
-					<a href="" id="sidebarshow" class="workspace-header-menu-icon"><span></span></a>
+		{{>Navigation}}
+		<div class="container">
+			<main class="content-container" role="main">
+				<a id="top"></a>
+				<div id="siteNotice" class="body-content-notice">{{{html-site-notice}}}</div>
+				<header class="body-content-header">
+					<div>
+						<div id="contentSub"{{{html-userlangattributes}}}>
+							{{{html-subtitle}}}
+						</div>
+						<h2 id="firstHeading" class="content-header-title">{{html-title}}</h2>
+						{{!-- <p class="content-header-text">info</p> --}}
+					</div>
+					{{#page-isarticle}}
+					<div class="content-header-right">
+						<div class="media">
+							<div class="media-body">
+								<label>Last Edit</label>
+								<h6>{{msg-lastedit}}</h6>
+							</div>
+						</div>
+						{{#html-head-category}}
+						<div class="media">
+							<div class="media-body">
+								<label>Category</label>
+								<h6>{{{html-head-category}}}</h6>
+							</div>
+						</div>
+						{{/html-head-category}}
+						<a href="javascript:print();" class="btn btn-info">Print</a>
+					</div>
+					{{/page-isarticle}}
+				</header>
+				<div class="body-content-nav">
+					<nav class="nav">
+						{{#data-namespaces}}{{>Menu}}{{/data-namespaces}}
+                    </nav>
+					<nav class="nav">
+						{{#data-views}}{{>Menu}}{{/data-views}}
+						{{#data-actions}}
+							{{#html-items}}
+							<a class="nav-link btn" type="button" id="actionbtn" data-bs-toggle="dropdown" aria-expanded="false">
+								<i class="fas fa-ellipsis-h"></i>
+							</a>
+							<div class="dropdown-menu">
+								{{#data-actions}}{{>Menu}}{{/data-actions}}
+							</div>
+							{{/html-items}}
+						{{/data-actions}}
+                    </nav>
 				</div>
-				<div class="workspace-header-center">
-					<input type="search" class="form-control" placeholder="Search for anything...">
-					<button class="btn"><i class="fas fa-search"></i></button>
+				<div id="content" class="media body-content">
+					<div class="media-body">
+						<div id="contentSub2">{{{html-undelete-link}}}</div>
+						{{{html-user-message}}}
+						{{{html-body-content}}}
+						{{{html-categories}}}
+					</div>	{{!-- media-body --}}
+					{{#page-istoc}}
+					<div class="media-right sticky-top"></div>
+					{{/page-istoc}}
 				</div>
-				<div class="workspace-header-right">
-					<div class="workspace-header-message">
-						<a href="#"><button class="btn"><i class="far fa-envelope"></i></button></a>
-					</div>
-					<div class="dropdown workspace-header-notification">
-						<a href="#"><button class="btn"><i class="fas fa-envelope-open-text"></i></button></a>
-					</div>
-					<div class="dropdown workspace-header-profile">
-						<a href="#"><button class="btn"><i class="fas fa-user-cog"></i></button></a>
-					</div>
-				</div> 
-			</div>
-		</div>	{{!-- workspace-header --}}
-
-		<main id="content" class="content-container" role="main">
-			<a id="top"></a>
-			<div id="siteNotice" class="body-content">something important !!!</div>
-
-			<header class="body-content-header">
-				<h1 class="firstHeading" >html-title</h1>
-			</header>
-
-			<div id="bodyContent" class="body-content">
-				<div id="contentSub">html-subtitle</div>
-				<div id="contentSub2">html-undelete-link</div>
-				{{{html-body-content}}}
-			</div>
-		</main>	{{!-- content-container --}}
-		after contents
+			</main>	{{!-- content-container --}}
+			{{{html-after-content}}}
+		</div>	{{!-- container --}}
 	</div>	{{!-- workspace-container --}}
+
+	<div class="workspace-container footer-container">
+		<div class="content-container">
+			{{#data-footer}}{{>Footer}}{{/data-footer}}
+		</div>
+	</div>	{{!-- footer-container --}}
 </div>	{{!-- wrapper --}}
-
-{{! <div id="mw-page-base" class="mw-topbar-placeholder noprint"></div> }}
-
-<div class="mw-body mw-content" role="main">
-	<div class="mw-topbar">
-		<div class="container-fluid">
-			<div class="mw-topbar-left">
-				<a href="" id="mw-sidebarShow" class="mw-topbar-menu-icon"><span></span></a>
-			</div>
-			<div class="mw-topbar-center">
-				{{#data-search-box}}{{>SearchBox}}{{/data-search-box}}
-			</div>
-			<div class="mw-topbar-right">
-				{{{html-personal-notification}}}
-				{{#data-personal-menu}}{{>Menu}}{{/data-personal-menu}}
-			</div>
-		</div>
-	</div>
-
-	<div class="mw-content-header">
-		<div class="container">
-			<div class="mw-content-header-left">
-				{{!html-indicators}}
-				<div id="contentSub"{{{html-userlangattributes}}}>{{{html-subtitle}}}</div>
-				<h3 id="firstHeading" class="mw-content-title" lang="{{page-langcode}}">{{{html-title}}}</h3>
-				{{#page-isarticle}}<div id="siteSub" class="noprint">{{msg-tagline}}</div>{{/page-isarticle}}
-			</div>
-			{{#page-isarticle}}
-			<div class="mw-content-header-right">
-				{{#msg-lastedit}}
-				<div class="media">
-					<div class="media-body">
-						<label>Last Edit</label>
-						<h6>{{{msg-lastedit}}}</h6>
-					</div>
-				</div>
-				{{/msg-lastedit}}
-				{{#msg-maincategory}}
-				<div class="media">
-					<div class="media-body">
-						<label>Category</label>
-						<h6>{{{msg-maincategory}}}</h6>
-					</div>
-				</div>
-				{{/msg-maincategory}}
-			</div>
-			{{/page-isarticle}}
-		</div>
-	</div>
-
-	<div class="mw-content-nav">
-		<div class="container">
-			{{#data-namespace-tabs}}{{>Menu}}{{/data-namespace-tabs}}
-			{{#data-page-actions}}{{>Menu}}{{/data-page-actions}}
-			{{! TODO: add action dropdown menu}}
-		</div>
-	</div>
-
-	{{#html-sitenotice}}
-		<div id="siteNotice" class="mw-body-content">{{{html-sitenotice}}}</div>
-	{{/html-sitenotice}}
-
-	<div id="content" class="mw-content-body">
-		<div class="container d-block">
-			<!-- prebody content -->
-			{{{html-prebodyhtml}}}
-			<!-- body content -->
-			{{{html-bodycontent}}}
-			{{#html-printfooter}}
-			<div class="printfooter">{{{html-printfooter}}}</div>
-			{{/html-printfooter}}
-			<div class="visualClear"></div>
-			{{{html-debuglog}}}
-		</div>
-		{{{html-dataAfterContent}}}
-	</div>
-	{{#data-footer}}{{>Footer}}{{/data-footer}}
-	{{{html-printtail}}}
-	<div class="to-top"></div>
-</div>

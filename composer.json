@@ -10,7 +10,7 @@
 	"homepage": "https://github.com/yongxinL/mediawiki-skins-Library",
 	"license": "GPL-2.0-or-later",
 	"authors": {
-			"name": "yongxinL"
+		"name": "yongxinL"
 	},
 	"require": {
 		"composer/installers": ">1.0.12"
