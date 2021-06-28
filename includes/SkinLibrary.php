@@ -71,12 +71,14 @@ class SkinLibrary extends SkinTemplate {
 	 * Called by OutputPage::headElement when it is creating the
 	 * `<body>` tag. Overrides method in Skin class.
 	 * @param OutputPage $out
+	 * @param Skin $skin
 	 * @param array &$bodyAttrs
 	 */
-	public function addToBodyAttributes( $out, &$bodyAttrs ) {
-
-		// Load custom styles into body tag
-		$bodyAttrs['class'] .= ' mw-body mw-light';
+	public static function onOutputPageBodyAttributes( $out, $skin, &$bodyAttrs ) {
+		if ( $skin->getSkinName() === 'library' ) {
+			// Load custom styles into body tag
+			$bodyAttrs['class'] .= ' mw-body mw-light';
+		}
 	}
 
 	/**

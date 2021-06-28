@@ -33,6 +33,7 @@
 	"Hooks": {
 		"BeforePageDisplayMobile": "Library\\Hooks::onBeforePageDisplayMobile",
 		"GetPreferences": "Library\\Hooks::onGetPreferences",
+		"OutputPageBodyAttributes": "SkinLibrary::onOutputPageBodyAttributes",
 		"PreferencesFormPreSave": "Library\\Hooks::onPreferencesFormPreSave",
 		"SkinTemplateNavigation": "Library\\Hooks::onSkinTemplateNavigation",
 		"LocalUserCreated": "Library\\Hooks::onLocalUserCreated"
