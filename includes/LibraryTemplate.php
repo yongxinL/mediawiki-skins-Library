@@ -327,17 +327,17 @@ class LibraryTemplate extends BaseTemplate {
 		$props = [];
 
 		// for logged out users Library shows a limited menu
-		if ( !$skin->getUser()->isLoggedIn() ) {
+		if ( $skin->getUser()->isAnon() ) {
 			// remove un-authorized items
 			foreach ( $portals['MAINMENU'] as $name => $content ) {
-				if ( !$content['anonymous'] ) {
+				if ( isset( $content['anonymous'] ) && !$content['anonymous'] ) {
 					unset( $portals['MAINMENU'][$name] );
 				}
 			}
 		} else {
 			// remove logged items
 			foreach ( $portals['MAINMENU'] as $name => $content ) {
-				if ( $content['anonymous'] ) {
+				if ( isset( $content['anonymous'] ) && $content['anonymous'] ) {
 					unset( $portals['MAINMENU'][$name] );
 				}
 			}
@@ -366,7 +366,7 @@ class LibraryTemplate extends BaseTemplate {
 				case 'TOOLBOX':
 					$portal = $this->getMenuData(
 						'specialtools',
-						$this->getToolbox(),
+						$this->data['sidebar']['TOOLBOX'],
 						self::MENU_TYPE_PORTAL, [
 							'tag' => 'li',
 						]
@@ -491,13 +491,13 @@ class LibraryTemplate extends BaseTemplate {
 			'label' => $this->Msg( $msgObj . '-label' ),
 			'label-msg' => $this->Msg(  $msgObj . '-msg' ),
 			'html-userlangattributes' => $this->get( 'userlangattributes', '' ),
-			'list-classes' => $listClasses[$type],
+			'list-classes' => $listClasses[$type] ?? '',
 			'html-items' => '',
 			'is-dropdown' => self::MENU_TYPE_DROPDOWN === $type,
 			'is-portal' => self::MENU_TYPE_PORTAL === $type,
 			'is-tabs' => self::MENU_TYPE_TABS === $type,
 			'html-tooltip' => Linker::tooltip( $label ),
-			'html-menu-prebody' => $options['html-prebody'] ?: null,
+			'html-menu-prebody' => $options['html-prebody'] ?? null,
 		];
 
 		foreach ( $urls as $key => $item ) {
@@ -531,7 +531,7 @@ class LibraryTemplate extends BaseTemplate {
 			}
 		}
 
-		$props['html-after-portal'] = $isPortal ? $this->getAfterPortlet( $label ) : '';
+		$props['html-after-portal'] = $isPortal ? $this->getSkin()->getAfterPortlet( $label ) : '';
 
 		// Mark the portal as empty if it has no content
 		$class = ( count( $urls ) == 0 && !$props['html-after-portal'] )
@@ -551,16 +551,7 @@ class LibraryTemplate extends BaseTemplate {
 		// $options = [ 'link-class' => 'dropdown-item' ];
 		$contentNavigation = $this->get( 'content_navigation', [] );
 
-		// This code doesn't belong here, it belongs in the UniversalLanguageSelector
-		// It is here to workaround the fact that it wants to be the first item in the personal menus.
-		if ( array_key_exists( 'uls', $portals ) ) {
-			$uls = $skin->makeListItem( 'uls', $personalTools[ 'uls' ] );
-			unset( $personalTools[ 'uls' ] );
-		} else {
-			$uls = '';
-		}
-
-		if ( !$skin->getUser()->isLoggedIn() ) {
+		if ( $skin->getUser()->isAnon() ) {
 			$props = $this->getMenuData(
 				'usermenu',
 				$portals,
@@ -756,8 +747,13 @@ class LibraryTemplate extends BaseTemplate {
 				}
 			}
 			if ( isset( $options['link-class'] ) ) {
-				if ( isset( $attrs['class'] ) ) {
-					$attrs['class'] .= " {$options['link-class']} {$key} {$item['text']}";
+				if ( isset( $attrs['class'] ) && isset( $item['text'] ) ) {
+					$className = " {$options['link-class']} {$key} {$item['text']}";
+					if ( is_string( $attrs['class'] ) ) {
+						$attrs['class'] .= $className;
+					} else {
+						$attrs['class'][] = $className;
+					}
 				} else {
 					$attrs['class'] = $options['link-class'];
 				}
