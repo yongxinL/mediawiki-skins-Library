@@ -2,79 +2,84 @@
     TODO:  update document
 }}
 
-<div class="wrapper">
+{{>Header}}
+<div class="body-container">
 	{{>Sidebar}}
-	<div class="workspace-container">
-		{{>Navigation}}
-		<div class="container">
-			<main class="content-container" role="main">
-				<a id="top"></a>
-				<div id="siteNotice" class="body-content-notice">{{{html-site-notice}}}</div>
-				<header class="body-content-header">
-					<div>
-						<div id="contentSub"{{{html-userlangattributes}}}>
+	<main class="content-container" role="main">
+		<a id="top"></a>
+		<div id="siteNotice" class="body-content-notice">{{{html-site-notice}}}</div>
+		<div class="container-fluid" style="background-image: url(/w/skins/Library/resources/images/page-dark.jpg);">
+			<section class="content-intro container">
+				<div class="col-md-10 col-xl-8">
+					{{#page-isarticle}}
+					<div class="row justify-content-between">
+						<div id="contentSub" class="breadcrumb col-4" {{{html-userlangattributes}}}>
 							{{{html-subtitle}}}
 						</div>
-						<h2 id="firstHeading" class="content-header-title">{{html-title}}</h2>
-						{{!-- <p class="content-header-text">info</p> --}}
-					</div>
-					{{#page-isarticle}}
-					<div class="content-header-right">
-						<div class="media">
-							<div class="media-body">
-								<label>Last Edit</label>
-								<h6>{{msg-lastedit}}</h6>
-							</div>
+						<div class="content-intro-date col-4 d-none d-xl-block">
+							<i class="fas fa-clock"></i>
+							<span>{{msg-lastedit}}</span>
 						</div>
-						{{#html-head-category}}
-						<div class="media">
-							<div class="media-body">
-								<label>Category</label>
-								<h6>{{{html-head-category}}}</h6>
-							</div>
-						</div>
-						{{/html-head-category}}
-						<a href="javascript:print();" class="btn btn-info">Print</a>
 					</div>
 					{{/page-isarticle}}
-				</header>
-				<div class="body-content-nav">
-					<nav class="nav">
-						{{#data-namespaces}}{{>Menu}}{{/data-namespaces}}
-                    </nav>
-					<nav class="nav">
-						{{#data-views}}{{>Menu}}{{/data-views}}
-						{{#data-actions}}
-							{{#html-items}}
-							<a class="nav-link btn" type="button" id="actionbtn" data-bs-toggle="dropdown" aria-expanded="false">
-								<i class="fas fa-ellipsis-h"></i>
-							</a>
-							<div class="dropdown-menu">
-								{{#data-actions}}{{>Menu}}{{/data-actions}}
-							</div>
-							{{/html-items}}
-						{{/data-actions}}
-                    </nav>
+					<h2 id="firstHeading" class="content-intro-title">
+						{{html-title}}
+					</h2>
+					{{#html-head-category}}
+					<div class="content-intro-category">
+						{{{html-head-category}}}
+					</div>
+					{{/html-head-category}}
 				</div>
-				<div id="content" class="media body-content">
-					<div class="media-body">
-						<div id="contentSub2">{{{html-undelete-link}}}</div>
-						{{{html-user-message}}}
-						{{{html-body-content}}}
-						{{{html-categories}}}
-					</div>	{{!-- media-body --}}
-					{{#page-istoc}}
-					<div class="media-right sticky-top"></div>
-					{{/page-istoc}}
-				</div>
-			</main>	{{!-- content-container --}}
-			{{{html-after-content}}}
-		</div>	{{!-- container --}}
-	</div>	{{!-- workspace-container --}}
-
-	<div class="workspace-container footer-container">
-		<div class="content-container">
-			{{#data-footer}}{{>Footer}}{{/data-footer}}
+			</section>
 		</div>
-	</div>	{{!-- footer-container --}}
-</div>	{{!-- wrapper --}}
+		<section id="commander" class="container content-commander">
+			<ul class="nav">
+			{{#data-namespaces}}
+				{{{html-items}}}
+			{{/data-namespaces}}
+			</ul>
+			<ul class="nav d-none d-lg-flex">
+			{{#data-views}}
+				{{{html-items}}}
+			{{/data-views}}
+			{{#data-actions}}
+				<li id="{{id}}" class="nav-item" >
+					<a href="#"  class="nav-link btn dropdown-toggle" type="button" title="More"
+					data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-90,24">
+						<i class="fas fa-ellipsis-h"></i>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="{{id}}">
+						<ul class="navbar-nav">
+						{{{html-items}}}
+						</ul>
+					</div>
+				</li>
+			{{/data-actions}}
+			</ul>
+		</section>
+		<article id="content" class="container content-section">
+			<div id="contentSub2">{{{html-undelete-link}}}</div>
+			<div id="contentAside" class="content-aside d-none"></div>
+			{{{html-user-message}}}
+			{{{html-body-content}}}
+		</article>
+		<footer class="content-container d-none">
+			<div class="content-footer">
+				{{#page-isarticle}}
+					{{{html-categories}}}
+				{{/page-isarticle}}
+				{{#data-footer}}{{>Footer}}{{/data-footer}}
+			</div>
+		</footer>
+	</main>
+	{{{html-after-content}}}
+
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/w/skins/Library/resources/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/w/skins/Library/resources/skins.library.js"></script>

@@ -36,30 +36,41 @@ final class Constants {
 	 * @var string
 	 */
 	public const SKIN_NAME = 'library';
-
-	public const SKIN_CUSTOM_NAV = array(
-		'nav' => [
-			'Home' => [ 'text' => 'Home', 'href' => '/' ],
-			'Login' => [ 'text' => 'Login', 'href' => '/wp-login.php', 'logged' => false ],
-			'Family' => [ 'text' => 'Family', 'href' => '/category/family/', 'logged' => true ],
-			'Life' => [ 'text' => 'Life', 'href' => '/category/life/', 'logged' => true ],
-			'Travel' => [ 'text' => 'Travel', 'href' => '/category/travel/', 'logged' => true ],
-			'Library' => [ 'text' => 'Library', 'href' => '/wiki/Main_page', 'logged' => true ],
-			'Logout' => [ 'text' => 'Log out', 'href' => '/wp-login.php?logout', 'logged' => true ]
+	public const SKIN_CUST_NAVIGATION = array(
+		'backhome' => [
+			'home' => [ 'text' => 'Home', 'href' => '/' ],
+			'members' => [ 'text' => 'Members', 'href' => '/members/', 'perm' => 1 ],
+			'groups' => [ 'text' => 'Groups', 'href' => '/groups/', 'perm' => 1 ],
+			'blog' => [ 'text' => 'Blog', 'href' => '/category/family/', 'perm' => 1 ],
+			'library' => [ 'text' => 'Library', 'href' => '/w/', 'perm' => 1 ]
+		],
+		'sidemenu' => [
+			'home' => [ 'text' => 'Home', 'href' => '/wiki/Main_Page' ],
+			'explore' => [ 'text' => 'Explore', 'href' => '/wiki/Special:Random', 'perm' => 1 ],
+			'history' => [ 'text' => 'History', 'href' => '/wiki/Special:RecentChanges', 'perm' => 1 ],
+			'bookmark' => [ 'text' => 'Bookmark', 'href' => '/wiki/Special:Watchlist', 'perm' => 1 ]
+		],
+		'sidebotm' => [
+			'preference' => [ 'text' => 'Preference', 'href' => '/wiki/Special:Preferences', 'perm' => 1 ],
+			'help' => [ 'text' => 'Help', 'href' => '/wiki/Help:Contents']
 		]
 		);
 
 	/**
-	 * return custom navigation menu based on loggged
-	 * 
-	 * @param bool logged
-	 * @return array
+	 * return custom navigation menu based on permission level [0, 1]
+	 * @param	int 	$perm	permission level
+	 * @return 	array 			navigation menu
 	 */
-	public function getCustomNav( bool $logged = false ) {
-		$data = SELF::SKIN_CUSTOM_NAV;
-		foreach ( $data['nav'] as $name => $content ) {
-			if( ( isset( $content['logged'] )) && ( $content['logged'] != $logged ) ) {
-				unset( $data['nav'][$name] );
+	public function getCustomMenuData( int $perm  = 0) {
+		$data = SELF::SKIN_CUST_NAVIGATION;
+		foreach ($data as $parentKey => $parentItem) {
+			if ( is_array($parentItem) ) {
+				foreach ( $data[$parentKey] as $childKey => $childItem ) {
+					if ( (isset( $childItem['perm'] )) && ( $childItem['perm'] > $perm )) {
+						unset( $data[$parentKey][$childKey] );
+					}
+					unset( $data[$parentKey][$childKey]['perm'] );
+				}
 			}
 		}
 		return $data;
@@ -71,5 +82,46 @@ final class Constants {
 	 */
 	private function __construct() {
 		throw new FatalError( "Cannot construct a utility class." );
+	}
+
+	/**
+	 * Logs message/variables to browser console within PHP
+	 * 	@param string	$msg: 	message to be whown for optional data/vars.
+	 *  @param mixed	$data (scalar/mixed) arrays/objects, etc. to be output.
+	 *  @param boolean	$jsEval		whether to apply JavaScript eval() to objects
+	 * 
+	 * @return	none
+	 * 
+	 */
+	public function outputConsoleBeforeHTML($msg, $data = NULL, $jsEval = FALSE) {
+		if ( ! $msg ) return false;
+		$isevaled = false;
+		$type = ($data || gettype($data)) ? 'Type: ' . gettype($data) : '';
+
+		if ($jsEval && (is_array($data) || is_object($data))) {
+			$data = 'eval(' . preg_replace('#[\s\r\n\t\0\x0B]+#', '', json_encode($data)) . ')';
+			$isevaled = true;
+		} else {
+			$data = json_encode($data);
+		}
+
+		# sanitalize
+		$data = $data ? $data : '';
+		$search_array = array("#'#", '#""#', "#''#", "#\n#", "#\r\n#");
+		$replace_array = array('"', '', '', '\\n', '\\n');
+		$data = preg_replace($search_array,  $replace_array, $data);
+		$data = ltrim(rtrim($data, '"'), '"');
+		$data = $isevaled ? $data : ($data[0] === "'") ? $data : "'" . $data . "'";
+
+		$out = <<<HEREDOC
+		\n<script>
+		console.log('$msg');
+		console.log('------------------------------------------');
+		console.log('$type');
+		console.log($data);
+		console.log('\\n');
+		</script>
+		HEREDOC;
+			echo $out;
 	}
 }

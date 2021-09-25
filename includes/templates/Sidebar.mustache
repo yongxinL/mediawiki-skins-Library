@@ -1,36 +1,60 @@
 {{!
-	@prop string href
-	@prop string text
 
-	string msg-sitetitle
-	string html-sidebar-aside
+	@typedef object sidebarItems
 
-	MenuDefinition[] array-sidebar-body
+    MenuDefinition[]    data-sidebar-minihead			menu item for minibar and top of sidebar
+    MenuDefinition[]    data-sidebar-navmenu			input for searchbox form
 }}
 
-<div class="sidebar-icon">
-	<a href="{{{link-mainpage}}}" class="sidebar-icon-logo"><i class="fab fa-wpexplorer"></i></a>
-	<nav class="nav">
-		{{#data-sidebar-iconbar}}{{>Menu}}{{/data-sidebar-iconbar}}
-	</nav>
-    <div class="sidebar-bottom">
-        <a href="/wiki/Special:Preferences" class="nav-link"><i class="fas fa-user-cog"></i></a>
-        <a href="/wiki/Help:Contents" class="nav-link"><i class="far fa-question-circle"></i></a>
-    </div>
-</div>	{{!-- sidebar-icon --}}
-
-<div class="sidebar-aside">
-	<div class="sidebar-aside-header">
-		<div class="sidebar-header-pane">
-			<a href="{{{link-mainpage}}}" class="sidebar-aside-logo">{{{msg-sitetitle}}}</a>
-			<small>{{msg-tagline}}</small>
+<div id="sidebar" class="sidebar-container sideshow">
+	<nav class="sidebar">
+		<div class="brand spacer"></div>
+		{{>Logo}}
+		<div class="body-sidebar">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-masthead}}
+				{{{html-items}}}
+			{{/data-sidemenu-masthead}}
+			</ul>
+			<ul class="navbar-nav" id="navigation">
+				{{#data-sidemenu}}
+				<li class="nav-item">
+					<a href="#" class="nav-link {{class}}" data-bs-toggle="collapse" data-bs-target="#{{id}}"
+						aria-expanded="false">
+						{{{label}}}
+					</a>
+					<div class="accordion-collapse collapse" id="{{id}}" data-bs-parent="#navigation">
+						<ul class="list-unstyled pb-1 ms-3 small">
+							{{{html-items}}}
+						</ul>
+					</div>
+				</li>
+				{{/data-sidemenu}}
+			</ul>
 		</div>
-        <a href="" class="sidebar-toggle-menu">
-          <i class="fas fa-arrow-left"></i>
-          <i class="fas fa-times"></i>
-        </a>
-	</div>
-	<div class="sidebar-aside-body">
-		{{#data-sidebar-aside}}{{>Menu}}{{/data-sidebar-aside}}
-	</div>
-</div>	{{!-- sidebar-aside --}}
+		<div class="bar-bottom">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-bottom}}
+				{{{html-items}}}
+			{{/data-sidemenu-bottom}}
+			</ul>
+		</div>
+	</nav>
+</div>
+<div id="minibar" class="minibar-container d-none">
+	<nav class="minibar">
+		<div class="brand"></div>
+		<ul class="navbar-nav">
+		{{#data-sidemenu-masthead}}
+			{{{html-items}}}
+		{{/data-sidemenu-masthead}}
+		</ul>
+		<div class="bar-bottom">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-bottom}}
+				{{{html-items}}}
+			{{/data-sidemenu-bottom}}
+			</ul>
+		</div>
+	</nav>
+</div>

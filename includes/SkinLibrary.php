@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Library - A fresh modren look of MediaWiki with Bootstrap framework supported.
  * 
@@ -53,6 +52,196 @@ class SkinLibrary extends SkinTemplate
 			$this->templateParser = new TemplateParser(__DIR__ . '/templates');
 		}
 		return $this->templateParser;
+	}
+
+	/**
+	 * rendering data that can be passed to a Mustache template.
+	 * @param 	string 	$name	of the portal e.g. p-personal => personal
+	 * @param 	array 	$item 	that are accepted input to Skin:makeListItem
+	 * @return 	array 			data that can be passed to a Mustache template
+	 * 							and presents a single menu.
+	 */
+	protected function getPortletData(
+		$name,
+		array 	$items = []
+	) : array {
+		switch ( $name ) {
+			case 'actions':
+				$type = self::MENU_TYPE_DROPDOWN;
+				break;
+			case 'userpage':
+				$type = self::MENU_TYPE_DROPDOWN;
+				break;
+			default:
+				$type = self::MENU_TYPE_DEFAULT;
+				break;
+		}
+
+		if ( count( $items ) > 0 ) {
+			$id = Sanitizer::escapeIdForAttribute( "p-$name" );
+			$portletData = [
+				'id' => $id,
+				'class' => Sanitizer::escapeClass( "portlet-$name" ),
+				'html-tooltip' => Linker::tooltip($name),
+				'html-items' => '',
+				'label' => $this->getTranslation( $id ) ?: Sanitizer::escapeIdForAttribute( $name )
+			];
+			foreach ($items as $key => $item) {
+				$portletData['html-items'] .= htmlspecialchars_decode( $this->makeListItem( $key, $this->decoratePortletClass( $item, $type )));
+			}
+			return $portletData;
+		} else {
+			return $items;
+		}
+	}
+
+	/**
+	 * helper for applying Library menu classes to portlet.
+	 * @param 	array 	$portletData 	array data to decorate.
+	 * @param 	int 	$type 			representing one of the menu types.
+	 * 									MENU_TYPE_DEFAULT - a list of navigation items (nav-item),
+	 * 									MENU_TYPE_DROPDOWN- a list items in dropdown or
+	 * 									MENU_TYPE_LINK 	  - a list of navigaton link (nav-link).
+	 * @return 	array					modified version of portletData input
+	 */
+	private function decoratePortletClass(
+		array 	$portletData,
+		int 	$type = self::MENU_TYPE_DEFAULT
+	) {
+		$navClasses = [
+			self::MENU_TYPE_DEFAULT => 'nav-item',
+			self::MENU_TYPE_DROPDOWN => 'dropdown-item'
+		];
+
+		$class = $portletData['class'];
+		$portletData['class'] = trim( "$class $navClasses[$type]" );
+		$label = isset( $portletData['id'] ) ? $portletData['id'] : $portletData['text'];
+		$portletData['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
+
+		if ( isset( $portletData['links'] )) {
+			foreach( $portletData['links'] as $key => $item ) {
+				$class = $item['class'];
+				$portletData['links'][$key]['class'] = trim( "$class nav-link" );
+				$portletData['links'][$key]['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
+				$portletData['links'][$key]['text'] = null;
+			}
+		} else {
+			$portletData['link-class'] .= ' nav-link';
+		}
+
+		// remove array['text'] in order to use translation message.
+		$portletData['text'] = null;
+		return $portletData;
+	}
+
+	/**
+	 * Render the associated portlets (navigation) data
+	 * @return array of portlet data for all portlets
+	 */
+	private function getPortletsTemplateData()
+	{
+		$contentNavigation = $this->buildContentNavigationUrls();
+		$customNavigation = Library\Constants::getCustomMenuData( $this->getUser()->isRegistered() ? 1 : 0 );
+		$userNavigation = $this->getStructuredPersonalTools();
+		$userAuthKey = $this->getConfig()->get( 'LibraryUserAuth' ) ?: 'login';
+		$navFilter = ['notifications-alert', 'notifications-notice', 'userpage', 'notifications', 'user-menu' ];
+		$userpage = [];
+		$portlets = [];
+		$sidebar = [];
+		$watched = [];
+
+		// restrict item for un-authorized user
+		if ( $this->getUser()->isRegistered() ) {
+			$sidebarData = array_merge( $this->buildSidebar(), $customNavigation );
+		} else {
+			$sidebarData = $customNavigation;
+		}
+
+		// data array for masthead navigation
+		$portlets['data-masthead'] = $this->getPortletData( 'masthead', $customNavigation['backhome'] );
+		// data array for sidebar navigation
+		$portlets['data-sidemenu-masthead'] = $this->getPortletData( 'sidemenu', $customNavigation['sidemenu'] );
+		$portlets['data-sidemenu-bottom'] = $this->getPortletData( 'sidemenu', $customNavigation['sidebotm'] );
+
+		// data array for usermenu and notifications
+		if ( ! in_array( $userAuthKey, $navFilter )) { $navFilter[] = $userAuthKey; }
+		foreach ($navFilter as $item) {
+			// remove used items from $userNavigation
+			if ( array_key_exists( $item, $userNavigation )) {
+				$name = $item === $userAuthKey ? $name = 'login' : $name = $item;
+				$portlets[ 'data-' . $name ]['id'] = $userNavigation[$item]['id'] ?: $userNavigation[$item]['links'][0]['single-id'];
+				$portlets[ 'data-' . $name ]['class'] =  $userNavigation[$item]['links'][0]['class'];
+				$portlets[ 'data-' . $name ]['href'] = $userNavigation[$item]['links'][0]['href'];
+				$portlets[ 'data-' . $name ]['text'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-text' ) ?: $userNavigation[$item]['links'][0]['text'];
+				$portlets[ 'data-' . $name ]['src'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-avatar' ) ?: $this->getTranslation( 'default-avatar' );
+				$portlets[ 'data-' . $name ]['role'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-role' ) ?: 'Editor';
+				$portlets[ 'data-' . $name ]['data'] = $userNavigation[$item]['links'][0]['data'];
+				$portlets[ 'data-' . $name ]['active'] = $userNavigation[$item]['active'];
+
+				if ( $item === 'userpage' ) { $userpage = $portlets[ 'data-' . $name ]; }
+				unset($userNavigation[$item]);
+			}
+			// remove used items from $contentNavigation
+			if ( array_key_exists( $item, $contentNavigation )) {
+				unset($contentNavigation[$item]);
+			}
+		}
+		// data array for userpage
+		if ( isset( $userpage['id'] ) && count($userNavigation) > 0 ) {
+			$portlets[ 'data-userpage' ] = $this->getPortletData( 'userpage', $userNavigation );
+			$portlets[ 'data-userpage' ] = array_merge( $userpage, $portlets[ 'data-userpage'] );
+		}
+
+		// data array for sidebar
+		foreach ( $sidebarData as $name => $items ) {
+			if ( is_array( $items )) {
+				// T73639: numeric strings gets an integer when set as key, cast back
+				$name = (string)$name;
+				switch ( $name ) {
+					// ignore search
+					case 'SEARCH':
+					case 'LANGUAGES':
+					case 'sidemenu':
+					case 'sidebotm':
+						break;
+					case 'TOOLBOX':
+						$sidebar[] = $this->getPortletData( 'toolbox', $items );
+						break;
+					default:
+						$sidebar[] = $this->getPortletData( $name, $items );
+						break;
+				}
+			}
+		}
+		$portlets[ 'data-sidemenu' ] = $sidebar;
+
+		// moving watch from actions to views
+		if ( isset( $contentNavigation['actions']['watch'] )) {
+			$contentNavigation['views']['watch'] = $contentNavigation['actions']['watch'];
+			unset( $contentNavigation['actions']['watch'] );
+		} elseif ( isset( $contentNavigation['actions']['unwatch'] )) {
+			$contentNavigation['views']['unwatch'] = $contentNavigation['actions']['unwatch'];
+			unset( $contentNavigation['actions']['unwatch'] );
+		}
+
+		foreach ($contentNavigation as $name => $items) {
+			$portlets['data-' . $name] = $this->getPortletData($name, $items);
+		}
+
+		return $portlets;
+	}
+
+	/**
+	 * return the translation/message object with its content set.
+	 * @param	string 	$name	of the string which need to retrieve.
+	 * @return  string 			that is human readable corresponding to the string.
+	 * 							return null if not found.
+	 */
+	private function getTranslation( $name ) {
+		$msgObj = $this->msg( Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $name ));
+		// If no message exists fallback to plain text
+		$labelText = $msgObj->exists() ? $msgObj->text() : null;
+		return $labelText;
 	}
 
 	/**
@@ -136,6 +325,7 @@ class SkinLibrary extends SkinTemplate
 			'array-indicators' => $this->getIndicatorsData($out->getIndicators()),
 
 			// data objects
+			// 'data-logos' => $this->getLogoData(),
 			'data-search-box' => $this->buildSearchProps(),
 
 			// HTML strings
@@ -156,6 +346,7 @@ class SkinLibrary extends SkinTemplate
 
 			// links
 			'link-mainpage' => Title::newMainPage()->getLocalUrl(),
+			'link-logopath' => $this->getLogoData(),
 		];
 
 		foreach ($this->options['messages'] ?? [] as $message) {
@@ -252,6 +443,8 @@ class SkinLibrary extends SkinTemplate
 		$data = $this->getTemplateData();
 
 		// T259955: OutputPage::headElement must be called last (after getTemplateData)
+		// as it calls OutputPage::getR1Client, which freezes the ResourceLoader modules
+		// queue for the current page load.
 		$html = $out->headElement($this);
 		$html .= $tp->processTemplate($template, $data);
 		$html .= $this->tailElement($out);
@@ -279,156 +472,11 @@ class SkinLibrary extends SkinTemplate
 	}
 
 	/**
-	 * Render the associated portlets (navigation) data
-	 *
-	 * @return array of portlet data for all portlets
+	 * @return string 
 	 */
-	private function getPortletsTemplateData()
-	{
-		$contentNavigation = $this->buildContentNavigationUrls();
-		$notification = ['notifications-alert', 'notifications-notice', 'userpage', 'login', 'login-private'];
-		$portlets = [];
-		$sidebarHeader = [];
-		$sidebarData = [];
-		$sidebar = array_merge(
-			$this->buildSidebar(),
-			Library\Constants::getCustomNav($this->getUser()->isRegistered())
-		);
-
-		$usermenu = $this->getStructuredPersonalTools();
-		if ($usermenu['userpage']) {
-			$usermenu['userpage']['links'][0]['avatar'] = $this->getPortletLabel('user-' . $usermenu['userpage']['links'][0]['text'] . '-avatar')
-				?? '<img src="https://ui-avatars.com/api/?length=2&size=80&rounded=true&name=' . str_replace('.', '+', $usermenu['userpage']['links'][0]['text']) . '">';
-			$usermenu['userpage']['links'][0]['member'] = $this->getPortletLabel('user-' . $usermenu['userpage']['links'][0]['text'] . '-member') ?? 'Member';
-			$usermenu['userpage']['links'][0]['name'] = $this->getPortletLabel('user-' . $usermenu['userpage']['links'][0]['text'] . '-name') ?? $usermenu['userpage']['links'][0]['text'];
-		} else {
-			$usermenu['userpage']['links'][0]['avatar'] = $this->getPortletLabel('user-anonymous-avatar')
-				?? '<img src="/w/skins/Library/resources/images/anonymous.png">';
-			$usermenu['userpage']['links'][0]['member'] = $this->getPortletLabel('user-anonymous-member') ?? 'Unknown';
-			$usermenu['userpage']['links'][0]['name'] = $this->getPortletLabel('user-anonymous-name') ?? 'anonymous';
-		}
-
-		if (($usermenu['anon_oauth_login']) && ($sidebar['nav']['Login'])) {
-			$sidebar['nav']['Login']['href'] = $usermenu['anon_oauth_login']['links'][0]['href'];
-		}
-
-		foreach ($notification as $name) {
-			if (array_key_exists($name, $usermenu)) {
-				$portlets['data-' . $name] = $usermenu[$name]['links'];
-				unset($usermenu[$name]);
-			}
-		}
-		$portlets['data-personal'] = $this->getPortletData('personal', $usermenu);
-
-		foreach ($sidebar as $name => $items) {
-			if (is_array($items)) {
-				// T73639: numeric strings gets an integer when set as key, cast back
-				$name = (string)$name;
-				switch ($name) {
-					case 'SEARCH':
-						// ignore search
-						break;
-					case 'TOOLBOX':
-						// toolbox to `tb` id.
-						$sidebarHeader[] = $this->getPortletData('tb', []);
-						$sidebarData[] = $this->getPortletData('tb', $items, SELF::MENU_TYPE_SIDEBAR);
-						break;
-						// Languages is no longer be tied to sidebar
-					case 'LANGUAGES':
-						// T252800: Language portal will be aded provided either
-						// language exists or there is a value in html-after-portal.
-						$portal = $this->getPortletData('lang', $items);
-						if (count($items) || $portal['html-after-portal']) {
-							$portlets['data-languages'] = $portal;
-						}
-						break;
-					default:
-						$sidebarHeader[] = $this->getPortletData($name, []);
-						$sidebarData[] = $this->getPortletData($name, $items, SELF::MENU_TYPE_SIDEBAR);
-						break;
-				}
-			}
-		}
-
-		foreach ($contentNavigation as $name => $items) {
-			$portlets['data-' . $name] = $this->getPortletData($name, $items);
-		}
-
-		return [
-			'data-sidebar-iconbar' => $this->getPortletData('iconbar', $sidebarHeader),
-			'data-sidebar-aside' => $sidebarData,
-		] + $portlets;
-	}
-
-	/**
-	 * rendering data that can be passed to a Mustache template that
-	 * represents a single menu.
-	 *
-	 * @param [type] $name	of portal. e.g. p-personal the name is personal
-	 * @param array $items	that are accepted input to Skin::makeListItem
-	 * @return array
-	 */
-	private function getPortletData(string $name, array $items = [], int $type = -1)
-	{
-		$extraClasses = [
-			SELF::MENU_TYPE_DEFAULT => 'nav-link',
-			SELF::MENU_TYPE_SIDEBAR => 'nav-item',
-			SELF::MENU_TYPE_DROPDOWN => 'dropdown-item'
-		];
-
-		switch ($name) {
-			case 'actions':
-			case 'personal':
-				$type = SELF::MENU_TYPE_DROPDOWN;
-			default:
-				($type != -1) ? $type : $type = SELF::MENU_TYPE_DEFAULT;
-				break;
-		}
-
-		$id = strtolower(preg_replace('/[^a-zA-Z0-9]/s', '', "$name"));
-		$portletData = [
-			'single-id' => 'p-' . $id,
-			'href' => '#' . $id,
-			'text' => $this->getPortletLabel($id),
-			'class' => 'nav-link ' . Sanitizer::escapeClass("portlet-$name"),
-			'html-tooltip' => Linker::tooltip($name),
-			'is-navlink' => $type === SELF::MENU_TYPE_DEFAULT,
-			'is-sidebar' => $type === SELF::MENU_TYPE_SIDEBAR,
-			'is-dropdown' => $type === SELF::MENU_TYPE_DROPDOWN,
-		];
-
-		if ($type == SELF::MENU_TYPE_SIDEBAR) {
-			$portletData['id'] = $id;
-			$portletData['title'] = $this->getPortletLabel("$id-sidetitle");
-			$portletData['info'] = $this->getPortletLabel("$id-sideinfo");
-		}
-
-		if (count($items) > 0) {
-			foreach ($items as $key => $item) {
-				$text = ((isset($item['text'])) && ($this->getPortletLabel($id . '-' . $item['text']))) ? $this->getPortletLabel($id . '-' . $item['text']) : null;
-				$text = ((empty($text)) && (isset($item['id'])) && ($this->getPortletLabel($id . '-' . $item['id']))) ? $this->getPortletLabel($id . '-' . $item['id']) : null;
-				$text = ((empty($text)) && ($this->getPortletLabel($id . '-' . $key))) ? $this->getPortletLabel($id . '-' . $key) : null;
-				$item['text'] = $text ?? $item['text'];
-				$class = $item['class'];
-				$item['class'] = trim("$class $extraClasses[$type]");
-
-				if ($type == SELF::MENU_TYPE_SIDEBAR) {
-					$options['link-class'] = trim("nav-link " . $item['link-class']);
-					$portletData['html-items'] .= htmlspecialchars_decode($this->makeListItem($key, $item, $options));
-				} elseif (isset($item['links'])) {
-					foreach ($item['links'] as $k => $link) {
-						$text = ((isset($link['text'])) && ($this->getPortletLabel($id . '-' . $link['text']))) ? $this->getPortletLabel($id . '-' . $link['text']) : null;
-						$link['text'] = $text ?? $link['text'];
-						$link['class'] = trim("$class $extraClasses[$type]");
-						$portletData['html-items'] .= htmlspecialchars_decode($this->makeLink($k, $link));
-					}
-				} else {
-					$portletData['html-items'] .= htmlspecialchars_decode($this->makeLink($key, $item));
-				}
-			}
-		}
-
-		return $portletData;
+	private function getLogoData() : string {
+		$data = ResourceLoaderSkinModule::getAvailableLogos( $this->getConfig() );
+		return $data['1x'];
 	}
 
 	/**
