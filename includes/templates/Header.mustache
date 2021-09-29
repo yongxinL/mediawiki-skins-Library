@@ -1,0 +1,87 @@
+{{!
+
+	@typedef object headerItem
+
+    string              msg-user-name               current Logged in user
+    string              msg-user-role               user role for current Logged in user
+    string              msg-user-avatar             user avatar for current Logged in user
+    MenuDefinition[]    data-masthead               Website navigation menu
+    MenuDefinition[]    data-login                  menu item for un-authorized user.
+    MenuDefinition[]    data-userpage               menu items authorized user.
+    MenuDefinition[]    data-notifications-xxx      menu item for notificates
+    MenuDefinition[]    data-search-box             input for searchbox form
+
+}}
+
+<header id="masthead" class="site-header show">
+	<div class="container-fluid">
+        {{>Logo}}
+        <nav class="nav d-none d-lg-block">
+            <ul class="navbar-nav flex-row">
+                {{#data-masthead}}{{{html-items}}}{{/data-masthead}}
+            </ul>
+        </nav>
+            <nav class="header-aside">
+                <ul class="navbar-nav flex-row">
+                    {{#data-login}}
+                    <li class="usermenu me-2 nav-item">
+                        <a href="{{href}}" class="nav-link dropdown-toggle btn btn-primary-light rounded-pill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{text}}">
+                            <span>{{text}}</span>
+                            <img src="{{src}}" alt="anonymous" />
+                        </a>
+                    </li>
+                    {{/data-login}}
+                    {{#data-userpage}}
+                    <li class="usermenu me-2 nav-item dropdown">
+                        <a href="#" id="pt-usermenu" class="nav-link dropdown-toggle btn btn-primary-light rounded-pill" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="16,32">
+                            <span>{{text}}</span>
+                            <img src="{{src}}" alt="{{text}}" />
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="pt-usermenu">
+                            <div class="usermenu-header">
+                                <img src="{{src}}" alt="{{text}}" />
+                                <h6 class="mb-0">{{text}}</h6>
+                                <span class="small">{{role}}</span>
+                            </div>
+                            <ul class="navbar-nav mx-0">
+                                {{{html-items}}}
+                            </ul>
+                        </div>
+                    </li>
+                    {{/data-userpage}}
+                    <li class="nav-item me-0">
+                        <span class="separator"></span>
+                    </li>
+                    <li class="nav-item me-0 d-none d-lg-block">
+                        <a href="#" class="nav-link" data-provide="fullscreen" data-bs-toggle="tooltip"
+                            data-bs-placement="bottom" title="Full screen">
+                            <i class="fas fa-expand"></i>
+                        </a>
+                    </li>
+                    {{#data-notifications-alert}}
+                    <li class="nav-item me-0 d-none d-lg-block">
+                        <a href="{{href}}" class="nav-link {{#class}}{{.}}{{/class}}" {{#data}} data-counter-num="{{counter-num}}" data-counter-text="{{counter-text}}" {{/data}}
+                        data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your alerts {{#data}}({{counter-num}}){{/data}}">
+                            <i class="far fa-bell"></i>
+                        </a>
+                    </li>
+                    {{/data-notifications-alert}}
+                    {{#data-notifications-notice}}
+                    <li class="nav-item me-0 d-none d-lg-block">
+                        <a href="{{href}}" class="nav-link {{#class}}{{.}}{{/class}}" {{#data}} data-counter-num="{{counter-num}}" data-counter-text="{{counter-text}}" {{/data}}
+                         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Your notices {{#data}}({{counter-num}}){{/data}}">
+                            <i class="fas fa-inbox"></i>
+                        </a>
+                    </li>
+                    {{/data-notifications-notice}}
+                    <li class="nav-item me-0 d-none d-lg-block">
+                        <span class="separator"></span>
+                    </li>
+                </ul>
+            </nav>
+            {{#data-search-box}}
+                {{>Searchbox}}
+            {{/data-search-box}}
+        </div>
+</header>

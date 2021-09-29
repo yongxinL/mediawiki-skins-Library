@@ -1,4 +1,42 @@
 {{!
+<<<<<<< HEAD
+
+	@typedef object skinLibrary
+
+	boolean				page-isarticle
+    string              html-site-notice            
+    string              html-subtitle
+    string              html-head-category
+    MenuDefinition[]    data-search-box             input for searchbox form
+}}
+
+{{>Header}}
+<div class="body-container">
+	{{>Sidebar}}
+	<main class="content-container" role="main">
+		<a id="top"></a>
+		<div id="siteNotice" class="body-content-notice">{{{html-site-notice}}}</div>
+		<div class="container-fluid" style="background-image: url(/w/skins/Library/resources/images/page-dark.jpg);">
+			<section class="container content-intro">
+				<div class="col-md-10 col-xl-8">
+					{{#page-isarticle}}
+					<div class="row justify-content-between">
+						<div id="contentSub" class="breadcrumb col-md-10 col-lg-4" {{{html-userlangattributes}}}>
+							{{{html-subtitle}}}
+						</div>
+						<div class="content-intro-date col-4 d-none d-xl-block">
+							<i class="fas fa-clock"></i>
+							<span>{{msg-lastedit}}</span>
+						</div>
+					</div>
+					{{/page-isarticle}}
+					<h2 id="firstHeading" class="content-intro-title">
+						{{html-title}}
+					</h2>
+					{{#html-head-category}}
+					<div class="content-intro-category">
+						{{{html-head-category}}}
+=======
 	string html-headelement a string of attribute HTML that begins with `<html>` and ends with
 		`</head>` and contains `meta` tags and ResourceLoader internals.
 	string|null html-sitenotice the contents of a banner defined in MediaWiki:Sitenotice.
@@ -79,8 +117,65 @@
 					<div class="media-body">
 						<label>Category</label>
 						<h6>{{{msg-maincategory}}}</h6>
+>>>>>>> master
 					</div>
+					{{/html-head-category}}
 				</div>
+<<<<<<< HEAD
+			</section>
+		</div>
+		<section id="commander" class="container sticky-top">
+			<div class="content-commander">
+				<ul class="nav">
+				{{#data-namespaces}}
+					{{{html-items}}}
+				{{/data-namespaces}}
+				</ul>
+				<ul class="nav d-none d-lg-flex">
+				{{#data-views}}
+					{{{html-items}}}
+				{{/data-views}}
+				{{#data-actions}}
+					<li id="{{id}}" class="nav-item" >
+						<a href="#"  class="nav-link btn dropdown-toggle" type="button" title="More"
+						data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-90,24">
+							<i class="fas fa-ellipsis-h"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="{{id}}">
+							<ul class="navbar-nav">
+							{{{html-items}}}
+							</ul>
+						</div>
+					</li>
+				{{/data-actions}}
+				</ul>
+			</div>
+		</section>
+		<article id="content" class="container content-section">
+			<div id="contentSub2">{{{html-undelete-link}}}</div>
+			<div id="contentAside" class="content-aside d-none d-lg-block"></div>
+			{{{html-user-message}}}
+			{{{html-body-content}}}
+		</article>
+		<footer class="content-container d-none">
+			<div class="content-footer">
+				{{#page-isarticle}}
+					{{{html-categories}}}
+				{{/page-isarticle}}
+				{{#data-footer}}{{>Footer}}{{/data-footer}}
+			</div>
+		</footer>
+	</main>
+	{{{html-after-content}}}
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/w/skins/Library/resources/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="/w/skins/Library/resources/skins.library.js"></script>
+=======
 				{{/msg-maincategory}}
 			</div>
 			{{/page-isarticle}}
@@ -117,3 +212,4 @@
 	{{{html-printtail}}}
 	<div class="to-top"></div>
 </div>
+>>>>>>> master

@@ -1,4 +1,96 @@
 {
+<<<<<<< HEAD
+    "name": "Library",
+    "version": "2.0",
+    "author": "yongxinL",
+    "url": "https://github.com/yongxinL/mediawiki-skins-Library",
+    "descriptionmsg": "library-desc",
+    "namemsg": "skinname-library",
+    "license-name": "GPL-2.0-or-later",
+    "type": "skin",
+    "requires": {
+        "MediaWiki": ">= 1.35.0"
+    },
+    "ValidSkinNames": {
+        "library": {
+            "class": "SkinLibrary",
+            "@args": "See SkinLibrary::__construct for more detail.",
+            "args": [
+                {
+                    "name": "library",
+                    "styles": ["skins.library.styles"],
+                    "messages": ["msg-1", "msg-2"]
+                }
+            ]
+        }
+    },
+    "MessagesDirs": {
+        "Library": ["i18n"]
+    },
+    "AutoloadClasses": {
+        "SkinLibrary": "includes/SkinLibrary.php"
+    },
+    "AutoloadNamespaces": {
+        "Library\\": "includes/"
+    },
+    "Hooks": {
+        "OutputPageBeforeHTML": "Library\\Hooks::onOutputPageBeforeHTML",
+        "OutputPageBodyAttributes": "Library\\Hooks::onOutputPageBodyAttributes"
+    },
+    "@note": "When modifying skins.library.styles definition, make sure the installer still works",
+    "ResourceModules": {
+        "skins.library.styles": {
+            "class": "ResourceLoaderSkinModule",
+            "features": {
+                "normalize": true,
+                "elements": true,
+                "content": true,
+                "interface": true,
+                "logo": true
+            },
+            "targets": ["desktop", "mobile"],
+            "styles": [
+                "resources/bootstrap/bootstrap.min.css",
+                "resources/fontawesome/css/fontawesome.min.css",
+                "resources/skins.library.css"
+            ]
+        }
+    },
+    "ResourceFileModulePaths": {
+        "localBasePath": "",
+        "remoteSkinPath": "Library"
+    },
+    "ResourceModuleSkinStyles": {
+        "library": {
+            "jquery.ui": [
+                "resources/jquery.ui/jquery.ui.core.css",
+                "resources/jquery.ui/jquery.ui.theme.css",
+                "resources/jquery.ui/jquery.ui.accordion.css",
+                "resources/jquery.ui/jquery.ui.autocomplete.css",
+                "resources/jquery.ui/jquery.ui.button.css",
+                "resources/jquery.ui/jquery.ui.datepicker.css",
+                "resources/jquery.ui/jquery.ui.dialog.css",
+                "resources/jquery.ui/jquery.ui.menu.css",
+                "resources/jquery.ui/jquery.ui.progressbar.css",
+                "resources/jquery.ui/jquery.ui.resizable.css",
+                "resources/jquery.ui/jquery.ui.selectable.css",
+                "resources/jquery.ui/jquery.ui.slider.css",
+                "resources/jquery.ui/jquery.ui.tabs.css",
+                "resources/jquery.ui/jquery.ui.tooltip.css"
+            ]
+        }
+    },
+    "config": {
+        "LibraryUserAuth": {
+            "value": "anon_oauth_login",
+            "description": "Specific user authentication, login: Mediawiki or anon_oauth_login: oAuth2."
+        },
+        "LibraryUseIconWatch": {
+            "value": true
+        }
+    },
+    "manifest_version": 2
+=======
 	"name": "Library",
 	"author": [
 	    "Yongxin Li",
@@ -135,4 +227,5 @@
 		"includes/ServiceWiring.php"
 	],
 	"manifest_version": 2
+>>>>>>> master
 }

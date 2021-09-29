@@ -1,32 +1,60 @@
 {{!
-	@prop string href
-	@prop string text
 
-	string msg-sitetitle
-	string html-sidebar-aside
+	@typedef object sidebarItems
 
-	MenuDefinition[] array-sidebar-body
+    MenuDefinition[]    data-sidebar-minihead			menu item for minibar and top of sidebar
+    MenuDefinition[]    data-sidebar-navmenu			input for searchbox form
 }}
 
-<div class="mw-sidebar">
-	<a href="{{{main-page-href}}}" class="mw-sidebar-logo"><i class="fas fa-university"></i></a>
-	<nav class="nav">
-		{{{html-sidebar-aside}}}
+<div id="sidebar" class="sidebar-container">
+	<nav class="sidebar">
+		<div class="brand spacer"></div>
+		{{>Logo}}
+		<div class="body-sidebar">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-masthead}}
+				{{{html-items}}}
+			{{/data-sidemenu-masthead}}
+			</ul>
+			<ul class="navbar-nav" id="navigation">
+				{{#data-sidemenu}}
+				<li class="nav-item">
+					<a href="#" class="nav-link {{class}}" data-bs-toggle="collapse" data-bs-target="#{{id}}"
+						aria-expanded="false">
+						{{{label}}}
+					</a>
+					<div class="accordion-collapse collapse" id="{{id}}" data-bs-parent="#navigation">
+						<ul class="list-unstyled pb-1 ms-3 small">
+							{{{html-items}}}
+						</ul>
+					</div>
+				</li>
+				{{/data-sidemenu}}
+			</ul>
+		</div>
+		<div class="bar-bottom">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-bottom}}
+				{{{html-items}}}
+			{{/data-sidemenu-bottom}}
+			</ul>
+		</div>
 	</nav>
-	<div class="mw-sidebar-bottom">
-		<a href="/wiki/Help:Contents" class="mw-sidebar-help"><i class="far fa-lightbulb"></i></a>
-	</div>
 </div>
-
-<div class="mw-sidebar-aside">
-	<div class="mw-sidebar-header">
-		<a href="{{{main-page-href}}}" class="mw-logo">{{{msg-sitetitle}}}</a>
-        <a href="" class="mw-sidebar-toggle-menu">
-          <i class="fas fa-arrow-left"></i>
-          <i class="fas fa-times"></i>
-        </a>
-	</div>
-	<div class="mw-sidebar-body">
-		{{#array-sidebar-body}}{{>Menu}}{{/array-sidebar-body}}
-	</div>
+<div id="minibar" class="minibar-container">
+	<nav class="minibar">
+		{{>Logo}}
+		<ul class="navbar-nav">
+		{{#data-sidemenu-masthead}}
+			{{{html-items}}}
+		{{/data-sidemenu-masthead}}
+		</ul>
+		<div class="bar-bottom">
+			<ul class="navbar-nav">
+			{{#data-sidemenu-bottom}}
+				{{{html-items}}}
+			{{/data-sidemenu-bottom}}
+			</ul>
+		</div>
+	</nav>
 </div>
