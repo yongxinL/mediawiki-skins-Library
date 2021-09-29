@@ -41,13 +41,13 @@
     --bs-danger: #df0b0b;
     --bs-danger-light: #f28d8d;
     --bs-danger-dark: #a20404;
-    --bs-gray:#d6d7d8;
+    --bs-gray: #d6d7d8;
     --bs-gray-light: #f1f2f3;
     --bs-gray-dark: #515254;
 }
 
 body {
-    background: linear-gradient(175deg, #e8ecff 0%, #e6e4f9 40%, #e5d7f6 100%);
+    background: var(--bs-gray-light);
     color: #141a38;
     font-family: Roboto, sans-serif;
     position: relative;
@@ -136,13 +136,13 @@ ul.navbar-nav {
 .brand {
     align-items: center;
     display: flex;
-    height: 72px;
+    height: 90px;
 }
 .brand.spacer {
     display: none;
 }
 .navbar-brand {
-    margin: 0 8px;
+    margin: 0 0 0 1rem;
     padding: 0;
 }
 .navbar-brand .brand-logo {
@@ -157,12 +157,11 @@ ul.navbar-nav {
     -o-transition: 0.3s ease-in-out;
     -webkit-transition: 0.3s ease-in-out;
     transition: 0.3s ease-in-out;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.01), 0 3px 6px rgba(0, 0, 0, 0.02);
 }
 /*-- end of navigation --*/
 
 .site-header {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--bs-gray-light);
     display: flex;
     font-size: 0.875rem;
     justify-content: space-between;
@@ -187,7 +186,8 @@ ul.navbar-nav {
     display: flex;
     height: 90px;
     justify-content: space-between;
-    padding: 0 1.5rem;
+    padding: 0;
+    margin-right: 2rem;
 }
 .site-header .separator {
     background-color: rgba(0, 0, 0, 0.5);
@@ -203,8 +203,9 @@ ul.navbar-nav {
     background: transparent;
     border: 0;
     font-size: 20px;
-    margin-right: 1rem;
-    padding: 0 8px;
+    height: 72px;
+    padding: 0;
+    width: 72px;
 }
 .sidebar-toggler:hover {
     color: var(--bs-primary);
@@ -244,7 +245,8 @@ ul.navbar-nav {
 }
 .usermenu .nav-link.dropdown-toggle {
     border-radius: 5px;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
 }
 .usermenu .nav-link.dropdown-toggle span {
     margin-right: 0.5rem;
@@ -313,7 +315,7 @@ ul.navbar-nav {
     line-height: 0;
     z-index: 1035;
     position: absolute;
-    right: 0;
+    right: 1rem;
     margin: 0;
 }
 .search-button i {
@@ -346,17 +348,18 @@ ul.navbar-nav {
     max-width: 100%;
 }
 .content-container {
+    margin-top: 90px;
     width: 100%;
 }
 .content-container .container-fluid {
     background-position: center bottom;
     background-repeat: no-repeat;
     background-size: cover;
-    padding: 12.5rem 0 10rem 0;
+    border-radius: 1rem;
+    padding: 10rem 0;
 }
 .sidebar-container {
     min-width: 230px;
-    margin: 0.5rem 0 0 0.5rem;
     visibility: hidden;
     transition-duration: 200ms;
     transition-property: visibility;
@@ -371,29 +374,34 @@ ul.navbar-nav {
 }
 .sideshow .sidebar-container.drawer {
     display: flex;
+    position: fixed;
     visibility: visible;
     z-index: 1050;
 }
-
-.body-container .drawer {
-    left: 0;
-    right: initial;
-    display: none;
-    position: fixed;
+.sideshow .sidebar-container.drawer .sidebar {
+    background-color: var(--bs-gray-100);
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
 }
+
+.sideshow .minibar-container {
+    visibility: hidden;
+}
+
 .content-intro {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
-.breadcrumb {
+#contentSub.breadcrumb,
+#contentSub2.breadcrumb {
     color: #f1f2f3;
+    font-size: 1rem;
     margin: 0;
 }
-.breadcrumb span > a {
+.content-intro .breadcrumb span > a {
     color: #f1f2f3;
 }
-.breadcrumb span > a:nth-last-of-type(n + 1) {
+.content-intro .breadcrumb span > a:nth-last-of-type(n + 1) {
     padding: 0 5px;
     text-decoration: none;
 }
@@ -435,18 +443,15 @@ ul.navbar-nav {
 }
 
 .content-commander {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-bottom: 1px solid #cdd4e0;
+    background-color: var(--bs-gray-100);
+    border-bottom: 1px solid var(--bs-gray-300);
     border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 72px;
-    margin-bottom: 1.5rem;
-    margin-right: auto;
-    margin-left: auto;
-    padding: 0 2rem;
-    margin-top: -2rem;
+    margin: -2rem 2rem 2rem;
+    padding: 0 1rem;
 }
 .content-commander .nav-link {
     color: #1c273c;
@@ -491,18 +496,15 @@ ul.navbar-nav {
 }
 /*-- sidebar --*/
 .sidebar {
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 2rem;
-    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+    background-color: var(--bs-gray-light);
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
     display: flex;
     flex-direction: column;
-    height: 98%;
+    height: 100%;
     position: fixed;
     overflow: auto;
     width: 230px;
-}
-.sidebar .brand {
-    padding: 0 1rem;
 }
 .sidebar .body-sidebar {
     flex: 1;
@@ -529,20 +531,13 @@ ul.navbar-nav {
 .minibar-container {
     display: block;
     min-width: 72px;
-    margin: 0.5rem 0 0 0.5rem;
 }
 .minibar {
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 1rem;
-    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
     display: flex;
     flex-direction: column;
     position: fixed;
-    height: 98%;
+    height: 100%;
     width: 72px;
-}
-.minibar .sidebar-toggler {
-    margin-left: 1rem;
 }
 .minibar .navbar-brand {
     display: none;
@@ -573,6 +568,35 @@ ul.navbar-nav {
     justify-content: center;
     padding: 0.5rem 0;
 }
+.page-Main_Page
+    .minibar
+    .navbar-nav:not(:last-child)
+    .nav-item:nth-child(1)
+    .nav-link,
+.page-Special_RecentChanges
+    .minibar
+    .navbar-nav:not(:last-child)
+    .nav-item:nth-child(3)
+    .nav-link,
+.page-Special_Watchlist
+    .minibar
+    .navbar-nav:not(:last-child)
+    .nav-item:nth-child(4)
+    .nav-link,
+.page-Special_Preferences
+    .minibar
+    .navbar-nav:last-child
+    .nav-item:nth-child(1)
+    .nav-link,
+.page-Help_Contents
+    .minibar
+    .navbar-nav:last-child
+    .nav-item:nth-child(2)
+    .nav-link,
+.minibar .navbar-nav .nav-item .nav-link:hover {
+    background-color: #ffffff;
+    border-left: 2px solid var(--bs-primary);
+}
 .minibar .navbar-nav .nav-item .nav-link i {
     font-size: 24px;
     padding-right: 0;
@@ -593,8 +617,8 @@ ul.navbar-nav {
     flex-direction: row-reverse;
     flex-wrap: wrap;
     justify-content: flex-end;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding-left: 2rem;
+    padding-right: 2rem;
     margin-left: auto;
     margin-right: auto;
     width: 100%;

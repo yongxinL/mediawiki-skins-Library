@@ -1,5 +1,12 @@
 {{!
-    TODO:  update document
+
+	@typedef object skinLibrary
+
+	boolean				page-isarticle
+    string              html-site-notice            
+    string              html-subtitle
+    string              html-head-category
+    MenuDefinition[]    data-search-box             input for searchbox form
 }}
 
 {{>Header}}
@@ -9,11 +16,11 @@
 		<a id="top"></a>
 		<div id="siteNotice" class="body-content-notice">{{{html-site-notice}}}</div>
 		<div class="container-fluid" style="background-image: url(/w/skins/Library/resources/images/page-dark.jpg);">
-			<section class="content-intro container">
+			<section class="container content-intro">
 				<div class="col-md-10 col-xl-8">
 					{{#page-isarticle}}
 					<div class="row justify-content-between">
-						<div id="contentSub" class="breadcrumb col-4" {{{html-userlangattributes}}}>
+						<div id="contentSub" class="breadcrumb col-md-10 col-lg-4" {{{html-userlangattributes}}}>
 							{{{html-subtitle}}}
 						</div>
 						<div class="content-intro-date col-4 d-none d-xl-block">
@@ -33,34 +40,36 @@
 				</div>
 			</section>
 		</div>
-		<section id="commander" class="container content-commander">
-			<ul class="nav">
-			{{#data-namespaces}}
-				{{{html-items}}}
-			{{/data-namespaces}}
-			</ul>
-			<ul class="nav d-none d-lg-flex">
-			{{#data-views}}
-				{{{html-items}}}
-			{{/data-views}}
-			{{#data-actions}}
-				<li id="{{id}}" class="nav-item" >
-					<a href="#"  class="nav-link btn dropdown-toggle" type="button" title="More"
-					data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-90,24">
-						<i class="fas fa-ellipsis-h"></i>
-					</a>
-					<div class="dropdown-menu" aria-labelledby="{{id}}">
-						<ul class="navbar-nav">
-						{{{html-items}}}
-						</ul>
-					</div>
-				</li>
-			{{/data-actions}}
-			</ul>
+		<section id="commander" class="container sticky-top">
+			<div class="content-commander">
+				<ul class="nav">
+				{{#data-namespaces}}
+					{{{html-items}}}
+				{{/data-namespaces}}
+				</ul>
+				<ul class="nav d-none d-lg-flex">
+				{{#data-views}}
+					{{{html-items}}}
+				{{/data-views}}
+				{{#data-actions}}
+					<li id="{{id}}" class="nav-item" >
+						<a href="#"  class="nav-link btn dropdown-toggle" type="button" title="More"
+						data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-90,24">
+							<i class="fas fa-ellipsis-h"></i>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="{{id}}">
+							<ul class="navbar-nav">
+							{{{html-items}}}
+							</ul>
+						</div>
+					</li>
+				{{/data-actions}}
+				</ul>
+			</div>
 		</section>
 		<article id="content" class="container content-section">
 			<div id="contentSub2">{{{html-undelete-link}}}</div>
-			<div id="contentAside" class="content-aside d-none"></div>
+			<div id="contentAside" class="content-aside d-none d-lg-block"></div>
 			{{{html-user-message}}}
 			{{{html-body-content}}}
 		</article>
@@ -74,7 +83,6 @@
 		</footer>
 	</main>
 	{{{html-after-content}}}
-
 </div>
 
 

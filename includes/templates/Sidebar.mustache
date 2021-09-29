@@ -6,7 +6,7 @@
     MenuDefinition[]    data-sidebar-navmenu			input for searchbox form
 }}
 
-<div id="sidebar" class="sidebar-container sideshow">
+<div id="sidebar" class="sidebar-container">
 	<nav class="sidebar">
 		<div class="brand spacer"></div>
 		{{>Logo}}
@@ -41,9 +41,9 @@
 		</div>
 	</nav>
 </div>
-<div id="minibar" class="minibar-container d-none">
+<div id="minibar" class="minibar-container">
 	<nav class="minibar">
-		<div class="brand"></div>
+		{{>Logo}}
 		<ul class="navbar-nav">
 		{{#data-sidemenu-masthead}}
 			{{{html-items}}}

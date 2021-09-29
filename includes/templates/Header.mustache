@@ -24,17 +24,17 @@
             <nav class="header-aside">
                 <ul class="navbar-nav flex-row">
                     {{#data-login}}
-                    <li class="nav-item usermenu">
-                        <a href="{{href}}" class="nav-link dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{text}}">
+                    <li class="usermenu me-2 nav-item">
+                        <a href="{{href}}" class="nav-link dropdown-toggle btn btn-primary-light rounded-pill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{text}}">
                             <span>{{text}}</span>
                             <img src="{{src}}" alt="anonymous" />
                         </a>
                     </li>
                     {{/data-login}}
                     {{#data-userpage}}
-                    <li class="usermenu me-0 nav-item dropdown">
-                        <a href="#" id="pt-usermenu" class="nav-link dropdown-toggle" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="0,24">
+                    <li class="usermenu me-2 nav-item dropdown">
+                        <a href="#" id="pt-usermenu" class="nav-link dropdown-toggle btn btn-primary-light rounded-pill" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="16,32">
                             <span>{{text}}</span>
                             <img src="{{src}}" alt="{{text}}" />
                         </a>
@@ -81,14 +81,7 @@
                 </ul>
             </nav>
             {{#data-search-box}}
-            <form action="/w/index.php" id="searchform" class="searchform">
-                {{{html-input}}}
-                <input type="hidden" name="title" value="Special:Search" />
-            </form>
-            <button type="button" class="search-button" aria-label="searchForm">
-                <i id="search" class="fas fa-search"></i>
-                <i id="searchclose" class="fas fa-times"></i>
-            </button>
+                {{>Searchbox}}
             {{/data-search-box}}
         </div>
 </header>
