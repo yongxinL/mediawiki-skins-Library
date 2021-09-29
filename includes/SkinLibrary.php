@@ -39,6 +39,7 @@ class SkinLibrary extends SkinTemplate
 	/**
 	 * @var templateParser|null
 	 */
+<<<<<<< HEAD
 	private $templateParser = null;
 
 	/**
@@ -50,6 +51,12 @@ class SkinLibrary extends SkinTemplate
 	{
 		if ($this->templateParser === null) {
 			$this->templateParser = new TemplateParser(__DIR__ . '/templates');
+=======
+	public function enableResponsiveMode() {
+		if ( !$this->responsiveMode ) {
+			$out = $this->getOutput();
+			$this->responsiveMode = true;
+>>>>>>> master
 		}
 		return $this->templateParser;
 	}
@@ -77,6 +84,7 @@ class SkinLibrary extends SkinTemplate
 				break;
 		}
 
+<<<<<<< HEAD
 		if ( count( $items ) > 0 ) {
 			$id = Sanitizer::escapeIdForAttribute( "p-$name" );
 			$portletData = [
@@ -112,6 +120,12 @@ class SkinLibrary extends SkinTemplate
 			self::MENU_TYPE_DEFAULT => 'nav-item',
 			self::MENU_TYPE_DROPDOWN => 'dropdown-item'
 		];
+=======
+		// Load metadata
+		$out->addMeta( 'viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no' );
+		$out->addMeta( 'description', 'theLijia Library');
+		$out->addMeta( 'author', 'Lijia-YongxinL');
+>>>>>>> master
 
 		$class = $portletData['class'];
 		$portletData['class'] = trim( "$class $navClasses[$type]" );
