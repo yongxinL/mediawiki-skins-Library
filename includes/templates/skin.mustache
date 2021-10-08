@@ -73,14 +73,9 @@
 			{{{html-user-message}}}
 			{{{html-body-content}}}
 		</article>
-		<footer class="content-container d-none">
-			<div class="content-footer">
-				{{#page-isarticle}}
-					{{{html-categories}}}
-				{{/page-isarticle}}
-				{{#data-footer}}{{>Footer}}{{/data-footer}}
-			</div>
-		</footer>
+		{{#data-footer}}
+			{{>Footer}}
+		{{/data-footer}}
 	</main>
 	{{{html-after-content}}}
 </div>

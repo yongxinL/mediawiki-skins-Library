@@ -66,7 +66,7 @@
         b = document.getElementsByTagName("body")[0];
         s = document.querySelector(".sidebar-container");
         m = document.querySelector(".minibar-container");
-        if (v >= 1400) {
+        if (v >= 1400 && b.classList.contains("page-Main_Page")) {
             b.classList.add("sideshow");
             s.classList.remove("drawer");
            // m.classList.add("drawer");

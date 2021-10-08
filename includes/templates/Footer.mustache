@@ -13,10 +13,62 @@
 	string|null html-userlangattributes a string of attribute HTML
 	footerRow[] array-footer-rows iterable list of footer rows
 }}
-<div id="footer" class="mw-footer" role="contentinfo" {{{html-userlangattributes}}}>
+<footer id="footer" class="content-footer" {{{html-userlangattributes}}}>
 	<div class="container">
-			{{{html-catlinks}}}
-			<span>2020 theLijia</span>
+		<div class="row">
+			<div class="col-md-9">
+				<div class="brand">
+					<a href="{{link-mainpage}}" class="navbar-brand" title="{{msg-sitetitle}}" >
+						<i class="brand-logo" style="background-image: url({{link-logopath}});"></i>
+					</a>
+				</div>
+				<ul class="navbar-nav d-flex flex-row">
+					<li class="nav-item">
+						<a href="/" class="nav-link">
+							© theLiJIA (Lifamily)
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="/privacy-policy" class="nav-link">
+							Privacy
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="/terms-of-service" class="nav-link">
+							Terms of Service
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-3 d-flex align-items-center">
+				<ul class="navbar-nav flex-row">
+					<li class="nav-item">
+						<a href="mailto:thelifamy@gmail.com" target="_top" class="nav-link">
+							<i class="far fa-envelope"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://www.facebook.com/thelifamily/" target="_blank" class="nav-link">
+							<i class="fab fa-facebook-square"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://github.com/yongxinL" target="_blank" class="nav-link">
+							<i class="fab fa-github"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://www.instagram.com/thelifamy/" target="_blank" class="nav-link">
+							<i class="fab fa-instagram"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="https://twitter.com/thelifamy" target="_blank" class="nav-link">
+							<i class="fab fa-twitter"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
-	<div style="clear: both;"></div>
-</div>
+</footer>

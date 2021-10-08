@@ -128,7 +128,6 @@ class SkinLibrary extends SkinTemplate
 		} else {
 			$portletData['link-class'] .= ' nav-link';
 		}
-
 		// remove array['text'] in order to use translation message.
 		$portletData['text'] = null;
 		return $portletData;
@@ -148,7 +147,6 @@ class SkinLibrary extends SkinTemplate
 		$userpage = [];
 		$portlets = [];
 		$sidebar = [];
-		$watched = [];
 
 		// restrict item for un-authorized user
 		if ( $this->getUser()->isRegistered() ) {
@@ -222,6 +220,11 @@ class SkinLibrary extends SkinTemplate
 		} elseif ( isset( $contentNavigation['actions']['unwatch'] )) {
 			$contentNavigation['views']['unwatch'] = $contentNavigation['actions']['unwatch'];
 			unset( $contentNavigation['actions']['unwatch'] );
+		}
+
+		// replace VE id
+		if ( isset( $contentNavigation['views']['ve-edit'] )) {
+		 	$contentNavigation['views']['ve-edit']['id'] = 'ca-visual-edit';
 		}
 
 		foreach ($contentNavigation as $name => $items) {

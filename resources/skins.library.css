@@ -81,7 +81,6 @@ body {
     background-color: var(--bs-primary) !important;
     border-color: var(--bs-primary);
 }
-
 .btn-info,
 .btn-info:focus,
 .btn-info.active {
@@ -89,13 +88,11 @@ body {
     background-color: #0d52ee !important;
     border-color: #0d52ee !important;
 }
-
 .btn-info:hover {
     color: #fff !important;
     background-color: #09369e !important;
     border-color: #09369e !important;
 }
-
 /*-- navigation --*/
 ul.navbar-nav {
     margin: 0;
@@ -159,7 +156,22 @@ ul.navbar-nav {
     transition: 0.3s ease-in-out;
 }
 /*-- end of navigation --*/
+/*-- card --*/
+.card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4.5px);
+    border: none;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0px 3px 12px rgb(0 0 0 / 5%);
+}
+.card-img-top {
+    width: 100%;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
 
+/*-- layout --*/
 .site-header {
     background-color: var(--bs-gray-light);
     display: flex;
@@ -386,7 +398,6 @@ ul.navbar-nav {
 .sideshow .minibar-container {
     visibility: hidden;
 }
-
 .content-intro {
     display: flex;
     flex-wrap: wrap;
@@ -494,6 +505,16 @@ ul.navbar-nav {
 .content-commander .dropdown-menu.show {
     z-index: 1050;
 }
+.content-footer {
+    background: var(--bs-gray-light);
+    font-size: 0.85rem;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+.content-footer .brand {
+    height: 50px;
+}
+
 /*-- sidebar --*/
 .sidebar {
     background-color: var(--bs-gray-light);
@@ -660,26 +681,48 @@ ul.navbar-nav {
         max-width: 1240px;
     }
 } */
-/*
- * Mediawiki
- */
+/*-- Mediawiki MainPage --*/
 .page-Main_Page .content-container .container-fluid,
 .page-Main_Page .content-commander {
     display: none;
 }
-.page-Main_Page .content-section {
-    margin-top: 8rem;
+.ns-special .content-container .container-fluid {
+    padding: 2rem 0;
 }
-.ve-init-target-visual .oo-ui-toolbar-position-top {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 72px;
-    z-index: 1020;
+.page-Main_Page .content-section {
+    margin-top: 2rem;
+}
+/*-- Visual Editor --*/
+.oo-ui-windowManager-modal-active .ve-ui-overlay-global {
+    z-index: 1060;
+}
+.ve-init-target-visual .ve-ui-toolbar-floating .oo-ui-toolbar-bar {
+    top: 90px;
+    z-index: 2;
+}
+.ve-init-target-visual
+    .ve-ui-toolbar-floating
+    .oo-ui-toolbar-bar
+    .oo-ui-toolbar-bar {
+    top: 0;
+}
+.ve-activated .content-container .container-fluid {
+    padding: 0;
+}
+.ve-activated .content-container .content-intro .row,
+.ve-activated .content-container .content-intro .content-intro-category {
+    display: none;
+}
+/*-- WikiEditor --*/
+.oo-ui-windowManager-modal > .oo-ui-dialog.oo-ui-window-active {
+    top: 90px !important;
+    z-index: 1060;
 }
 .wikiEditor-ui-toolbar .tabs,
 .wikiEditor-ui-toolbar .section-main {
     height: auto !important;
 }
+
 .client-js .mw-content-ltr .mw-editsection-bracket:first-of-type,
 .client-js .mw-content-rtl .mw-editsection-bracket:not(:first-of-type) {
     margin-left: 0.5rem;
@@ -702,6 +745,7 @@ ul.navbar-nav {
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 1rem;
     padding: 1rem;
+    min-width: 280px;
 }
 .content-aside .toc .toctitle {
     text-align: left;
@@ -766,11 +810,9 @@ ul.navbar-nav {
 .ve-init-target-visual .toc {
     display: none;
 }
-
 .mw-parser-output {
     width: 100%;
 }
-
 #mw-content-text {
     flex: 1;
     margin-right: 2rem;
@@ -778,6 +820,7 @@ ul.navbar-nav {
     background-color: rgba(255, 255, 255, 0.6);
     border-radius: 1rem;
     padding: 1rem;
+    min-height: 20rem;
 }
 
 /* TODO
