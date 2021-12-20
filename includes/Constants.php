@@ -61,7 +61,7 @@ final class Constants {
 	 * @param	int 	$perm	permission level
 	 * @return 	array 			navigation menu
 	 */
-	public function getCustomMenuData( int $perm  = 0) {
+	public static function getCustomMenuData( int $perm  = 0) {
 		$data = SELF::SKIN_CUST_NAVIGATION;
 		foreach ($data as $parentKey => $parentItem) {
 			if ( is_array($parentItem) ) {
@@ -111,7 +111,7 @@ final class Constants {
 		$replace_array = array('"', '', '', '\\n', '\\n');
 		$data = preg_replace($search_array,  $replace_array, $data);
 		$data = ltrim(rtrim($data, '"'), '"');
-		$data = $isevaled ? $data : ($data[0] === "'") ? $data : "'" . $data . "'";
+		$data = ( $isevaled ? $data : ($data[0] === "'") ) ? $data : "'" . $data . "'";
 
 		$out = <<<HEREDOC
 		\n<script>

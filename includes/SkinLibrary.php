@@ -113,20 +113,27 @@ class SkinLibrary extends SkinTemplate
 			self::MENU_TYPE_DROPDOWN => 'dropdown-item'
 		];
 
-		$class = $portletData['class'];
+		$class = $portletData['class'] ?? '';
 		$portletData['class'] = trim( "$class $navClasses[$type]" );
 		$label = isset( $portletData['id'] ) ? $portletData['id'] : $portletData['text'];
 		$portletData['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
 
 		if ( isset( $portletData['links'] )) {
 			foreach( $portletData['links'] as $key => $item ) {
-				$class = $item['class'];
-				$portletData['links'][$key]['class'] = trim( "$class nav-link" );
+				$class = $item['class'] ?? '';
+				if ( is_string( $class ) ) {
+					$newClass = trim( "$class nav-link" );
+				} else {
+					$newClass[] = 'nav-link';
+				}
+				$portletData['links'][$key]['class'] = $newClass;
 				$portletData['links'][$key]['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
 				$portletData['links'][$key]['text'] = null;
 			}
 		} else {
-			$portletData['link-class'] .= ' nav-link';
+			$linkClass = $portletData['link-class'] ?? [];
+			$linkClass[] = 'nav-link';
+			$portletData['link-class'] = $linkClass;
 		}
 		// remove array['text'] in order to use translation message.
 		$portletData['text'] = null;
@@ -173,7 +180,7 @@ class SkinLibrary extends SkinTemplate
 				$portlets[ 'data-' . $name ]['text'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-text' ) ?: $userNavigation[$item]['links'][0]['text'];
 				$portlets[ 'data-' . $name ]['src'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-avatar' ) ?: $this->getTranslation( 'default-avatar' );
 				$portlets[ 'data-' . $name ]['role'] = $this->getTranslation( $userNavigation[$item]['links'][0]['text'] . '-role' ) ?: 'Editor';
-				$portlets[ 'data-' . $name ]['data'] = $userNavigation[$item]['links'][0]['data'];
+				$portlets[ 'data-' . $name ]['data'] = $userNavigation[$item]['links'][0]['data'] ?? [];
 				$portlets[ 'data-' . $name ]['active'] = $userNavigation[$item]['active'];
 
 				if ( $item === 'userpage' ) { $userpage = $portlets[ 'data-' . $name ]; }
@@ -273,7 +280,7 @@ class SkinLibrary extends SkinTemplate
 	private function getFirstCategory()
 	{
 		$catlinks = $this->getOutput()->getCategoryLinks();
-		foreach ($catlinks['normal'] as $key => $item) {
+		foreach ($catlinks['normal'] ?? [] as $key => $item) {
 			if (strpos($item, 'errors') !== false) {
 				unset($catlinks['normal'][$key]);
 				continue;
