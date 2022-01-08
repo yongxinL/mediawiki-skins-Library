@@ -114,9 +114,15 @@ class SkinLibrary extends SkinTemplate
 		];
 
 		$class = $portletData['class'] ?? '';
-		$portletData['class'] = trim( "$class $navClasses[$type]" );
-		$label = isset( $portletData['id'] ) ? $portletData['id'] : $portletData['text'];
-		$portletData['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
+		if ( is_string( $class ) ) {
+			$portletData['class'] = trim( "$class $navClasses[$type]" );
+		} else {
+			$portletData['class'][] = trim( $navClasses[$type] );
+		}
+		$label = isset( $portletData['id'] ) ? $portletData['id'] : $portletData['text'] ?? null;
+		if ( $label ) {
+			$portletData['msg'] = Sanitizer::escapeIdForAttribute( Library\Constants::SKIN_NAME . '-' . $label );
+		}
 
 		if ( isset( $portletData['links'] )) {
 			foreach( $portletData['links'] as $key => $item ) {
@@ -132,7 +138,11 @@ class SkinLibrary extends SkinTemplate
 			}
 		} else {
 			$linkClass = $portletData['link-class'] ?? [];
-			$linkClass[] = 'nav-link';
+			if ( is_string( $linkClass ) ) {
+				$linkClass .= ' nav-link';
+			} else {
+				$linkClass[] = 'nav-link';
+			}
 			$portletData['link-class'] = $linkClass;
 		}
 		// remove array['text'] in order to use translation message.
