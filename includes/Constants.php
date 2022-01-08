@@ -36,7 +36,7 @@ final class Constants {
 	 * @var string
 	 */
 	public const SKIN_NAME = 'library';
-	public const SKIN_CUST_NAVIGATION = array(
+	public const SKIN_CUST_NAVIGATION = [
 		'backhome' => [
 			'home' => [ 'text' => 'Home', 'href' => '/' ],
 			'members' => [ 'text' => 'Members', 'href' => '/members/', 'perm' => 1 ],
@@ -54,7 +54,7 @@ final class Constants {
 			'preference' => [ 'text' => 'Preference', 'href' => '/wiki/Special:Preferences', 'perm' => 1 ],
 			'help' => [ 'text' => 'Help', 'href' => '/wiki/Help:Contents']
 		]
-		);
+	];
 
 	/**
 	 * return custom navigation menu based on permission level [0, 1]
@@ -114,14 +114,14 @@ final class Constants {
 		$data = ( $isevaled ? $data : ($data[0] === "'") ) ? $data : "'" . $data . "'";
 
 		$out = <<<HEREDOC
-		\n<script>
-		console.log('$msg');
-		console.log('------------------------------------------');
-		console.log('$type');
-		console.log($data);
-		console.log('\\n');
-		</script>
-		HEREDOC;
+\n<script>
+console.log('$msg');
+console.log('------------------------------------------');
+console.log('$type');
+console.log($data);
+console.log('\\n');
+</script>
+HEREDOC;
 			echo $out;
 	}
 }
