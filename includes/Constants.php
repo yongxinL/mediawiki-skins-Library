@@ -37,7 +37,6 @@ final class Constants
 	 * @var string
 	 */
 	public const SKIN_NAME = 'library';
-<<<<<<< HEAD
 	/**
 	 * custom navigation menu for linking to another system / website
 	 * @var array
@@ -50,15 +49,6 @@ final class Constants
 			'travel' => ['text' => 'Travel', 'href' => '/category/travel/', 'perm' => 1],
 			'library' => ['text' => 'Library', 'href' => '/w/', 'perm' => 1],
 			'scholar' => ['text' => 'Scholar', 'href' => '/scholar/', 'perm' => 1]
-=======
-	public const SKIN_CUST_NAVIGATION = [
-		'backhome' => [
-			'home' => [ 'text' => 'Home', 'href' => '/' ],
-			'members' => [ 'text' => 'Members', 'href' => '/members/', 'perm' => 1 ],
-			'groups' => [ 'text' => 'Groups', 'href' => '/groups/', 'perm' => 1 ],
-			'blog' => [ 'text' => 'Blog', 'href' => '/category/family/', 'perm' => 1 ],
-			'library' => [ 'text' => 'Library', 'href' => '/w/', 'perm' => 1 ]
->>>>>>> c62c1b9a5b5885dd070290d85307d9b0067b9f6e
 		],
 		'shortcut' => [
 			'home' => ['text' => 'Home', 'href' => '/wiki/Main_Page'],
@@ -71,23 +61,14 @@ final class Constants
 			'help' => ['text' => 'Help', 'href' => '/wiki/Help:Contents']
 		]
 	];
-<<<<<<< HEAD
-=======
-
->>>>>>> c62c1b9a5b5885dd070290d85307d9b0067b9f6e
 	/**
 	 * return custom navigation menu based on permission level [0, 1]
 	 * @param	int 	$perm	permission level
 	 * @return 	array 			navigation menu
 	 */
-<<<<<<< HEAD
 	public static function getCustomNavigationData(int $perm  = 0)
 	{
 		$data = SELF::CONFIG_ARRAY_CUST_NAVIGATION;
-=======
-	public static function getCustomMenuData( int $perm  = 0) {
-		$data = SELF::SKIN_CUST_NAVIGATION;
->>>>>>> c62c1b9a5b5885dd070290d85307d9b0067b9f6e
 		foreach ($data as $parentKey => $parentItem) {
 			if (is_array($parentItem)) {
 				foreach ($data[$parentKey] as $childKey => $childItem) {
@@ -138,11 +119,7 @@ final class Constants
 		$replace_array = array('"', '', '', '\\n', '\\n');
 		$data = preg_replace($search_array,  $replace_array, $data);
 		$data = ltrim(rtrim($data, '"'), '"');
-<<<<<<< HEAD
 		$data = ($isevaled ? $data : ($data[0] === "'")) ? $data : "'" . $data . "'";
-=======
-		$data = ( $isevaled ? $data : ($data[0] === "'") ) ? $data : "'" . $data . "'";
->>>>>>> c62c1b9a5b5885dd070290d85307d9b0067b9f6e
 
 		$out = <<<HEREDOC
 \n<script>
@@ -153,10 +130,6 @@ console.log($data);
 console.log('\\n');
 </script>
 HEREDOC;
-<<<<<<< HEAD
 		echo $out;
-=======
-			echo $out;
->>>>>>> c62c1b9a5b5885dd070290d85307d9b0067b9f6e
 	}
 }

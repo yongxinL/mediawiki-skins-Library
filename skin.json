@@ -111,7 +111,28 @@
         },
         "LibraryHeroHeaderBG": {
             "value": [
-                "/w/skins/Library/resources/images/dark-header-01.jpg"
+                "/w/skins/Library/resources/images/header-01.jpg",
+                "/w/skins/Library/resources/images/header-02.jpg",
+                "/w/skins/Library/resources/images/header-03.jpg",
+                "/w/skins/Library/resources/images/header-04.jpg",
+                "/w/skins/Library/resources/images/header-05.jpg",
+                "/w/skins/Library/resources/images/header-06.jpg",
+                "/w/skins/Library/resources/images/header-07.jpg",
+                "/w/skins/Library/resources/images/header-08.jpg",
+                "/w/skins/Library/resources/images/header-09.jpg",
+                "/w/skins/Library/resources/images/header-10.jpg",
+                "/w/skins/Library/resources/images/header-11.jpg",
+                "/w/skins/Library/resources/images/header-12.jpg",
+                "/w/skins/Library/resources/images/header-13.jpg",
+                "/w/skins/Library/resources/images/header-14.jpg",
+                "/w/skins/Library/resources/images/header-15.jpg",
+                "/w/skins/Library/resources/images/header-16.jpg",
+                "/w/skins/Library/resources/images/header-17.jpg",
+                "/w/skins/Library/resources/images/header-18.jpg",
+                "/w/skins/Library/resources/images/dark-header-01.jpg",
+                "/w/skins/Library/resources/images/dark-header-02.jpg",
+                "/w/skins/Library/resources/images/dark-header-03.jpg",
+                "/w/skins/Library/resources/images/dark-header-04.jpg"
             ],
             "description": "background image can be use for header hero, add dark at first of filename if you need invert font color"
         }

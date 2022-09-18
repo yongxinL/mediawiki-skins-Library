@@ -69,3 +69,8 @@ tsconfig.json
 # ignore everything related to Visual Studio Code
 .vscode/*
 *.code-workspace
+# ignore everything related to private contents
+/resources/images/dark*.jpg
+/resources/images/header*.jpg
+/resources/webfonts/4U*.woff2
+/resources/webfonts/Product*.woff
