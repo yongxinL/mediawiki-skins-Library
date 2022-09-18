@@ -1,74 +1,45 @@
 {{!
-	@typedef object footerItem
-	@prop string id of list item element
-	@prop string html of list item
-	@prop footerItem[] items
 
-	@typedef object footerRow
-	@prop string className of list element
-	@prop string id of list element
-	@prop footerItem[] array-items
+	-- logo block
 
-	string html-hook-library-before-footer output of LibraryBeforeFooter hook
-	string|null html-userlangattributes a string of attribute HTML
-	footerRow[] array-footer-rows iterable list of footer rows
+	@typedef object LogoItem
 }}
-<footer id="footer" class="content-footer" {{{html-userlangattributes}}}>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-9">
+<mw-article-footer>
+	<footer>
+		{{#html-footer-info}}
+			<section>
+				<a href="{{link-mainpage}}" class="ps-2">
+					<img src="/w/skins/Library/resources/images/icon.png" title="Library" width="36px">
+				</a>
+				<div class="info">
+					{{{html-footer-info}}}
+				</div>
+				{{#html-footer-category}}
+					<div class="category">
+						<ul class="nav">
+							{{{html-footer-category}}}
+						</ul>
+					</div>
+				{{/html-footer-category}}
+			</section>
+		{{/html-footer-info}}
+		{{^html-footer-info}}
+			<section class="d-none"></section>
+		{{/html-footer-info}}
+		<section class="d-flex justify-content-between">
+			<div class="d-flex align-items-center">
 				<div class="brand">
-					<a href="{{link-mainpage}}" class="navbar-brand" title="{{msg-sitetitle}}" >
-						<i class="brand-logo" style="background-image: url({{link-logopath}});"></i>
+					<a href="{{link-mainpage}}" class="brand__link" title="Home">
+						<span class="brand__logo" style="background-image: url({{link-logopath}});"></span>
 					</a>
 				</div>
-				<ul class="navbar-nav d-flex flex-row">
-					<li class="nav-item">
-						<a href="/" class="nav-link">
-							© theLiJIA (Lifamily)
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="/privacy-policy" class="nav-link">
-							Privacy
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="/terms-of-service" class="nav-link">
-							Terms of Service
-						</a>
-					</li>
+				<ul class="nav">
+					{{{html-footer-places}}}
 				</ul>
 			</div>
-			<div class="col-md-3 d-flex align-items-center">
-				<ul class="navbar-nav flex-row">
-					<li class="nav-item">
-						<a href="mailto:thelifamy@gmail.com" target="_top" class="nav-link">
-							<i class="far fa-envelope"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="https://www.facebook.com/thelifamily/" target="_blank" class="nav-link">
-							<i class="fab fa-facebook-square"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="https://github.com/yongxinL" target="_blank" class="nav-link">
-							<i class="fab fa-github"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="https://www.instagram.com/thelifamy/" target="_blank" class="nav-link">
-							<i class="fab fa-instagram"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="https://twitter.com/thelifamy" target="_blank" class="nav-link">
-							<i class="fab fa-twitter"></i>
-						</a>
-					</li>
-				</ul>
+			<div class="icons">
+				{{{html-footer-icons}}}
 			</div>
-		</div>
-	</div>
-</footer>
+		</section>
+	</footer>
+</mw-article-footer>

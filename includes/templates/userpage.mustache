@@ -1,0 +1,24 @@
+{{!
+
+	-- user menu block
+
+	@typedef object LogoItem
+}}
+<li class="nav-item dropdown user-menu">
+	<a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-16,32">
+		<span class="d-none d-lg-block">{{text}}</span>
+		<img class="" src="{{src}}" alt="{{text}}" />
+	</a>
+	<ul class="dropdown-menu">
+		<li>
+			<a href="{{href}}" class="dropdown-item">
+				<img src="{{src}}" alt="" />
+				<div class="{{id}}">
+					<span class="user-menu__name">{{text}}</span>
+					<span class="user-menu__mention">@{{text}}</span>
+				</div>
+			</a>
+		</li>
+		{{{html-items}}}
+	</ul>
+</li>

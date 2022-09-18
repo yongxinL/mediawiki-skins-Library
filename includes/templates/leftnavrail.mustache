@@ -1,0 +1,30 @@
+{{!
+
+	-- left navigation rail block
+
+	@typedef object LogoItem
+}}
+<mw-left-nav-rail class="mw-nav-drawer d-none d-lg-block">
+	<div class="mw-nav-drawer__row">
+		<section>
+			<nav class="navbar">
+				<ul class="navbar-nav">
+					{{#data-nav-rail}}{{{html-items}}}{{/data-nav-rail}}
+						<li class="nav-item">
+							<a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#searchmodal">
+								<i class="material-symbols-outlined">search </i>
+								<span>Search </span>
+							</a>
+						</li>
+				</ul>
+			</nav>
+		</section>
+		<section>
+			<nav class="navbar">
+				<ul class="navbar-nav">
+					{{#data-nav-bottom}}{{{html-items}}}{{/data-nav-bottom}}
+				</ul>
+			</nav>
+		</section>
+	</div>
+</mw-left-nav-rail>

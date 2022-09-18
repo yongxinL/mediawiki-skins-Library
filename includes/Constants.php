@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Library - A fresh modren look of MediaWiki with Bootstrap framework supported.
  * 
@@ -30,46 +31,51 @@ use FatalError;
  * @package Library
  * @internal
  */
-final class Constants {
+final class Constants
+{
 	/**
-	 * This is tightly coupled to the ConfigRegistry field in skin.json.
 	 * @var string
 	 */
 	public const SKIN_NAME = 'library';
-	public const SKIN_CUST_NAVIGATION = array(
-		'backhome' => [
-			'home' => [ 'text' => 'Home', 'href' => '/' ],
-			'members' => [ 'text' => 'Members', 'href' => '/members/', 'perm' => 1 ],
-			'groups' => [ 'text' => 'Groups', 'href' => '/groups/', 'perm' => 1 ],
-			'blog' => [ 'text' => 'Blog', 'href' => '/category/family/', 'perm' => 1 ],
-			'library' => [ 'text' => 'Library', 'href' => '/w/', 'perm' => 1 ]
+	/**
+	 * custom navigation menu for linking to another system / website
+	 * @var array
+	 */
+	public const CONFIG_ARRAY_CUST_NAVIGATION = [
+		'main' => [
+			'home' => ['text' => 'Home', 'href' => '/'],
+			'family' => ['text' => 'Family', 'href' => '/category/family/', 'perm' => 1],
+			'life' => ['text' => 'Life', 'href' => '/category/life/', 'perm' => 1],
+			'travel' => ['text' => 'Travel', 'href' => '/category/travel/', 'perm' => 1],
+			'library' => ['text' => 'Library', 'href' => '/w/', 'perm' => 1],
+			'scholar' => ['text' => 'Scholar', 'href' => '/scholar/', 'perm' => 1]
 		],
-		'sidemenu' => [
-			'home' => [ 'text' => 'Home', 'href' => '/wiki/Main_Page' ],
-			'explore' => [ 'text' => 'Explore', 'href' => '/wiki/Special:Random', 'perm' => 1 ],
-			'history' => [ 'text' => 'History', 'href' => '/wiki/Special:RecentChanges', 'perm' => 1 ],
-			'bookmark' => [ 'text' => 'Bookmark', 'href' => '/wiki/Special:Watchlist', 'perm' => 1 ]
+		'shortcut' => [
+			'home' => ['text' => 'Home', 'href' => '/wiki/Main_Page'],
+			'explore' => ['text' => 'Explore', 'href' => '/wiki/Special:Random', 'perm' => 1],
+			'history' => ['text' => 'History', 'href' => '/wiki/Special:RecentChanges', 'perm' => 1],
+			'bookmark' => ['text' => 'Bookmark', 'href' => '/wiki/Special:Watchlist', 'perm' => 1]
 		],
-		'sidebotm' => [
-			'preference' => [ 'text' => 'Preference', 'href' => '/wiki/Special:Preferences', 'perm' => 1 ],
-			'help' => [ 'text' => 'Help', 'href' => '/wiki/Help:Contents']
+		'bottom' => [
+			'preference' => ['text' => 'Preference', 'href' => '/wiki/Special:Preferences', 'perm' => 1],
+			'help' => ['text' => 'Help', 'href' => '/wiki/Help:Contents']
 		]
-		);
-
+	];
 	/**
 	 * return custom navigation menu based on permission level [0, 1]
 	 * @param	int 	$perm	permission level
 	 * @return 	array 			navigation menu
 	 */
-	public function getCustomMenuData( int $perm  = 0) {
-		$data = SELF::SKIN_CUST_NAVIGATION;
+	public static function getCustomNavigationData(int $perm  = 0)
+	{
+		$data = SELF::CONFIG_ARRAY_CUST_NAVIGATION;
 		foreach ($data as $parentKey => $parentItem) {
-			if ( is_array($parentItem) ) {
-				foreach ( $data[$parentKey] as $childKey => $childItem ) {
-					if ( (isset( $childItem['perm'] )) && ( $childItem['perm'] > $perm )) {
-						unset( $data[$parentKey][$childKey] );
+			if (is_array($parentItem)) {
+				foreach ($data[$parentKey] as $childKey => $childItem) {
+					if ((isset($childItem['perm'])) && ($childItem['perm'] > $perm)) {
+						unset($data[$parentKey][$childKey]);
 					}
-					unset( $data[$parentKey][$childKey]['perm'] );
+					unset($data[$parentKey][$childKey]['perm']);
 				}
 			}
 		}
@@ -80,8 +86,9 @@ final class Constants {
 	 * This class is for namespacing constants only. Forbid construction.
 	 * @throws FatalError
 	 */
-	private function __construct() {
-		throw new FatalError( "Cannot construct a utility class." );
+	private function __construct()
+	{
+		throw new FatalError("Cannot construct a utility class.");
 	}
 
 	/**
@@ -93,8 +100,9 @@ final class Constants {
 	 * @return	none
 	 * 
 	 */
-	public function outputConsoleBeforeHTML($msg, $data = NULL, $jsEval = FALSE) {
-		if ( ! $msg ) return false;
+	public function outputConsoleBeforeHTML($msg, $data = NULL, $jsEval = FALSE)
+	{
+		if (!$msg) return false;
 		$isevaled = false;
 		$type = ($data || gettype($data)) ? 'Type: ' . gettype($data) : '';
 
@@ -111,17 +119,17 @@ final class Constants {
 		$replace_array = array('"', '', '', '\\n', '\\n');
 		$data = preg_replace($search_array,  $replace_array, $data);
 		$data = ltrim(rtrim($data, '"'), '"');
-		$data = $isevaled ? $data : ($data[0] === "'") ? $data : "'" . $data . "'";
+		$data = ($isevaled ? $data : ($data[0] === "'")) ? $data : "'" . $data . "'";
 
 		$out = <<<HEREDOC
-		\n<script>
-		console.log('$msg');
-		console.log('------------------------------------------');
-		console.log('$type');
-		console.log($data);
-		console.log('\\n');
-		</script>
-		HEREDOC;
-			echo $out;
+\n<script>
+console.log('$msg');
+console.log('------------------------------------------');
+console.log('$type');
+console.log($data);
+console.log('\\n');
+</script>
+HEREDOC;
+		echo $out;
 	}
 }

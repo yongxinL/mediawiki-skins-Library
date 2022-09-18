@@ -1,0 +1,104 @@
+{{!
+
+	-- Top application bar block
+	
+	@typedef object LogoItem
+}}
+<mw-top-app-bar>
+	<mw-top-app-bar--fixed class="container-fluid">
+		<div class="mw-top-app-bar__row">
+			<section>
+				<div class="icon-button">
+					<button type="button" class="hamburger" title="navigation">
+						<span class="hamburger__btn-line1"></span>
+						<span class="hamburger__btn-line2"></span>
+						<span class="hamburger__btn-line3"></span>
+						<span class="hamburger__btn-line4"></span>
+						<span class="hamburger__btn-line5"></span>
+					</button>
+				</div>
+				{{>logo}}
+			</section>
+			<section class="d-none d-lg-inline-flex">
+				<nav class="navbar">
+					<ul class="navbar-nav">
+						{{#data-nav-main}}{{{html-items}}}{{/data-nav-main}}
+					</ul>
+				</nav>
+			</section>
+			<section>
+				<ul class="nav">
+					<li class="nav-item">
+						<a href="#" class="nav-link search-button" data-bs-toggle="modal" data-bs-target="#searchmodal">
+							<i class="material-symbols-outlined">search </i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<span class="separator"></span>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link disabled d-none d-lg-block" data-provide="fullscreen" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Full screen">
+							<i class="material-symbols-outlined"> width_full </i>
+						</a>
+					</li>
+					{{#data-nav-talk}}
+						{{{html-items}}}
+					{{/data-nav-talk}}
+					<li class="nav-item d-none d-lg-block">
+						<span class="separator"></span>
+					</li>
+					{{#data-nav-usermenu}}
+						{{> userpage}}
+					{{/data-nav-usermenu}}
+				</ul>
+			</section>
+		</div>
+	</mw-top-app-bar--fixed>
+	<mw-top-app-bar--sticky class="container-fluid">
+		<div class="mw-top-app-bar__row">
+			<section>
+				<div class="icon-button">
+					<button type="button" class="hamburger" title="navigation">
+						<span class="hamburger__btn-line1"></span>
+						<span class="hamburger__btn-line2"></span>
+						<span class="hamburger__btn-line3"></span>
+						<span class="hamburger__btn-line4"></span>
+						<span class="hamburger__btn-line5"></span>
+					</button>
+				</div>
+				{{>logo}}
+			</section>
+			<section class="flex-fill d-none d-lg-inline-flex">
+				<span class="separator"></span>
+				<h6 class="header-context-title">{{html-title}}</h6>
+			</section>
+			<section>
+				<ul class="nav">
+					{{#data-login}}
+						<li class="nav-item">
+							<a href="{{href}}" class="nav-link" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{text}}">
+								<span>{{text}}</span>
+								<i class="material-symbols-outlined">login </i>
+							</a>
+						</li>
+					{{/data-login}}
+					<li class="nav-item">
+						<a href="#" class="nav-link search-button" data-bs-toggle="modal" data-bs-target="#searchmodal">
+							<i class="material-symbols-outlined">search </i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<span class="separator"></span>
+					</li>
+					{{#data-nav-iconview}}
+						{{{html-items}}}
+					{{/data-nav-iconview}}
+					{{#data-nav-usermenu}}
+						{{> userpage}}
+					{{/data-nav-usermenu}}
+				</ul>
+			</section>
+		</div>
+	</mw-top-app-bar--sticky>
+	<div class="mw-top-app-bar--adjust"></div>
+</mw-top-app-bar>

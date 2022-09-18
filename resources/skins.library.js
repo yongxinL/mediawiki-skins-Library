@@ -1,42 +1,38 @@
 !(function () {
-    // enable tooltips (Bootstrap 5)
-    var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    // cloning #toc (table of content) from #mw-parser-output
-    var toc = document.getElementById("toc");
-    if (typeof toc != "undefined" && toc != null) {
-        var a = document.getElementById("contentAside");
-        a.classList.add("d-lg-block");
-
-        toc.classList.add("card", "sticky-top");
-        var u = document.querySelectorAll("#toc ul");
-        for (var i = 0; i < u.length; i++) {
-            u[i].classList.add("nav");
-            u[0].classList.add("scrollspy");
-        }
-        var u = document.querySelectorAll("#toc ul a");
-        for (var i = 0; i < u.length; i++) {
-            u[i].classList.add("nav-link");
-        }
-        var u = document.querySelectorAll("#toc ul li");
-        for (var i = 0; i < u.length; i++) {
-            u[i].classList.add("nav-item");
-        }
-        a.appendChild(toc);
-
-        // var spyElem = document.getElementById("mw-content-text");
-        var spyElem = document.getElementsByTagName("body")[0];
-        spyElem.setAttribute("data-bs-spy", "scroll");
-        spyElem.setAttribute("data-bs-target", "ul.scrollspy");
-        spyElem.setAttribute("data-bs-offset", "0");
-        spyElem.setAttribute("tabindex", "0");
+    const b = document.getElementsByTagName("body")[0];
+    const h = document.getElementsByTagName("mw-top-app-bar")[0];
+    
+    // show page loading until the page has finished
+    // the load event is fired when the whole page has loaded, including
+    // all dependent resources such as stylesheets and images.
+    function fade(element) {
+        var op = 1;  // initial opacity
+        var timer = setInterval(function () {
+            if (op <= 0.1){
+                clearInterval(timer);
+                element.style.display = 'none';
+            }
+            element.style.opacity = op;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+            op -= op * 0.1;
+        }, 30);
     }
-
+    function unfade(element) {
+        var op = 0.1;  // initial opacity
+        element.style.display = 'flex';
+        var timer = setInterval(function () {
+            if (op >= 1){
+                clearInterval(timer);
+            }
+            element.style.opacity = op;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+            op += op * 0.1;
+        }, 10);
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        fade(document.getElementsByTagName("mw-page-preloader")[0]);
+        unfade(document.getElementsByTagName("mw-root")[0]);
+    })
     // returns a function, that, as long as it continues to be invoked, will not
     // be triggered. The function wil lbe called after it stops being called for
     // N milliseconds. If 'immediate' is passed, trigger the function on the
@@ -56,81 +52,49 @@
             if (callNow) func.apply(context, args);
         };
     }
-
-    // update document by viewport width
-    // Extra Large (>=1400) = sideshow
-    // Medium (>=768px) = sideopen
-    // by Vanilla
-    var setViewport = function () {
-        v = window.innerWidth || document.documentElement.clientWidth;
-        b = document.getElementsByTagName("body")[0];
-        s = document.querySelector(".sidebar-container");
-        m = document.querySelector(".minibar-container");
-        if (v >= 1400 && b.classList.contains("page-Main_Page")) {
-            b.classList.add("sideshow");
-            s.classList.remove("drawer");
-           // m.classList.add("drawer");
-        } else if (v < 1400 && v >= 992) {
-            b.classList.remove("sideshow");
-            b.classList.add("minishow");
-            s.classList.add("drawer");
-            // m.classList.remove("drawer");
-        } else {
-            b.classList.remove("sideshow");
-            s.classList.add("drawer");
-        }
-    };
-    // initial document by current viewport
-    setViewport();
-    // on resize events
-    window.addEventListener("resize", function () {
-        setViewport();
-    });
-
     document.addEventListener("DOMContentLoaded", function () {
         var pos = 0;
-        var m = document.getElementById("masthead");
-        if (typeof m != "undefined" && m != null) {
+        var t = document.getElementsByClassName("hamburger");
+        if (typeof h != "undefined" && h != null) {
             // show (hide) masthead when window scrollUp & Down
             window.addEventListener(
                 "scroll",
                 debounce(function () {
                     if (window.scrollY < pos) {
-                        m.classList.add("show");
+                        h.classList.remove("sticky");
                     } else {
-                        m.classList.remove("show");
+                        h.classList.add("sticky");
                     }
                     pos = window.scrollY;
                 }, 10)
             );
-            // open (close) searchForm when clicking
-            document
-                .getElementById("search")
-                .addEventListener("click", function () {
-                    m.classList.add("searchshow");
-                });
-            document
-                .getElementById("searchclose")
-                .addEventListener("click", function () {
-                    m.classList.remove("searchshow");
-                });
         }
 
-        // open / close sidebar when clicking
-        var t = document.getElementsByClassName("sidebar-toggler");
-        var v = window.innerWidth || document.documentElement.clientWidth;
-        var b = document.getElementsByTagName("body")[0];
-
+        // trigger navigation drawer
         for (var i = 0; i < t.length; i++) {
             t[i].addEventListener("click", function () {
-                if (b.classList.contains("sideshow")) {
-                    b.classList.add("minishow");
-                    b.classList.remove("sideshow");
-                } else {
-                    b.classList.remove("minishow");
-                    b.classList.add("sideshow");
-                }
+                b.classList.toggle('drawer-open')
             });
         }
+    });
+
+    // Calculate the estimated reading time of an article
+    function readingTime() {
+        const text = document.getElementById("mw-content-text").innerText;
+        const wpm = 225;
+        const words = text.trim().split(/\s+/).length;
+        const time = Math.ceil(words / wpm);
+        const rtime = document.getElementById("rtime")
+        if (typeof rtime != "undefined" && rtime != null) {
+            rtime.innerText = time;
+        }
+    }
+    readingTime();
+    // enable tooltips (Bootstrap 5)
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 })();

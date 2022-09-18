@@ -1,0 +1,43 @@
+{{!
+
+	-- navigation drawer block
+
+	@typedef object skinLibrary
+}}
+<aside class="mw-nav-drawer" type="dismissible">
+	<div class="mw-nav-drawer__row">
+		<section>
+			<nav class="navbar">
+				<ul class="navbar-nav">
+					{{#data-nav-rail}}{{{html-items}}}{{/data-nav-rail}}
+				</ul>
+			</nav>
+		</section>
+		<hr class="divider">
+		<section>
+			<nav class="navbar">
+				<ul class="navbar-nav" id="navigation">
+					{{#data-nav-side}}
+						<li class="nav-item">
+							<a href="#" class="nav-link {{class}}" data-bs-toggle="collapse" data-bs-target="#{{id}}" aria-expanded="false">
+								{{{label}}}
+							</a>
+							<div class="accordion-collapse collapse" id="{{id}}" data-bs-parent="#navigation">
+								<ul class="navbar-nav">
+									{{{html-items}}}
+								</ul>
+							</div>
+						</li>
+					{{/data-nav-side}}
+				</ul>
+			</nav>
+		</section>
+		<section>
+			<nav class="navbar">
+				<ul class="navbar-nav">
+					{{#data-nav-bottom}}{{{html-items}}}{{/data-nav-bottom}}
+				</ul>
+			</nav>
+		</section>
+	</div>
+</aside>

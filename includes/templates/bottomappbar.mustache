@@ -1,0 +1,27 @@
+{{!
+
+	-- bottom application bar block
+	
+	@typedef object LogoItem
+}}
+{{#data-nav-actions}}
+	<mw-bottom-app-bar>
+		<mw-bottom-app-bar--fixed class="container-fluid">
+			<div class="mw-bottom-app-bar__row">
+				<section id="botappbar" class="collapse">
+					<nav class="navbar">
+						<ul class="navbar-nav">
+							{{{html-items}}}
+							<li id="ca-edit" class="d-none">
+								<!-- to meet Visual Editor requirement -->
+							</li>
+						</ul>
+					</nav>
+				</section>
+				<button class="icon-only collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#botappbar" aria-expanded="true" aria-controls="botappbar">
+					<span>btn</span>
+				</button>
+			</div>
+		</mw-bottom-app-bar--fixed>
+	</mw-bottom-app-bar>
+{{/data-nav-actions}}

@@ -49,8 +49,8 @@
      */
     public static function onOutputPageBeforeHTML( OutputPage $out, &$text ) {
         $out->addMeta( 'viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no' );
-        $out->addMeta( 'description', 'theLijia Library');
-        $out->addMeta( 'author', 'Lijia-yongxinL');
+        $out->addMeta( 'description', 'theLiJIA Library');
+        $out->addMeta( 'author', 'theLiJIA-yongxinL');
     }
 
     /**
