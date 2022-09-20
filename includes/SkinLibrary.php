@@ -132,6 +132,9 @@ class SkinLibrary extends SkinMustache
 		$max = 3
 	) {
 		$lnk = $this->getOutput()->getCategoryLinks();
+		if ( count( $lnk ) === 0 ) {
+			return '';
+		}
 		$tmp = new DOMDocument();
 		@$tmp->loadHTML(implode($lnk['normal']));
 		$lnk = $tmp->getElementsByTagName('a');
@@ -204,6 +207,17 @@ class SkinLibrary extends SkinMustache
 			return null;
 		}
 	}
+
+	private function addClass( &$obj, $class, $field = 'class' ) {
+		$classList = $obj[$field] ?? [];
+		if ( is_array( $classList ) ) {
+			$classList[] = $class;
+			$obj[$field] = $classList;
+		} else {
+			$obj[$field] = $classList . ' ' . $class;
+		}
+	}
+
 	/**
 	 * build array of url for page actions
 	 * @note: including 
@@ -267,14 +281,14 @@ class SkinLibrary extends SkinMustache
 						if (array_key_exists($key, $v)) {
 							$rtn[$key] = $nav[$k][$key];
 							if ($name == 'iconview') {
-								$rtn[$key]['class'] .= ' icon-only';
+								$this->addClass( $rtn[$key], 'icon-only' );
 							}
 						}
 					}
 					if (array_key_exists($key, $pt)) {
 						$rtn[$key] = $pt[$key];
 						if ($name == 'iconview') {
-							$rtn[$key]['class'] .= ' icon-only';
+							$this->addClass( $rtn[$key], 'icon-only' );
 						}
 					}
 				}
@@ -401,7 +415,7 @@ class SkinLibrary extends SkinMustache
 				'label' => $this->getTranslation($id) ?: Sanitizer::escapeIdForAttribute($name)
 			];
 			foreach ($items as $key => $item) {
-				$portletData['html-items'] .= htmlspecialchars_decode($this->makeListItem($key, $this->decoratePortletClass($item, $type)));
+				$portletData['html-items'] .= htmlspecialchars_decode($this->makeListItem($key, $this->decoratePortletClass($item, $type, $key)));
 			}
 			return $portletData;
 		} else {
@@ -415,32 +429,34 @@ class SkinLibrary extends SkinMustache
 	 * 									MENU_TYPE_DEFAULT - a list of navigation items (nav-item),
 	 * 									MENU_TYPE_DROPDOWN- a list items in dropdown or
 	 * 									MENU_TYPE_LINK 	  - a list of navigaton link (nav-link).
+	 * @param string $key to fallback to
 	 * @return 	array					modified version of portletData input
 	 */
 	private function decoratePortletClass(
 		array 	$portletData,
-		int 	$type = self::MENU_TYPE_DEFAULT
+		int 	$type = self::MENU_TYPE_DEFAULT,
+		string $key = 'item-unknown'
 	) {
 		// $class = $portletData['class'];
 		if ($type == self::MENU_TYPE_DEFAULT) {
-			$portletData['class'] .= " nav-item";
+			$this->addClass( $portletData, 'nav-item' );
 		}
 
-		$label = isset($portletData['id']) ? $portletData['id'] : $portletData['text'];
+		$label = isset($portletData['id']) ? $portletData['id'] : $portletData['text'] ?? $key ;
 		$portletData['msg'] = Sanitizer::escapeIdForAttribute(Library\Constants::SKIN_NAME . '-' . $label);
 
 		if (isset($portletData['links'])) {
 			foreach ($portletData['links'] as $key => $item) {
 				if ($type == self::MENU_TYPE_DROPDOWN) {
-					$portletData['links'][$key]['class'] .= " dropdown-item";
+					$this->addClass( $portletData['links'][$key], 'dropdown-item' );
 				} else {
-					$portletData['links'][$key]['class'] .= " nav-link";
+					$this->addClass( $portletData['links'][$key], 'nav-link' );
 				}
 				$portletData['links'][$key]['msg'] = Sanitizer::escapeIdForAttribute(Library\Constants::SKIN_NAME . '-' . $label);
 				$portletData['links'][$key]['text'] = null;
 			}
 		} else {
-			$portletData['link-class'] .= ' nav-link';
+			$this->addClass( $portletData, 'nav-link', 'link-class' );
 		}
 		// remove array['text'] in order to use translation message.
 		$portletData['text'] = null;
