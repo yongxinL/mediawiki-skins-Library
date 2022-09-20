@@ -208,6 +208,15 @@ class SkinLibrary extends SkinMustache
 		}
 	}
 
+	/**
+	 * Adds a class to the passed element accounting for string
+	 * and array definitions
+	 *
+	 * @param array &$obj to update
+	 * @param string $class to add
+	 * @param string $field to write to
+	 * 
+	 */
 	private function addClass( &$obj, $class, $field = 'class' ) {
 		$classList = $obj[$field] ?? [];
 		if ( is_array( $classList ) ) {
