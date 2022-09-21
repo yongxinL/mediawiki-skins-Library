@@ -38,6 +38,9 @@ class SkinLibrary extends SkinMustache
 	private const MENU_TYPE_DEFAULT = 0;
 	/** @var int */
 	private const MENU_TYPE_DROPDOWN = 1;
+	/**
+	 * nav item keys for StructuredDiscussions (flow) extension.
+	 */
 	private const CONFIG_ARRAY_TALK = [
 		'notifications-alert',
 		'notifications-notice'
@@ -46,13 +49,19 @@ class SkinLibrary extends SkinMustache
 		'view',
 		've-edit'
 	];
+	/**
+	 * item will be remove from category links
+	 */
+	private const CONFIG_CATEGORY_FILTER = [
+		'Pages using DynamicPageList parser function',
+		'Pages with syntax highlighting errors'
+	];
 
 	public function __construct($options = [])
 	{
 		$options['templateDirectory'] = __DIR__ . '/templates';
 		parent::__construct($options);
 	}
-
 	/**
 	 * Extend the method SkinMustache::getTemplateData to add additional template data.
 	 * 
@@ -142,44 +151,42 @@ class SkinLibrary extends SkinMustache
 		$max = 3
 	) {
 		$lnk = $this->getOutput()->getCategoryLinks();
-		$tmp = new DOMDocument();
-		@$tmp->loadHTML(implode($lnk['normal']));
-		$lnk = $tmp->getElementsByTagName('a');
-		$remove = ['Pages using DynamicPageList parser function', ''];
-		$tmp = [];
-		$cnt = 1;
-		$rt = '';
-
-		foreach ($lnk as $k => $v) {
-			if ($unique) {
-				// get root category
-				$id = current(explode('/', $v->nodeValue));
-			} else {
-				$id = $v->nodeValue;
-			}
-			// remove duplicate root category
-			if ((!array_key_exists($id, $tmp)) && ($cnt <= $max) && (!array_key_exists($id, $remove))) {
-				$cnt++;
-				$tmp[$id] = [
-					'text' => $id,
-					'class' => $options['class'],
-				];
-				$tmp[$id]['links'][0] = [
-					'text' => $id,
-					'class' => $options['lnkclass'],
-					'href' => $v->getAttribute('href'),
-					'title' => $v->getAttribute('title')
-				];
-				$rt .= $this->makeListItem($k, $tmp[$id]);
-			}
-		}
-		if (!empty($rt)) {
-			return $rt;
-		} else {
+		if (count($lnk['normal']) === 0) {
 			return null;
-		}
-	}
+		} else {
+			$tmp = new DOMDocument();
+			@$tmp->loadHTML(implode($lnk['normal']));
+			$lnk = $tmp->getElementsByTagName('a');
+			$tmp = [];
+			$cnt = 1;
+			$rtn = '';
 
+			foreach ($lnk as $k => $v) {
+				if ($unique) {
+					// get root category
+					$id = current(explode('/', $v->nodeValue));
+				} else {
+					$id = $v->nodeValue;
+				}
+				// remove duplicate root category
+				if ((!array_key_exists($id, $tmp)) && ($cnt <= $max) && (!in_array($id, self::CONFIG_CATEGORY_FILTER))) {
+					$cnt++;
+					$tmp[$id] = [
+						'text' => $id,
+						'class' => $options['class'],
+					];
+					$tmp[$id]['links'][0] = [
+						'text' => $id,
+						'class' => $options['lnkclass'],
+						'href' => $v->getAttribute('href'),
+						'title' => $v->getAttribute('title')
+					];
+					$rtn .= $this->makeListItem($k, $tmp[$id]);
+				}
+			}
+		}
+		return $rtn;
+	}
 	/**
 	 *  Build array of urls for navigation menu
 	 * @param	string	$name	
@@ -189,7 +196,7 @@ class SkinLibrary extends SkinMustache
 		$name
 	) {
 		$nav = Library\Constants::getCustomNavigationData($this->getUser()->isRegistered() ? 1 : 0);
-		$rt = [];
+		$rtn = [];
 		if ($name == 'sidebar') {
 			foreach (array_filter(array_merge($this->buildSidebar(), $nav)) as $k => $v) {
 				if (is_array($v)) {
@@ -202,12 +209,12 @@ class SkinLibrary extends SkinMustache
 						case 'bottom':
 							break;
 						default:
-							$rt[] = $this->getPortletData(strtolower($k), $v);
+							$rtn[] = $this->getPortletData(strtolower($k), $v);
 							break;
 					}
 				}
 			}
-			return $rt;
+			return $rtn;
 		} elseif (array_key_exists($name, $nav)) {
 			return $this->getPortletData($name, $nav[$name]);
 		} else {
@@ -298,7 +305,7 @@ class SkinLibrary extends SkinMustache
 							$tmp[$key] = $nav[$k][$key];
 							$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
 							if ($name == 'iconviews') {
-								$tmp[$key]['class'] .= ' icon-only';
+								$this->addClass($tmp[$key], 'icon-only');
 							}
 						}
 					}
@@ -306,11 +313,10 @@ class SkinLibrary extends SkinMustache
 						$tmp[$key] = $pt[$key];
 						$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
 						if ($name == 'iconviews') {
-							$tmp[$key]['class'] .= ' icon-only';
+							$this->addClass($tmp[$key], 'icon-only');
 						}
 					}
 				}
-
 				if (is_array($tmp)) {
 					$rtn = $this->getPortletData($name, $tmp);
 				}
@@ -341,14 +347,13 @@ class SkinLibrary extends SkinMustache
 	{
 		$bg = $this->getConfig()->get('LibraryHeroHeaderBG');
 		$i = rand(0, count($bg) - 1);
-		$rt = 'class="background';
+		$rtn = 'class="background';
 		if (current(explode('-', basename($bg[$i]))) == 'dark') {
-			$rt .= ' dark';
+			$rtn .= ' dark';
 		}
-		$rt .= '" style="background-image: url(' . $bg[$i] . ');"';
-		return $rt;
+		$rtn .= '" style="background-image: url(' . $bg[$i] . ');"';
+		return $rtn;
 	}
-
 	/**
 	 * HTML string for footer links
 	 * @return	string	HTML
@@ -360,13 +365,13 @@ class SkinLibrary extends SkinMustache
 		$ico = $this->getFooterIcons('icononly');
 		$info = ['lastmod', 'copyright'];
 		$tmp = new DOMDocument();
-		$rt = '';
+		$rtn = '';
 
 		switch ($name) {
 			case 'info':
 				foreach (${$name} as $key) {
 					if (!empty($lnk[$name][$key])) {
-						$rt .= Html::rawElement(
+						$rtn .= Html::rawElement(
 							'p',
 							[],
 							$lnk[$name][$key]
@@ -391,7 +396,7 @@ class SkinLibrary extends SkinMustache
 						'href' => $v->getAttribute('href'),
 						'title' => $v->getAttribute('title')
 					];
-					$rt .= $this->makeListItem($k, $tmp[$id]);
+					$rtn .= $this->makeListItem($k, $tmp[$id]);
 				}
 				break;
 			case 'icon':
@@ -399,19 +404,18 @@ class SkinLibrary extends SkinMustache
 					foreach ($ico as $k => $v) {
 						foreach ($v as $icon) {
 							$icon['class'] = 'px-1';
-							$rt .= $this->makeFooterIcon($icon);
+							$rtn .= $this->makeFooterIcon($icon);
 						}
 					}
 				}
 				break;
 		}
-		if (!empty($rt)) {
-			return $rt;
+		if (!empty($rtn)) {
+			return $rtn;
 		} else {
 			return null;
 		}
 	}
-
 	/**
 	 * rendering data that can be passed to a Mustache template.
 	 * @param 	string 	$name	of the portal e.g. p-personal => personal
@@ -453,8 +457,7 @@ class SkinLibrary extends SkinMustache
 	 * @param 	array 	$portletData 	array data to decorate.
 	 * @param 	int 	$type 			representing one of the menu types.
 	 * 									MENU_TYPE_DEFAULT - a list of navigation items (nav-item),
-	 * 									MENU_TYPE_DROPDOWN- a list items in dropdown or
-	 * 									MENU_TYPE_LINK 	  - a list of navigaton link (nav-link).
+	 * 									MENU_TYPE_DROPDOWN- a list items in dropdown
 	 * @return 	array					modified version of portletData input
 	 */
 	private function decoratePortletClass(
@@ -498,5 +501,24 @@ class SkinLibrary extends SkinMustache
 		// If no message exists fallback to plain text
 		$labelText = $msgObj->exists() ? $msgObj->text() : null;
 		return $labelText;
+	}
+	/**
+	 * Adds a class to the passed element accounting for string
+	 * and array definitions
+	 *
+	 * @param array &$obj to update
+	 * @param string $class to add
+	 * @param string $field to write to
+	 * 
+	 */
+	private function addClass(&$obj, $class, $field = 'class')
+	{
+		$classList = $obj[$field] ?? [];
+		if (is_array($classList)) {
+			$classList[] = $class;
+			$obj[$field] = $classList;
+		} else {
+			$obj[$field] = $classList . ' ' . $class;
+		}
 	}
 }
