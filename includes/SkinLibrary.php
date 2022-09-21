@@ -305,7 +305,7 @@ class SkinLibrary extends SkinMustache
 							$tmp[$key] = $nav[$k][$key];
 							$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
 							if ($name == 'iconviews') {
-								$this->addClass($tmp[$key], 'icon-only');
+								$this->addClass($tmp[$key], 'icon-only d-none d-lg-block');
 							}
 						}
 					}

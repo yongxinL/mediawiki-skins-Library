@@ -266,6 +266,15 @@ mw-article-footer {
     background-color: var(--skinlib-sys-color-surface-light);
     font-size: 14px;
 }
+@media screen and (max-width: 768px) {
+    mw-article-page {
+        padding: 0 1.5rem;
+    }
+    mw-article-footer {
+        width: calc(100% - 24px);
+        margin: 0;
+    }
+}
 /* ######### Preloader ######### */
 mw-page-preloader {
     background-color: orange;
@@ -303,27 +312,6 @@ mw-page-preloader span:nth-child(odd) {
     }
 }
 /* ######### Typography ######### */
-body .display-1 {
-    font-family: var(--skinlib-sys-typescale-display-large-font-family);
-    font-size: var(--skinlib-sys-typescale-display-large-font-size);
-    font-weight: var(--skinlib-sys-typescale-display-large-font-weight);
-    letter-spacing: var(--skinlib-sys-typescale-display-large-letter-spacing);
-    line-height: var(--skinlib-sys-typescale-display-large-line-height);
-}
-body .display-2 {
-    font-family: var(--skinlib-sys-typescale-display-medium-font-family);
-    font-size: var(--skinlib-sys-typescale-display-medium-font-size);
-    font-weight: var(--skinlib-sys-typescale-display-medium-font-weight);
-    letter-spacing: var(--skinlib-sys-typescale-display-medium-letter-spacing);
-    line-height: var(--skinlib-sys-typescale-display-medium-line-height);
-}
-body .display-3 {
-    font-family: var(--skinlib-sys-typescale-display-small-font-family);
-    font-size: var(--skinlib-sys-typescale-display-small-font-size);
-    font-weight: var(--skinlib-sys-typescale-display-small-font-weight);
-    letter-spacing: var(--skinlib-sys-typescale-display-small-letter-spacing);
-    line-height: var(--skinlib-sys-typescale-display-small-line-height);
-}
 body h1, body .h1 {
     border: 0;
     font-size: calc(1.375rem + 1.5vw);
@@ -371,26 +359,19 @@ body h6, body .h6 {
     line-height: var(--skinlib-sys-typescale-title-small-line-height);
 }
 @media (min-width: 1200px) {
-    body .display-1 {
-        font-size: 3.75rem;
-    }
-    body .display-2 {
-        font-size: 3.5rem;
-    }
-    body .display-3 {
-        font-size: 3rem;
-    }
     body h1, body .h1 {
-        font-size: 2.5rem;
-    }
-    body h2, body .h2 {
-        font-size: 2rem;
+        font-size: var(--skinlib-sys-typescale-display-large-font-size);
     }
     body h3, body .h3 {
         font-size: 1.75rem;
     }
     body h4, body .h4 {
         font-size: 1.5rem;
+    }
+}
+@media screen and (max-width: 768px) {
+    body {
+        font-size: var(--skinlib-sys-typescale-body-medium-font-size);
     }
 }
 /* ######### Navigation & Links ######### */
@@ -764,7 +745,6 @@ mw-article-header header.background {
     background-position: 0 50%;
     background-size: cover;
     padding: 3rem 4rem;
-    margin: 0 2.5rem 5rem;
 }
 mw-article-header header.dark,
 mw-article-header header.dark span,
@@ -808,6 +788,19 @@ mw-article-header .breadcrumb-item {
 .breadcrumb-item+.breadcrumb-item::before {
     color: inherit;
 }
+@media screen and (max-width: 768px) {
+    mw-article-header header {
+        margin: 0 0 .5rem;
+        padding: 0;
+    }
+    mw-article-header header.background {
+        padding: 1rem;
+    }
+    mw-article-header header.background .article-header__title {
+        width: 100%;
+        text-align: center;
+    }
+}
 @media (max-width: 1199.98px) {
     mw-article-header header.background h1 {
         width: initial;
@@ -820,6 +813,11 @@ mw-article-header .breadcrumb-item {
 /* --- article --- */
 .mw-article-body {
     margin: 0 2.5rem;
+}
+@media screen and (max-width: 768px) {
+    .mw-article-body {
+        margin: 0 0 .5rem;
+    }
 }
 /* ######### article footer ######### */
 mw-article-footer section {

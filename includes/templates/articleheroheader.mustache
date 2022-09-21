@@ -6,23 +6,23 @@
 }}
 <header {{{html-header-herobg}}}>
 	<div class="container">
-		<nav id="contentSub" class="contentSub {{{html-userlangattributes}}}">
+		<nav id="contentSub" class="contentSub {{{html-userlangattributes}}} d-none d-md-block">
 			{{{html-subtitle}}}
 		</nav>
 		<div class="article-header__title">
-			<h1 class="display-1">{{msg-article-title}}</h1>
+			<h1>{{msg-article-title}}</h1>
 		</div>
 		<nav style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				{{{html-header-category}}}
-				<li class="breadcrumb-item">
+				<li class="breadcrumb-item d-none d-md-inline-flex">
 					<i class="material-symbols-outlined">calendar_month</i>
 					<span class="ms-1">{{msg-article-lastedit}}</span>
 				</li>
 				<li class="breadcrumb-item">
 					<i class="material-symbols-outlined">timer</i>
 					<span class="mx-1" id="rtime"></span>
-					<span>minutes read</span>
+					<span class="d-none d-md-block">minutes read</span>
 				</li>
 			</ol>
 		</nav>
