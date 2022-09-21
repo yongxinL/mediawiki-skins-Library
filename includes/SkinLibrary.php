@@ -34,16 +34,24 @@ use Wikimedia\WrappedStringList;
  */
 class SkinLibrary extends SkinMustache
 {
-	/** @var	int */
+	/** @var int */
 	private const MENU_TYPE_DEFAULT = 0;
-	/** @var	int */
+	/** @var int */
 	private const MENU_TYPE_DROPDOWN = 1;
+	private const CONFIG_ARRAY_TALK = [
+		'notifications-alert',
+		'notifications-notice'
+	];
+	private const CONFIG_ARRAY_VIEWS = [
+		'view',
+		've-edit'
+	];
 
-	/* 	public function __construct($options = [])
+	public function __construct($options = [])
 	{
 		$options['templateDirectory'] = __DIR__ . '/templates';
 		parent::__construct($options);
-	} */
+	}
 
 	/**
 	 * Extend the method SkinMustache::getTemplateData to add additional template data.
@@ -56,7 +64,6 @@ class SkinLibrary extends SkinMustache
 	 */
 	public function getTemplateData(): array
 	{
-		$skin = $this;
 		$out = $this->getOutput();
 		$parentData = parent::getTemplateData();
 
@@ -83,6 +90,7 @@ class SkinLibrary extends SkinMustache
 			$parentData,
 			[
 				'page-isarticle' => (bool)$out->isArticle(),
+				'page-isheroheader' => $this->isHeroHeader(),
 				// links
 				'link-mainpage' => Title::newMainPage()->getLocalUrl(),
 				'link-logopath' => ResourceLoaderSkinModule::getAvailableLogos($this->getConfig())['1x'],
@@ -92,16 +100,18 @@ class SkinLibrary extends SkinMustache
 				'data-nav-rail' => $this->buildCustNavData('shortcut'),
 				'data-nav-side' => $this->buildCustNavData('sidebar'),
 				'data-nav-bottom' => $this->buildCustNavData('bottom'),
-				'data-nav-talk' => $this->buildActionNavData('talk'),
-				'data-nav-iconview' => $this->buildActionNavData('iconview'),
-				'data-nav-usermenu' => $this->buildActionNavData('usermenu'),
 				'data-nav-actions' => $this->buildActionNavData('actions'),
+				'data-nav-iconview' => $this->buildActionNavData('iconviews'),
+				'data-nav-namespace' => $this->buildActionNavData('namespace'),
+				'data-nav-talk' => $this->buildActionNavData('talk'),
+				'data-nav-usermenu' => $this->buildActionNavData('usermenu'),
+				'data-nav-views' => $this->buildActionNavData('views'),
 
 				// HTML string
 				'html-header-herobg' => $this->buildHeaderHeroBGLinks(),
-				'html-header-category' => $this->buildHeaderCategoryLinks(['class' => 'breadcrumb-item nav-item', 'lnkclass' => 'nav-link']),
+				'html-header-category' => $this->buildCategoryLinks(['class' => 'breadcrumb-item nav-item', 'lnkclass' => 'nav-link']),
 				'html-footer-info' => $this->buildFooterLinks('info'),
-				'html-footer-category' => $this->buildHeaderCategoryLinks(['class' => 'nav-item', 'lnkclass' => 'nav-link'], false, 10),
+				'html-footer-category' => $this->buildCategoryLinks(['class' => 'nav-item', 'lnkclass' => 'nav-link'], false, 10),
 				'html-footer-places' => $this->buildFooterLinks('places'),
 				'html-footer-icons' => $this->buildFooterLinks('icon'),
 				'html-search-input' => $this->makeSearchInput([
@@ -123,7 +133,7 @@ class SkinLibrary extends SkinMustache
 	 * HTML string for category links
 	 * @return	string	HTML
 	 */
-	private function buildHeaderCategoryLinks(
+	private function buildCategoryLinks(
 		$options = [
 			'class' => '',
 			'lnkclass' => ''
@@ -219,10 +229,11 @@ class SkinLibrary extends SkinMustache
 	) {
 		$nav = $this->buildContentNavigationUrls();
 		$pt = $this->getStructuredPersonalTools();
-		$talk = ['notifications-alert', 'notifications-notice'];
 		$login = $this->getConfig()->get('LibraryDefaultLogin') ?: 'login';
-		$iconview = $this->getConfig()->get('LibraryIconView');
-		$actions = $this->getConfig()->get('LibraryBottomAction');
+		$talk = self::CONFIG_ARRAY_TALK;
+		$views = self::CONFIG_ARRAY_VIEWS;
+		$iconviews = $this->getConfig()->get('LibraryIconViews');
+		$actions = $this->getConfig()->get('LibraryBottomActions');
 		$rtn = [];
 
 		switch ($name) {
@@ -257,41 +268,70 @@ class SkinLibrary extends SkinMustache
 					$tmp = $this->getPortletData('usermenu', $pt);
 					$rtn['html-items'] = $tmp['html-items'];
 				}
-				if (is_array($rtn)) {
-					return $rtn;
+				break;
+			case 'namespace':
+				foreach ($nav['namespaces'] as $k => $v) {
+					if ($v['context'] == 'subject') {
+						$rtn = [
+							'id' => $k,
+							'text' => $v['text'],
+							'href' => $v['href'],
+							'html-items' => Html::rawElement(
+								'a',
+								[
+									'class' => $v['class'] . ' article-header__subtitle',
+									'href' => $v['href'],
+									'nsid' => $k,
+									'title' => $v['text']
+								],
+								$this->getTranslation($v['id']) ?? $v['text']
+							)
+						];
+						break;
+					}
 				}
 				break;
 			default:
 				foreach (${$name} as $key) {
 					foreach ($nav as $k => $v) {
 						if (array_key_exists($key, $v)) {
-							$rtn[$key] = $nav[$k][$key];
-							if ($name == 'iconview') {
-								$rtn[$key]['class'] .= ' icon-only';
+							$tmp[$key] = $nav[$k][$key];
+							$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
+							if ($name == 'iconviews') {
+								$tmp[$key]['class'] .= ' icon-only';
 							}
 						}
 					}
 					if (array_key_exists($key, $pt)) {
-						$rtn[$key] = $pt[$key];
-						if ($name == 'iconview') {
-							$rtn[$key]['class'] .= ' icon-only';
+						$tmp[$key] = $pt[$key];
+						$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
+						if ($name == 'iconviews') {
+							$tmp[$key]['class'] .= ' icon-only';
 						}
 					}
 				}
-				// renmae id for visual editor
-				if (array_key_exists('ve-edit', $rtn)) {
-					$rtn['ve-edit']['id'] = 'ca-visual-editor';
-				}
-				// rename id for source editor
-				if (array_key_exists('edit', $rtn)) {
-					$rtn['edit']['id'] = 'ca-source-editor';
-				}
-				if (is_array($rtn)) {
-					return $this->getPortletData($name, $rtn);
+
+				if (is_array($tmp)) {
+					$rtn = $this->getPortletData($name, $tmp);
 				}
 				break;
 		}
-		return null;
+		return $rtn ?? null;
+	}
+	/**
+	 * set whether to display hero header.
+	 * @return	bool
+	 */
+	private function isHeroHeader()
+	{
+		$current = $this->buildActionNavData('namespace');
+		$ns = $this->getConfig()->get('LibraryHeroHeaderNS');
+
+		if ((in_array($current['id'], $ns)) && ($this->getOutput()->isArticle())) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	/**
 	 * HTML string for background of hero header

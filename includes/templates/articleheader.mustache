@@ -1,0 +1,25 @@
+{{!
+
+	-- article header block
+
+	@typedef object LogoItem
+}}
+<header>
+	<div class="container">
+		<div class="article-header__title">
+			<h2 id="firstHeading">{{msg-article-title}}</h2>
+			{{{html-subtitle}}}
+		</div>
+		{{#page-isarticle}}
+			<div class="article-header__action">
+				<nav class="navbar">
+					<ul class="nav">
+						{{#data-nav-views}}
+							{{{html-items}}}
+						{{/data-nav-views}}
+					</ul>
+				</nav>
+			</div>
+		{{/page-isarticle}}
+	</div>
+</header>

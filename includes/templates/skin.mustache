@@ -17,14 +17,19 @@
 		<mw-drawer-app-content>
 			<div class="page-content">
 				<mw-article-page>
+					<mw-article-header>
+						{{#page-isheroheader}}
+							{{> articleheroheader}}
+						{{/page-isheroheader}}
+						{{> articleheader}}
+					</mw-article-header>
 					<main id="content" role="main" aria-label="main content">
 						<a id="top"></a>
-						{{#page-isarticle}}
-							{{> pagehero}}
-						{{/page-isarticle}}
 						<article class="mw-article-body" data-mw-ve-target-container>
-							{{{html-user-message}}}
-							{{{html-body-content}}}
+							<div class="container">
+								{{{html-user-message}}}
+								{{{html-body-content}}}
+							</div>
 						</article>
 					</main>
 					{{{html-after-content}}}

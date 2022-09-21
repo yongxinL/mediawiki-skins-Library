@@ -18,13 +18,17 @@
                 {
                     "name": "library",
                     "templateDirectory": "includes/templates",
-                    "styles": ["skins.library.styles"]
+                    "styles": [
+                        "skins.library.styles"
+                    ]
                 }
             ]
         }
     },
     "MessagesDirs": {
-        "Library": ["i18n"]
+        "Library": [
+            "i18n"
+        ]
     },
     "AutoloadClasses": {
         "SkinLibrary": "includes/SkinLibrary.php"
@@ -86,7 +90,7 @@
             "value": "anon_oauth_login",
             "description": "Specific user authentication, login: Mediawiki or anon_oauth_login: oAuth2."
         },
-        "LibraryIconView": {
+        "LibraryIconViews": {
             "value": [
                 "talk",
                 "ve-edit",
@@ -95,11 +99,11 @@
             ],
             "description": "Specific navigation item will display in topbar"
         },
-        "LibraryBottomAction": {
+        "LibraryBottomActions": {
             "value": [
                 "view",
                 "watch",
-                "unwatch", 
+                "unwatch",
                 "ve-edit",
                 "edit",
                 "history",
@@ -108,6 +112,14 @@
                 "protect"
             ],
             "description": "Specific navigation item will display in bottom toolbar"
+        },
+        "LibraryHeroHeaderNS": {
+            "value": [
+                "main",
+                "category",
+                "help"
+            ],
+            "description": "namespace that Hero Header appeared"
         },
         "LibraryHeroHeaderBG": {
             "value": [

@@ -156,7 +156,7 @@ mw-top-app-bar.sticky mw-top-app-bar--sticky.container-fluid {
 mw-bottom-app-bar .container-fluid {
     border-radius: 1rem;
     position: fixed;
-    bottom: 1rem;
+    bottom: 3rem;
     right: 1rem;
     max-width: calc(100vw - var(--skinlib-theme-left-nav-rail-width));
     width: initial;
@@ -339,6 +339,8 @@ body h2, body .h2 {
     font-weight: var(--skinlib-sys-typescale-headline-medium-font-weight);
     letter-spacing: var(--skinlib-sys-typescale-headline-medium-letter-spacing);
     line-height: var(--skinlib-sys-typescale-headline-medium-line-height);
+    margin-bottom: .5rem;
+    padding-top: 0;
 }
 body h3, body .h3 {
     font-size: calc(1.3rem + 0.6vw);
@@ -747,39 +749,40 @@ aside.mw-nav-drawer .mw-nav-drawer__row section:last-child {
     width: var(--skinlib-theme-left-nav-drawer-width);
 }
 /* ######### article page ######### */
-/* --- article page hero --- */
-mw-article-page-hero header {
+/* --- article header --- */
+mw-article-header header {
     font-family: var(--skinlib-sys-typescale-title-font-family-name);
     font-size: var(--skinlib-sys-typescale-title-small-font-size);
     font-weight: var(--skinlib-sys-typescale-title-small-font-weight);
     letter-spacing: var(--skinlib-sys-typescale-title-small-letter-spacing);
     line-height: var(--skinlib-sys-typescale-title-small-line-height);
+    margin: 0 2.5rem 2rem;
+}
+mw-article-header header.background {
     border-radius: 3rem;
     background-repeat: no-repeat;
     background-position: 0 50%;
     background-size: cover;
-    margin: 0 2.5rem;
-}
-mw-article-page-hero header.background {
     padding: 3rem 4rem;
+    margin: 0 2.5rem 5rem;
 }
-mw-article-page-hero header.dark,
-mw-article-page-hero header.dark span,
-mw-article-page-hero header.dark h1,
-mw-article-page-hero header.dark a,
-mw-article-page-hero header.dark a:visited {
+mw-article-header header.dark,
+mw-article-header header.dark span,
+mw-article-header header.dark h1,
+mw-article-header header.dark a,
+mw-article-header header.dark a:visited {
     color: var(--skinlib-sys-color-on-surface-dark);
 }
-mw-article-page-hero header .container {
+mw-article-header header .container {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
 }
-mw-article-page-hero header.background .container {
+mw-article-header header.background .container {
+    flex-direction: column;
     min-height: 360px;
 }
-mw-article-page-hero #contentSub,
-mw-article-page-hero #contentSub2 {
+mw-article-header #contentSub,
+mw-article-header #contentSub2 {
     display: flex;
     flex-direction: column;
     font-size: inherit;
@@ -787,17 +790,17 @@ mw-article-page-hero #contentSub2 {
     margin: 0;
     color: inherit;
 }
-mw-article-page-hero h1 {
+mw-article-header h1 {
     padding: 2.5rem 0;
 }
-mw-article-page-hero header.background h1 {
+mw-article-header header.background .article-header__title {
     width: 70%;
 }
-mw-article-page-hero ol.breadcrumb {
+mw-article-header ol.breadcrumb {
     justify-content: end;
     margin: 0;
 }
-mw-article-page-hero .breadcrumb-item {
+mw-article-header .breadcrumb-item {
     display: inline-flex;
     align-items: center;
     margin: 0;
@@ -806,16 +809,17 @@ mw-article-page-hero .breadcrumb-item {
     color: inherit;
 }
 @media (max-width: 1199.98px) {
-    mw-article-page-hero header.background h1 {
+    mw-article-header header.background h1 {
         width: initial;
     }
+}
+/* ######### article body ######### */
+.printfooter {
+    display: none;
 }
 /* --- article --- */
 .mw-article-body {
     margin: 0 2.5rem;
-}
-#mw-content-text {
-    margin-top: 5rem;
 }
 /* ######### article footer ######### */
 mw-article-footer section {
@@ -838,6 +842,29 @@ mw-article-footer .category {
     padding: .5rem 0;
 }
 /* ######### Components ######### */
+/* --- wikitable --- */
+.mw-article-body .wikitable {
+    margin-bottom: 1rem;
+    color: #212529;
+    vertical-align: top;
+    border-color: #dee2e6;
+}
+.mw-article-body .wikitable>tbody {
+    vertical-align: inherit;
+}
+.mw-article-body .wikitable>:not(caption)>*>* {
+    padding: .5rem .5rem;
+    border-width: 0 1px;
+    border-bottom-width: 1px;
+}
+.mw-article-body .wikitable>tbody>tr:hover>* {
+    --bs-table-accent-bg: rgba(0, 0, 0, 0, 0.075);
+    color: #212529;
+}
+.wikitable>tr>th, .wikitable>*>tr>th {
+    background-color: #eaecf0;
+    text-align: center;
+}
 /* --- search modal --- */
 mw-search-modal .modal-content {
     margin: 0 1rem;
@@ -875,15 +902,39 @@ mw-search-modal .searchform .input-group-text i {
 mw-search-modal .searchform .form-control:focus {
     box-shadow: none;
 }
+/* --- Special Pages --- */
+.mw-specialpages-list {
+    font-size: var(--skinlib-sys-typescale-body-medium-font-size);
+    font-weight: var(--skinlib-sys-typescale-body-medium-font-weight);
+}
+/* --- Visual Editor --- */
+.ve-available:not(.ve-activated) mw-article-header header,
+.ve-activated #views-ca-ve-edit,
+.ve-activated mw-article-header header.background,
+.ve-activated mw-article-footer section:first-of-type {
+    display: none;
+}
+.ve-available:not(.ve-activated) mw-article-header header.background {
+    display: block;
+}
+.ve-activated mw-article-header header,
+.ve-activated mw-article-footer {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.ve-init-mw-desktopArticleTarget-originalContent:not(:empty) {
+    box-sizing: border-box;
+    height: calc(100vh - 300px);
+    padding: .5rem 1rem;
+    overflow-y: scroll;
+}
+.oo-ui-toolbar.ve-ui-toolbar-floating>.oo-ui-toolbar-bar {
+    top: var(--skinlib-theme-top-app-bar-height);
+}
 /* --- debug Log --- */
 #mw-html-debug-log {
-    display: block;
-    width: calc(100% - var(--skinlib-theme-left-nav-rail-width));
+    font-size: var(--skinlib-sys-typescale-body-small-font-size);
+    margin: 0 auto;
     max-width: 1200px;
-    margin: 5rem auto 2.5rem;
-    padding: 2rem;
-    border: 1px solid var(--skinlib-sys-color-primary-container-light);
-    border-radius: 2rem;
-    background-color: var(--skinlib-sys-color-surface-light);
-    font-size: 14px;
+    width: calc(100% - var(--skinlib-theme-left-nav-rail-width));
 }
