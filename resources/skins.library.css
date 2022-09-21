@@ -86,7 +86,7 @@
     --skinlib-sys-typescale-title-small-font-size: 0.875rem;
     --skinlib-sys-typescale-title-small-letter-spacing: 0.1px;
     --skinlib-sys-typescale-title-small-line-height: 20px;
-    --skinlib-sys-typescale-body-font-family-name: "Roboto", sans-serif;
+    --skinlib-sys-typescale-body-font-family-name: Roboto, sans-serif;
     --skinlib-sys-typescale-body-font-weight: 400;
     --skinlib-sys-typescale-body-large-font-family: var(--skinlib-sys-typescale-body-font-family-name);
     --skinlib-sys-typescale-body-large-font-weight: var(--skinlib-sys-typescale-body-font-weight);
@@ -598,6 +598,10 @@ mw-top-app-bar .login {
 mw-top-app-bar .login .user-menu__mention {
     display: none;
 }
+mw-top-app-bar .oo-ui-icon-bell, .mw-ui-icon-bell:before,
+mw-top-app-bar .oo-ui-icon-tray, .mw-ui-icon-tray:before {
+    background: none;
+}
 mw-top-app-bar .dropdown-item {
     display: flex;
     border-radius: 8px;
@@ -795,6 +799,9 @@ mw-article-header .breadcrumb-item {
     }
     mw-article-header header.background {
         padding: 1rem;
+    }
+    mw-article-header header.background .container {
+        min-height: 180px;
     }
     mw-article-header header.background .article-header__title {
         width: 100%;

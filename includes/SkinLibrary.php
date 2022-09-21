@@ -312,8 +312,8 @@ class SkinLibrary extends SkinMustache
 					if (array_key_exists($key, $pt)) {
 						$tmp[$key] = $pt[$key];
 						$tmp[$key]['id'] = $name . '-' . $tmp[$key]['id'];
-						if ($name == 'iconviews') {
-							$this->addClass($tmp[$key], 'icon-only');
+						if (($name == 'iconviews') || ($name == 'talk')) {
+							$this->addClass($tmp[$key]['links'][0], 'icon-only d-none d-md-block');
 						}
 					}
 				}
@@ -464,9 +464,8 @@ class SkinLibrary extends SkinMustache
 		array 	$portletData,
 		int 	$type = self::MENU_TYPE_DEFAULT
 	) {
-		// $class = $portletData['class'];
 		if ($type == self::MENU_TYPE_DEFAULT) {
-			$portletData['class'] .= " nav-item";
+			$this->addClass($portletData, 'nav-item');
 		}
 
 		$label = isset($portletData['id']) ? $portletData['id'] : $portletData['text'];
@@ -475,9 +474,9 @@ class SkinLibrary extends SkinMustache
 		if (isset($portletData['links'])) {
 			foreach ($portletData['links'] as $key => $item) {
 				if ($type == self::MENU_TYPE_DROPDOWN) {
-					$portletData['links'][$key]['class'] .= " dropdown-item";
+					$this->addClass($portletData['links'][$key], 'dropdown-item');
 				} else {
-					$portletData['links'][$key]['class'] .= " nav-link";
+					$this->addClass($portletData['links'][$key], 'nav-link');
 				}
 				$portletData['links'][$key]['msg'] = Sanitizer::escapeIdForAttribute(Library\Constants::SKIN_NAME . '-' . $label);
 				$portletData['links'][$key]['text'] = null;
