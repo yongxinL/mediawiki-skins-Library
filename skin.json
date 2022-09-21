@@ -143,8 +143,7 @@
                 "/w/skins/Library/resources/images/header-18.jpg",
                 "/w/skins/Library/resources/images/dark-header-01.jpg",
                 "/w/skins/Library/resources/images/dark-header-02.jpg",
-                "/w/skins/Library/resources/images/dark-header-03.jpg",
-                "/w/skins/Library/resources/images/dark-header-04.jpg"
+                "/w/skins/Library/resources/images/dark-header-03.jpg"
             ],
             "description": "background image can be use for header hero, add dark at first of filename if you need invert font color"
         }
