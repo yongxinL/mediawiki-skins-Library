@@ -151,7 +151,7 @@ class SkinLibrary extends SkinMustache
 		$max = 3
 	) {
 		$lnk = $this->getOutput()->getCategoryLinks();
-		if (count($lnk['normal']) === 0) {
+		if (count($lnk['normal'] ?? []) === 0) {
 			return null;
 		} else {
 			$tmp = new DOMDocument();
@@ -468,8 +468,12 @@ class SkinLibrary extends SkinMustache
 			$this->addClass($portletData, 'nav-item');
 		}
 
-		$label = isset($portletData['id']) ? $portletData['id'] : $portletData['text'];
-		$portletData['msg'] = Sanitizer::escapeIdForAttribute(Library\Constants::SKIN_NAME . '-' . $label);
+		$label = isset($portletData['id']) ? $portletData['id'] : ( $portletData['text'] ?? null );
+		if ( $label ) {
+			$portletData['msg'] = Sanitizer::escapeIdForAttribute(
+				Library\Constants::SKIN_NAME . '-' . $label
+			);
+		}
 
 		if (isset($portletData['links'])) {
 			foreach ($portletData['links'] as $key => $item) {
@@ -482,7 +486,10 @@ class SkinLibrary extends SkinMustache
 				$portletData['links'][$key]['text'] = null;
 			}
 		} else {
-			$portletData['link-class'] .= ' nav-link';
+			if ( isset( $portletData['link-class'] ) ) {
+				$portletData['link-class'] = [];
+			}
+			$portletData['link-class'][] = 'nav-link';
 		}
 		// remove array['text'] in order to use translation message.
 		$portletData['text'] = null;
