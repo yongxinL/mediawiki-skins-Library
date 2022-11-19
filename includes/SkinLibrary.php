@@ -209,14 +209,14 @@ class SkinLibrary extends SkinMustache
 						case 'bottom':
 							break;
 						default:
-							$rtn[] = $this->getPortletData(strtolower($k), $v);
+							$rtn[] = $this->getLibraryPortletData(strtolower($k), $v);
 							break;
 					}
 				}
 			}
 			return $rtn;
 		} elseif (array_key_exists($name, $nav)) {
-			return $this->getPortletData($name, $nav[$name]);
+			return $this->getLibraryPortletData($name, $nav[$name]);
 		} else {
 			return null;
 		}
@@ -260,7 +260,7 @@ class SkinLibrary extends SkinMustache
 						'src' => $this->getTranslation($pt[$login]['links'][0]['text'] . '-avatar') ?:  $this->getTranslation('default-avatar')
 					];
 					unset($pt[$login]);
-					$tmp = $this->getPortletData('usermenu', $pt);
+					$tmp = $this->getLibraryPortletData('usermenu', $pt);
 					$rtn['html-items'] = $tmp['html-items'];
 				}
 				// restructure data for authorized user
@@ -272,7 +272,7 @@ class SkinLibrary extends SkinMustache
 						'src' => $this->getTranslation($pt['userpage']['links'][0]['text'] . '-avatar') ?:  $this->getTranslation('default-avatar')
 					];
 					unset($pt['userpage']);
-					$tmp = $this->getPortletData('usermenu', $pt);
+					$tmp = $this->getLibraryPortletData('usermenu', $pt);
 					$rtn['html-items'] = $tmp['html-items'];
 				}
 				break;
@@ -299,6 +299,7 @@ class SkinLibrary extends SkinMustache
 				}
 				break;
 			default:
+				$tmp = null;
 				foreach (${$name} as $key) {
 					foreach ($nav as $k => $v) {
 						if (array_key_exists($key, $v)) {
@@ -318,7 +319,7 @@ class SkinLibrary extends SkinMustache
 					}
 				}
 				if (is_array($tmp)) {
-					$rtn = $this->getPortletData($name, $tmp);
+					$rtn = $this->getLibraryPortletData($name, $tmp);
 				}
 				break;
 		}
@@ -353,6 +354,63 @@ class SkinLibrary extends SkinMustache
 		}
 		$rtn .= '" style="background-image: url(' . $bg[$i] . ');"';
 		return $rtn;
+	}
+	/**
+	 * Restores the getFooterLinks method that was removed in
+	 * https://gerrit.wikimedia.org/r/c/mediawiki/core/+/808913
+	 *
+	 * @return string[] Map of (key => HTML) for 'privacy', 'about', 'disclaimer'
+	 */
+	private function getSiteFooterLinks() {
+		return [
+			'privacy' => $this->footerLink( 'privacy', 'privacypage' ),
+			'about' => $this->footerLink( 'aboutsite', 'aboutpage' ),
+			'disclaimer' => $this->footerLink( 'disclaimers', 'disclaimerpage' )
+		];
+	}
+	/**
+	 * Restores the getFooterLinks method that was removed in
+	 * https://gerrit.wikimedia.org/r/c/mediawiki/core/+/808913
+	 *
+	 * @internal
+	 * @return array
+	 */
+	protected function getFooterLinks(): array {
+		$out = $this->getOutput();
+		$title = $out->getTitle();
+		$titleExists = $title->exists();
+		$config = $this->getConfig();
+		$maxCredits = $config->get( 'MaxCredits' );
+		$showCreditsIfMax = $config->get( 'ShowCreditsIfMax' );
+		$useCredits = $titleExists
+			&& $out->isArticle()
+			&& $out->isRevisionCurrent()
+			&& $maxCredits !== 0;
+
+		/** @var CreditsAction $action */
+		if ( $useCredits ) {
+			$article = Article::newFromWikiPage( $this->getWikiPage(), $this );
+			$action = Action::factory( 'credits', $article, $this );
+		}
+
+		'@phan-var CreditsAction $action';
+		$data = [
+			'info' => [
+				'lastmod' => !$useCredits ? $this->lastModified() : null,
+				'numberofwatchingusers' => null,
+				'credits' => $useCredits ?
+					$action->getCredits( $maxCredits, $showCreditsIfMax ) : null,
+				'copyright' => $titleExists &&
+					$out->showsCopyright() ? $this->getCopyright() : null,
+			],
+			'places' => $this->getSiteFooterLinks(),
+		];
+		foreach ( $data as $key => $existingItems ) {
+			$newItems = [];
+			$this->getHookRunner()->onSkinAddFooterLinks( $this, $key, $newItems );
+			$data[$key] = $existingItems + $newItems;
+		}
+		return $data;
 	}
 	/**
 	 * HTML string for footer links
@@ -423,7 +481,7 @@ class SkinLibrary extends SkinMustache
 	 * @return 	array 			data that can be passed to a Mustache template
 	 * 							and presents a single menu.
 	 */
-	protected function getPortletData(
+	protected function getLibraryPortletData(
 		$name,
 		array 	$items = []
 	): array {
